@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Stylelink</string>
+    <string name="ekasi_signiture">EKASI STYLELINK © 2023</string>
+    <string name="username">Username</string>
+    <string name="email_address">Email Address</string>
+    <string name="password">Password</string>
+    <string name="mobile">Mobile</string>
+    <string name="create_account">Create Account</string>
+    <string name="by_checking_this_box_you_agree_to_sylelink_s_terms_and_condition">By checking this box you agree to Sylelink\'s terms and condition</string>
+</resources>
