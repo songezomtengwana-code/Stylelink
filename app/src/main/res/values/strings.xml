@@ -7,4 +7,7 @@
     <string name="mobile">Mobile</string>
     <string name="create_account">Create Account</string>
     <string name="by_checking_this_box_you_agree_to_sylelink_s_terms_and_condition">By checking this box you agree to Sylelink\'s terms and condition</string>
+    <string name="already_have_an_account_log_in">Already Have An Account ? Log In</string>
+    <string name="create_your_new_account">Create Your New Account.</string>
+    <string name="sign_up_subtitle">Create your new account with to unlock infinite styling solutions.</string>
 </resources>
