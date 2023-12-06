@@ -13,6 +13,12 @@
         android:theme="@style/Theme.Stylelink"
         tools:targetApi="31">
         <activity
+            android:name=".ui.activities.SignInActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activities.ConfigurationActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activities.SignUpActivity"
             android:exported="false" />
         <activity

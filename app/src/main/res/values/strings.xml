@@ -1,13 +1,19 @@
-<resources>
-    <string name="app_name">Stylelink</string>
-    <string name="ekasi_signiture">EKASI STYLELINK © 2023</string>
-    <string name="username">Username</string>
-    <string name="email_address">Email Address</string>
-    <string name="password">Password</string>
-    <string name="mobile">Mobile</string>
-    <string name="create_account">Create Account</string>
-    <string name="by_checking_this_box_you_agree_to_sylelink_s_terms_and_condition">By checking this box you agree to Sylelink\'s terms and condition</string>
-    <string name="already_have_an_account_log_in">Already Have An Account ? Log In</string>
-    <string name="create_your_new_account">Create Your New Account.</string>
-    <string name="sign_up_subtitle">Create your new account with to unlock infinite styling solutions.</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" tools:ignore="MissingTranslation">Stylelink</string>
+    <string name="ekasi_signiture" tools:ignore="MissingTranslation">EKASI STYLELINK © 2023</string>
+    <string name="username" tools:ignore="MissingTranslation">Username</string>
+    <string name="email_address" tools:ignore="MissingTranslation">Email Address</string>
+    <string name="password" tools:ignore="MissingTranslation">Password</string>
+    <string name="mobile" tools:ignore="MissingTranslation">Mobile</string>
+    <string name="create_account" tools:ignore="MissingTranslation">Create Account</string>
+    <string name="by_checking_this_box_you_agree_to_sylelink_s_terms_and_condition" tools:ignore="MissingTranslation">By checking this box you agree to Sylelink\'s terms and condition</string>
+    <string name="already_have_an_account_log_in" tools:ignore="MissingTranslation">Already Have An Account ? Log In</string>
+    <string name="create_your_new_account" tools:ignore="MissingTranslation">Create Your New Account.</string>
+    <string name="sign_up_subtitle" tools:ignore="MissingTranslation">Create your new account with to unlock infinite styling solutions.</string>
+    <string name="invalid_input_values" tools:ignore="MissingTranslation">All fields are required</string>
+    <string name="valid_input_values" tools:ignore="MissingTranslation">All fields have been filled</string>
+    <string name="invalid_input_values_action" translatable="false">Try again</string>
+    <string name="valid_input_values_action" translatable="false">Good Job</string>
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
