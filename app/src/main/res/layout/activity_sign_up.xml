@@ -6,11 +6,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:visibility="visible"
     tools:context=".ui.activities.SignUpActivity">
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:id="@+id/scrollView2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -21,17 +27,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
-            <com.google.android.material.progressindicator.LinearProgressIndicator
-                android:id="@+id/createAccountIndicator"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:indeterminate="true"
-                app:indicatorColor="@color/black"
-                app:trackColor="@color/one"
-                app:trackCornerRadius="10dp"
-                tools:visibility="gone" />
 
             <TextView
                 android:id="@+id/sign_up_title2"
@@ -147,6 +142,18 @@
                     android:text="@string/by_checking_this_box_you_agree_to_sylelink_s_terms_and_condition"
                     android:textColor="@color/dark" />
             </LinearLayout>
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/createAccountIndicator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="2dp"
+                android:indeterminate="true"
+                app:indicatorColor="@color/black"
+                app:trackColor="@color/one"
+                app:trackCornerRadius="10dp"
+                tools:visibility="gone" />
 
             <Button
                 android:id="@+id/createAccountButton"

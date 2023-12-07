@@ -1,14 +1,12 @@
 package com.ekasi.stylelink.data.models
 
-import java.util.Date
-
 data class UserModel(
-    val userId: String,
     val username: String,
     val email: String,
     val password: String,
     val phoneNumber: String,
-    val registrationDate: Date,
+    val userId: String? = "",
+    val registrationDate: String? = "",
     val profileImageURL: String? = "",
     val hairType: String? = "",
     val hairColor: String? = "",
