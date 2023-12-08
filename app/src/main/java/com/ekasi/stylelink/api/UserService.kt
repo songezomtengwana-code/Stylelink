@@ -9,7 +9,10 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 
-interface ApiService {
+interface UserService {
     @POST("/api/users")
     fun createUserAccount(@Body data: NewUserModel): Call<ResponseBody>
+
+    @GET("/api/users/{email}")
+    fun getUserSingleAccount(@Path("email") email: String): Call<UserModel>
 }

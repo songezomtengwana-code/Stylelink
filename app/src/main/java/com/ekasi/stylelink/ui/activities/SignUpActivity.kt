@@ -2,7 +2,6 @@ package com.ekasi.stylelink.ui.activities
 
 import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -11,9 +10,8 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.Toast
 import com.ekasi.stylelink.R
-import com.ekasi.stylelink.api.NetworkClient.NetworkClient.apiService
+import com.ekasi.stylelink.util.network.NetworkClient.NetworkClient.apiService
 import com.ekasi.stylelink.data.models.NewUserModel
-import com.ekasi.stylelink.data.models.UserModel
 import com.ekasi.stylelink.databinding.ActivitySignUpBinding
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.snackbar.Snackbar
@@ -27,6 +25,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+@Suppress("NAME_SHADOWING")
 class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
     private lateinit var username: TextInputEditText
@@ -37,6 +36,7 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var logInButton: Button
     private lateinit var createAccountIndicator: LinearProgressIndicator
     private lateinit var firebaseAuth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
@@ -63,6 +63,7 @@ class SignUpActivity : AppCompatActivity() {
             val context = findViewById<View>(R.id.signUpContext)
             val invalidSnackbar = Snackbar.make(context, R.string.invalid_input_values, Snackbar.LENGTH_LONG).setAction(R.string.invalid_input_values_action) {}
 
+
             if (email.isNotEmpty() || username.isNotEmpty() || password.isNotEmpty() || phoneNumber.isNotEmpty()) {
                 if (termsCheckBox.isChecked)  {
                     createAccountIndicator.visibility = View.VISIBLE
@@ -73,8 +74,8 @@ class SignUpActivity : AppCompatActivity() {
                         phoneNumber,
                     )
 
-                    val configurationIntent = Intent(this, ConfigurationActivity::class.java)
-                    createUserAccount(newUserAccount, configurationIntent, context)
+                    val homeActivity = Intent(this, HomeActivity::class.java)
+                    createUserAccount(newUserAccount, homeActivity, context)
                     println(newUserAccount)
                 } else {
                     Snackbar.make(context, "Please make sure you've check the box below", Snackbar.LENGTH_LONG).show()
@@ -116,6 +117,14 @@ class SignUpActivity : AppCompatActivity() {
                             }
                         }
 
+                    user.sendEmailVerification()
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Log.d("Email Verification", "Email sent.")
+                            }
+                        }
+
+
                 } else {
                     Log.w("Create Account", "signInWithCustomToken:failure", task.exception)
                     Toast.makeText(baseContext, "Authentication failed.",
@@ -135,6 +144,7 @@ class SignUpActivity : AppCompatActivity() {
                         val responseBody = response.body()
                         Log.d("Create Account Response", responseBody.toString())
                         auth(data.email, data.password, data.username)
+
                         startActivity(intent)
                     } else {
                         Log.d("Create Error Response", "Error Creating A New User")

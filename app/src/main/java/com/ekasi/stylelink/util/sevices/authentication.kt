@@ -1,24 +1,5 @@
 package com.ekasi.stylelink.util.sevices
 
-import android.content.Context
-import android.content.Intent
-import android.util.Log
-import android.view.View
-import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
-import com.ekasi.stylelink.api.NetworkClient
-import com.ekasi.stylelink.data.models.NewUserModel
-import com.ekasi.stylelink.data.models.UserModel
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
-import com.google.firebase.auth.userProfileChangeRequest
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-
 class authentication {
 
 }

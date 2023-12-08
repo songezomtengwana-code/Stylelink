@@ -6,24 +6,101 @@
     android:layout_height="match_parent"
     tools:context=".ui.activities.ConfigurationActivity">
 
-    <LinearLayout
-        android:id="@+id/linearLayout2"
+
+    <ScrollView
+        android:id="@+id/scrollView3"
         android:layout_width="0dp"
-        android:layout_height="849dp"
-        android:orientation="vertical"
-        android:padding="24dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/textView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/anton"
-            android:text="More Info"
-            android:textColor="@color/black"
-            android:textSize="48sp" />
-    </LinearLayout>
+            android:padding="24dp"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/preferences"
+                android:fontFamily="@font/anton"
+                android:textSize="48sp"
+                android:textColor="@color/two"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="@font/poppins_medium"
+                android:text="@string/set_up_your_profile_to_get_started"
+                android:textColor="@color/two"
+                android:textSize="16sp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/address"
+                android:textColorHint="@color/two"
+                app:boxStrokeColor="@color/two"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:inputType="textAutoCorrect"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/two" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/state_province"
+                android:textColorHint="@color/two"
+                app:boxBackgroundColor="@color/white"
+                app:boxStrokeColor="@color/two"
+                app:errorEnabled="true">
+
+
+                <AutoCompleteTextView
+                    android:id="@+id/stateOptions"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="none"
+                    android:textColor="@color/two"
+                    android:textColorHighlight="#FFFFFF"
+                    android:textColorHint="@color/dark" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/zip_code"
+                android:textColorHint="@color/two"
+                app:boxStrokeColor="@color/two"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/zip_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/two" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
