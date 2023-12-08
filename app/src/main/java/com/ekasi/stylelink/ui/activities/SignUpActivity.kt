@@ -2,6 +2,7 @@ package com.ekasi.stylelink.ui.activities
 
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +12,7 @@ import android.widget.CheckBox
 import android.widget.Toast
 import com.ekasi.stylelink.R
 import com.ekasi.stylelink.api.NetworkClient.NetworkClient.apiService
+import com.ekasi.stylelink.data.models.NewUserModel
 import com.ekasi.stylelink.data.models.UserModel
 import com.ekasi.stylelink.databinding.ActivitySignUpBinding
 import com.google.android.material.progressindicator.LinearProgressIndicator
@@ -19,6 +21,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.auth.userProfileChangeRequest
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -63,7 +66,7 @@ class SignUpActivity : AppCompatActivity() {
             if (email.isNotEmpty() || username.isNotEmpty() || password.isNotEmpty() || phoneNumber.isNotEmpty()) {
                 if (termsCheckBox.isChecked)  {
                     createAccountIndicator.visibility = View.VISIBLE
-                    val newUserAccount = UserModel(
+                    val newUserAccount = NewUserModel(
                         username,
                         email,
                         password,
@@ -71,7 +74,7 @@ class SignUpActivity : AppCompatActivity() {
                     )
 
                     val configurationIntent = Intent(this, ConfigurationActivity::class.java)
-                    createUserAccount(newUserAccount, configurationIntent)
+                    createUserAccount(newUserAccount, configurationIntent, context)
                     println(newUserAccount)
                 } else {
                     Snackbar.make(context, "Please make sure you've check the box below", Snackbar.LENGTH_LONG).show()
@@ -94,12 +97,24 @@ class SignUpActivity : AppCompatActivity() {
         startActivity(i)
     }
 
-    private fun  auth(email: String, password: String) {
+    private fun  auth(email: String, password: String, username: String) {
         if (email.isNotEmpty()|| password.isNotEmpty()) {
             firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this) {
                 task ->
                 if (task.isSuccessful)  {
                     Log.d("Create Account", "Success, Account Create On Firebase")
+                    val user = firebaseAuth.currentUser
+
+                    val profileUpdates = userProfileChangeRequest {
+                        displayName = username
+                    }
+
+                    user!!.updateProfile(profileUpdates)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Log.d("Profile Update", "User profile updated.")
+                            }
+                        }
 
                 } else {
                     Log.w("Create Account", "signInWithCustomToken:failure", task.exception)
@@ -112,24 +127,26 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    private fun createUserAccount(data: UserModel, intent: Intent) {
+    private fun createUserAccount(data: NewUserModel, intent: Intent, context: View) {
         apiService.createUserAccount(data)
             .enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                     if (response.isSuccessful) {
                         val responseBody = response.body()
                         Log.d("Create Account Response", responseBody.toString())
-                        auth(data.email, data.password)
+                        auth(data.email, data.password, data.username)
                         startActivity(intent)
                     } else {
-                        val responseBody = response.body()
-                        Log.d("Create Account Response", responseBody.toString())
                         Log.d("Create Error Response", "Error Creating A New User")
+                        Snackbar.make(context, "Error create account, please try again", Snackbar.LENGTH_LONG).show()
+                        createAccountIndicator.visibility = View.GONE
                     }
                 }
 
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     Log.d("Create Error Response", "shit MF did not even start")
+                    Snackbar.make(context, "Error create account, please try again", Snackbar.LENGTH_LONG).show()
+                    createAccountIndicator.visibility = View.GONE
                 }
             })
     }

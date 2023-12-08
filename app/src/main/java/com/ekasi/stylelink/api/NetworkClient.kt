@@ -6,7 +6,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class NetworkClient  private constructor() {
     object NetworkClient {
-        private const val BASE_URL = "https://stylelinkapi.onrender.com/api/"
+        private const val BASE_URL = "https://stylelinkapi.onrender.com/"
+        private const val LOCAL_URL = "http://localhost:7000/api/"
+
         private val retrofit: Retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
