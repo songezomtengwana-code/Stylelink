@@ -25,5 +25,11 @@
     <string name="continue_from_where_you_left_off" translatable="false">Continue from where you left off</string>
     <string name="sign_in" translatable="false">Sign In</string>
     <string name="don_t_have_an_account_create_one" translatable="false">Don\'t have an account ? create one</string>
-    <string name="zip_code">Zip Code</string>
+    <string name="zip_code" translatable="false">Zip Code</string>
+    <string name="username_placeholder" translatable="false">$username</string>
+    <string name="greeting_placeholder" translatable="false">$greeting</string>
+    <string name="search_salon">Search Salon</string>
+    <string name="general">General</string>
+    <string name="chip_women">Women</string>
+    <string name="chip_men">Men</string>
 </resources>

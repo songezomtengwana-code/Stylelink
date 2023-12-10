@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/white"
     android:layout_height="match_parent"
     tools:context=".ui.activities.HomeActivity">
 
@@ -19,7 +20,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5"
         app:trackColor="@color/one"
-        app:trackCornerRadius="10dp" />
+        app:trackCornerRadius="10dp"
+        tools:visibility="gone" />
 
     <ScrollView
         android:id="@+id/homeContent"
@@ -28,32 +30,148 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_view"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="50dp"
+                    app:cardElevation="4dp">
+
+                    <ImageView
+                        android:id="@+id/homeProfileAvatar"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:scaleType="fitXY"
+                        tools:ignore="ImageContrastCheck"
+                        tools:srcCompat="@tools:sample/avatars[5]" />
+
+                </androidx.cardview.widget.CardView>
 
                 <TextView
                     android:id="@+id/homeGreeting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
                     android:fontFamily="@font/poppins_bold"
+                    android:text="@string/greeting_placeholder"
                     android:textColor="@color/dark"
                     android:textSize="34sp" />
 
-                <TextView
-                    android:id="@+id/homeUsername"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"></LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"></LinearLayout>
+
+            </LinearLayout>
+
+            <!--            <SearchView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginTop="12dp"-->
+<!--                android:layout_marginBottom="12dp"-->
+<!--                android:background="@color/one"-->
+<!--                android:inputType="text|textAutoComplete|textAutoCorrect|textCapSentences" />-->
+
+            <TextView
+                android:id="@+id/homeUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
+                android:text="@string/username_placeholder"
+                android:textColor="@color/dark"
+                android:textSize="16sp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:hint="@string/search_salon"
+                app:startIconContentDescription="search icon"
+                app:startIconDrawable="@drawable/baseline_search_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/homeSalonSeachInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#F6F6F6"
+                    android:textColor="@color/two"
+                    android:textColorHint="@color/dark" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/womenChip"
+                    style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="0"
-                    android:fontFamily="@font/poppins"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:checkable="true"
+                    android:fontFamily="@font/poppins_bold"
+                    android:padding="10dp"
+                    android:text="@string/chip_women"
                     android:textColor="@color/dark"
                     android:textSize="16sp"
-                    tools:visibility="gone" />
+                    app:chipBackgroundColor="#FFFFFF"
+                    app:chipIconVisible="false"
+                    app:chipStrokeColor="@color/white"
+                    app:chipStrokeWidth="2dp" />
+
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/menChip"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:fontFamily="@font/poppins_bold"
+                    android:padding="10dp"
+                    android:text="@string/chip_men"
+                    android:textColor="@color/dark"
+                    android:textSize="16sp"
+                    app:chipBackgroundColor="#FFFFFF"
+                    app:chipStrokeColor="@color/white"
+                    app:chipStrokeWidth="2dp" />
+
+            </com.google.android.material.chip.ChipGroup>
+
+            <TextView
+                android:id="@+id/sectionHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/poppins_bold"
+                android:text="Available Stores"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/two" />
+
 
         </LinearLayout>
     </ScrollView>

@@ -1,14 +1,18 @@
 package com.ekasi.stylelink.ui.activities
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
+import com.ekasi.stylelink.R
 import com.ekasi.stylelink.data.models.UserModel
 import com.ekasi.stylelink.data.viewModels.UserViewModel
 import com.ekasi.stylelink.databinding.ActivityHomeBinding
@@ -29,17 +33,18 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var homeGreeting:TextView
     private lateinit var homeLoader: LinearProgressIndicator
     private lateinit var homeContent: ScrollView
+    private lateinit var homeProfileAvatar: ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        homeUsername = binding.homeUsername
+        homeUsername = findViewById(R.id.homeUsername)
         homeGreeting = binding.homeGreeting
         homeLoader = binding.homeLoader
         homeContent = binding.homeContent
         homeContent.visibility= View.GONE
-
+        homeProfileAvatar = binding.homeProfileAvatar
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
 
         main()
@@ -67,14 +72,19 @@ class HomeActivity : AppCompatActivity() {
             override fun onResponse(call: Call<UserModel>, response: Response<UserModel>) {
                 if (response.isSuccessful) {
                     val retrievedUser = response.body()
-                    homeLoader.visibility = View.GONE
-                    homeContent.visibility= View.VISIBLE
-                    Log.d("getActiveUser", "User Retrieved Successfully")
 
                     // save user in ViewModel
                     userViewModel.saveLoggedInUser(retrievedUser)
+                    if (retrievedUser?.profileImageURL?.length!! < 0) {
+                        Glide.with(baseContext).load("https://stylelinkapi.onrender.com/api/cloud/d164a270-cd95-4aed-b63d-58435cc073f0").into(homeProfileAvatar)
+                    } else {
+                        Glide.with(baseContext).load(retrievedUser.profileImageURL).into(homeProfileAvatar)
+                    }
                     activeUser = userViewModel.getLoggedInUserData()!!
                     homeUsername.text = activeUser.username
+                    homeContent.visibility= View.VISIBLE
+                    homeLoader.visibility = View.GONE
+                    Log.d("getActiveUser", "Logged User: ${activeUser.username}")
                 } else {
                     // handle error
                     Log.d("getActiveUser", "User Not Available")
@@ -98,6 +108,10 @@ class HomeActivity : AppCompatActivity() {
         } else {
             homeGreeting.text = eveningGreeting
         }
+    }
+
+    private fun profileRedirect() {
+
     }
 
 }
