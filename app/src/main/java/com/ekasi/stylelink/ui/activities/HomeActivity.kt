@@ -1,12 +1,14 @@
 package com.ekasi.stylelink.ui.activities
 
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
@@ -18,6 +20,7 @@ import com.ekasi.stylelink.data.viewModels.UserViewModel
 import com.ekasi.stylelink.databinding.ActivityHomeBinding
 import com.ekasi.stylelink.util.network.NetworkClient
 import com.google.android.material.progressindicator.LinearProgressIndicator
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import retrofit2.Call
@@ -31,7 +34,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var activeUser: UserModel
     private lateinit var homeUsername: TextView
     private lateinit var homeGreeting:TextView
-    private lateinit var homeLoader: LinearProgressIndicator
+    private lateinit var homeLoader: LinearLayout
     private lateinit var homeContent: ScrollView
     private lateinit var homeProfileAvatar: ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +70,24 @@ class HomeActivity : AppCompatActivity() {
         NetworkClient.NetworkClient.userService.getUserSingleAccount(email).enqueue(object : Callback<UserModel> {
             override fun onFailure(call: Call<UserModel>, t: Throwable) {
                 Log.d("getActiveUser", "MF did not even look !")
+                val homeLoadingTextView = binding.homeLoaderText
+                homeLoadingTextView.text = "Error"
+                try {
+                    Snackbar.make(binding.homeViewContainer, "Sorry, we came across an error", Snackbar.LENGTH_LONG)
+                        .setTextColor(Color.WHITE)
+                        .setBackgroundTint(Color.RED)
+                        .setActionTextColor(Color.WHITE)
+                        .setAction("Reload") {
+                            homeLoadingTextView.text = "Loading"
+                            try {
+                                main()
+                            } catch (err: Exception) {
+                                Log.d("Home Reload", err.message!!)
+                            }
+                        }
+                } catch (err: Exception) {
+                    Log.d("onFailure", err.message!!)
+                }
             }
 
             override fun onResponse(call: Call<UserModel>, response: Response<UserModel>) {

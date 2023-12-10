@@ -3,25 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/white"
     android:layout_height="match_parent"
+    android:background="@color/white"
+    android:id="@+id/homeViewContainer"
     tools:context=".ui.activities.HomeActivity">
-
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/homeLoader"
-        android:layout_width="100dp"
-        android:layout_height="2dp"
-        android:indeterminate="true"
-        app:indicatorColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5"
-        app:trackColor="@color/one"
-        app:trackCornerRadius="10dp"
-        tools:visibility="gone" />
 
     <ScrollView
         android:id="@+id/homeContent"
@@ -85,12 +70,12 @@
             </LinearLayout>
 
             <!--            <SearchView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_marginTop="12dp"-->
-<!--                android:layout_marginBottom="12dp"-->
-<!--                android:background="@color/one"-->
-<!--                android:inputType="text|textAutoComplete|textAutoCorrect|textCapSentences" />-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:layout_marginTop="12dp"-->
+            <!--                android:layout_marginBottom="12dp"-->
+            <!--                android:background="@color/one"-->
+            <!--                android:inputType="text|textAutoComplete|textAutoCorrect|textCapSentences" />-->
 
             <TextView
                 android:id="@+id/homeUsername"
@@ -168,13 +153,45 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:fontFamily="@font/poppins_bold"
-                android:text="Available Stores"
+                android:text="@string/available_stores"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/two" />
 
 
         </LinearLayout>
     </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/homeLoader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5">
+
+        <TextView
+            android:id="@+id/homeLoaderText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins"
+            android:text="@string/loading"
+            android:textAlignment="center" />
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progress_indicator"
+            android:layout_width="100dp"
+            android:layout_height="2dp"
+            android:indeterminate="true"
+            app:indicatorColor="@color/black"
+            app:trackColor="@color/one"
+            app:trackCornerRadius="10dp" />
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
