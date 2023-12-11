@@ -4,6 +4,12 @@
     <color name="white">#FFFFFFFF</color>
     <color name="one">#FFE3E3DD</color>
     <color name="two">#FF050505</color>
-    <color name="grey">#FF95958E</color>
-    <color name="dark">#202020</color>
+    <color name="grey_900">#adb5bd</color>
+    <color name="dark_900">#212529</color>
+    <color name="dark_500">#212529</color>
+    <color name="grey_200">#f1f2eb</color>
+    <color name="grey_300">#ced4da</color>
+    <color name="grey_500">#d8dad3</color>
+    <color name="light_100">#f8f9fa</color>
+    <color name="light_200">#e9ecef</color>
 </resources>

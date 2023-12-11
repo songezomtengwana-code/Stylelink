@@ -73,11 +73,11 @@ class HomeActivity : AppCompatActivity() {
                 val homeLoadingTextView = binding.homeLoaderText
                 homeLoadingTextView.text = "Error"
                 try {
-                    Snackbar.make(binding.homeViewContainer, "Sorry, we came across an error", Snackbar.LENGTH_LONG)
-                        .setTextColor(Color.WHITE)
-                        .setBackgroundTint(Color.RED)
-                        .setActionTextColor(Color.WHITE)
-                        .setAction("Reload") {
+                    val snack = Snackbar.make(binding.homeViewContainer, "Sorry, we came across an error", Snackbar.LENGTH_LONG)
+                        snack.setTextColor(Color.WHITE)
+                        snack.setBackgroundTint(Color.RED)
+                        snack.setActionTextColor(Color.WHITE)
+                        snack.setAction("Reload") {
                             homeLoadingTextView.text = "Loading"
                             try {
                                 main()
@@ -85,6 +85,7 @@ class HomeActivity : AppCompatActivity() {
                                 Log.d("Home Reload", err.message!!)
                             }
                         }
+                        snack.show()
                 } catch (err: Exception) {
                     Log.d("onFailure", err.message!!)
                 }
