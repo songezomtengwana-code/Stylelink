@@ -8,9 +8,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/stylelink_single_clear"
+        android:icon="@drawable/stylelink_full_clear"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/stylelink_single_clear"
+        android:roundIcon="@drawable/stylelink_full_clear"
         android:supportsRtl="true"
         android:theme="@style/Theme.Stylelink"
         tools:targetApi="31">

@@ -63,6 +63,7 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences-core:1.0.0")
     implementation("androidx.datastore:datastore:1.0.0")
     implementation("androidx.datastore:datastore-core:1.0.0")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
     // test libraries
     testImplementation("junit:junit:4.13.2")

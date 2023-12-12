@@ -77,7 +77,7 @@
                     android:inputType="none"
                     android:textColor="@color/two"
                     android:textColorHighlight="#FFFFFF"
-                    android:textColorHint="@color/dark" />
+                    android:textColorHint="@color/dark_900" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

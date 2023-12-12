@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_medium"
                 android:text="@string/continue_from_where_you_left_off"
-                android:textColor="@color/dark"
+                android:textColor="@color/dark_900"
                 android:textSize="16sp" />
 
             <LinearLayout
@@ -119,7 +119,7 @@
                 android:textSize="15sp"
 
                 android:textStyle="bold"
-                app:rippleColor="@color/dark" />
+                app:rippleColor="@color/dark_900" />
 
             <Button
                 android:id="@+id/redirectButton"

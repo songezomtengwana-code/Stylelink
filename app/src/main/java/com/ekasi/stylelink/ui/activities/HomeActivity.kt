@@ -2,8 +2,6 @@ package com.ekasi.stylelink.ui.activities
 
 import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -12,43 +10,49 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.ekasi.stylelink.R
 import com.ekasi.stylelink.data.models.UserModel
 import com.ekasi.stylelink.data.viewModels.UserViewModel
 import com.ekasi.stylelink.databinding.ActivityHomeBinding
 import com.ekasi.stylelink.util.network.NetworkClient
-import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.Calendar
+
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var userViewModel: UserViewModel
     private lateinit var activeUser: UserModel
-    private lateinit var homeUsername: TextView
-    private lateinit var homeGreeting:TextView
     private lateinit var homeLoader: LinearLayout
     private lateinit var homeContent: ScrollView
     private lateinit var homeProfileAvatar: ImageView
+    private lateinit var greetingTextView: TextView
+    private lateinit var reloadImageView: ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        homeUsername = findViewById(R.id.homeUsername)
-        homeGreeting = binding.homeGreeting
         homeLoader = binding.homeLoader
         homeContent = binding.homeContent
+        reloadImageView = binding.reloadImageView
         homeContent.visibility= View.GONE
+        reloadImageView.visibility= View.GONE
         homeProfileAvatar = binding.homeProfileAvatar
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
+        reloadImageView.setOnClickListener {
+            try {
+                main()
+            } catch (error: Exception) {
+                Log.d("reloadImageView", error.message!!)
+            }
+        }
 
         main()
     }
@@ -58,7 +62,6 @@ class HomeActivity : AppCompatActivity() {
 
         if (firebaseUser != null) {
             getActiveUser(firebaseUser.email.toString())
-            greetingConfiguration()
         } else {
             val signUpIntent = Intent(this, SignInActivity::class.java)
             startActivity(signUpIntent)
@@ -71,14 +74,19 @@ class HomeActivity : AppCompatActivity() {
             override fun onFailure(call: Call<UserModel>, t: Throwable) {
                 Log.d("getActiveUser", "MF did not even look !")
                 val homeLoadingTextView = binding.homeLoaderText
-                homeLoadingTextView.text = "Error"
+                val homeLoader = binding.progressIndicator
+                homeLoader.visibility = View.GONE
+                reloadImageView.visibility = View.VISIBLE
+                homeLoadingTextView.text = "Unable to connect to servers"
                 try {
-                    val snack = Snackbar.make(binding.homeViewContainer, "Sorry, we came across an error", Snackbar.LENGTH_LONG)
+                    val snack = Snackbar.make(binding.homeViewContainer, "Unable to connect to servers", 5000)
                         snack.setTextColor(Color.WHITE)
-                        snack.setBackgroundTint(Color.RED)
+                        snack.setBackgroundTint(Color.BLACK)
                         snack.setActionTextColor(Color.WHITE)
-                        snack.setAction("Reload") {
-                            homeLoadingTextView.text = "Loading"
+                        snack.setAction("Try Again") {
+                            homeLoadingTextView.text = "Loading..."
+                            homeLoader.visibility = View.GONE
+                            reloadImageView.visibility = View.GONE
                             try {
                                 main()
                             } catch (err: Exception) {
@@ -94,6 +102,7 @@ class HomeActivity : AppCompatActivity() {
             override fun onResponse(call: Call<UserModel>, response: Response<UserModel>) {
                 if (response.isSuccessful) {
                     val retrievedUser = response.body()
+                    greetingTextView = binding.greeting
 
                     // save user in ViewModel
                     userViewModel.saveLoggedInUser(retrievedUser)
@@ -101,9 +110,9 @@ class HomeActivity : AppCompatActivity() {
                         Glide.with(baseContext).load("https://stylelinkapi.onrender.com/api/cloud/d164a270-cd95-4aed-b63d-58435cc073f0").into(homeProfileAvatar)
                     } else {
                         Glide.with(baseContext).load(retrievedUser.profileImageURL).into(homeProfileAvatar)
+                        greetingTextView.text = "Hi, ${retrievedUser.username} 👋"
                     }
                     activeUser = userViewModel.getLoggedInUserData()!!
-                    homeUsername.text = activeUser.username
                     homeContent.visibility= View.VISIBLE
                     homeLoader.visibility = View.GONE
                     Log.d("getActiveUser", "Logged User: ${activeUser.username}")
@@ -113,27 +122,6 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
         })
-    }
-
-    private fun greetingConfiguration() {
-        val calender = Calendar.getInstance()
-        val hour = calender.get(Calendar.HOUR_OF_DAY)
-
-        val morningGreeting = "Good morning"
-        val afternoonGreeting = "Good afternoon"
-        val eveningGreeting = "Good evening"
-
-        if (hour < 12) {
-            homeGreeting.text = morningGreeting
-        } else if (hour < 18) {
-            homeGreeting.text = afternoonGreeting
-        } else {
-            homeGreeting.text = eveningGreeting
-        }
-    }
-
-    private fun profileRedirect() {
-
     }
 
 }
