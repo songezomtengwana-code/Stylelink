@@ -34,7 +34,5 @@ class MainActivity : AppCompatActivity() {
             }
             finish()
         }, splashTimeOut)
-
-
     }
 }

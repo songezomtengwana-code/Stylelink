@@ -36,7 +36,7 @@
             android:layout_weight="1" />
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/card_view"
+            android:id="@+id/homeProfileAvatarContainer"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             app:cardCornerRadius="50dp"

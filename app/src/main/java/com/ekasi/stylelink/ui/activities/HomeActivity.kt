@@ -11,6 +11,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.ekasi.stylelink.data.models.UserModel
@@ -34,18 +35,25 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var homeProfileAvatar: ImageView
     private lateinit var greetingTextView: TextView
     private lateinit var reloadImageView: ImageView
+    private lateinit var homeProfileAvatarContainerCardView: CardView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // var declarations
         homeLoader = binding.homeLoader
         homeContent = binding.homeContent
         reloadImageView = binding.reloadImageView
+        homeProfileAvatarContainerCardView = binding.homeProfileAvatarContainer
+
+        // toggle visibility state
         homeContent.visibility= View.GONE
         reloadImageView.visibility= View.GONE
         homeProfileAvatar = binding.homeProfileAvatar
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
+
+        // reload active screen
         reloadImageView.setOnClickListener {
             try {
                 main()
@@ -54,6 +62,20 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
+        // reroute to profile configuration screen
+        homeProfileAvatarContainerCardView.setOnClickListener {
+            val targetIntent = Intent(this, ConfigurationActivity::class.java)
+
+            if (activeUser != null) {
+                startActivity(targetIntent)
+            } else {
+                Snackbar.make(binding.homeViewContainer, "Please refresh page", Snackbar.LENGTH_LONG).setAction("Refresh") {
+                    main()
+                }
+            }
+        }
+
+        // main thread functions
         main()
     }
 
@@ -79,13 +101,13 @@ class HomeActivity : AppCompatActivity() {
                 reloadImageView.visibility = View.VISIBLE
                 homeLoadingTextView.text = "Unable to connect to servers"
                 try {
-                    val snack = Snackbar.make(binding.homeViewContainer, "Unable to connect to servers", 5000)
+                    val snack = Snackbar.make(binding.homeViewContainer, "Unable to connect to servers", 12000)
                         snack.setTextColor(Color.WHITE)
                         snack.setBackgroundTint(Color.BLACK)
                         snack.setActionTextColor(Color.WHITE)
                         snack.setAction("Try Again") {
                             homeLoadingTextView.text = "Loading..."
-                            homeLoader.visibility = View.GONE
+                            homeLoader.visibility = View.VISIBLE
                             reloadImageView.visibility = View.GONE
                             try {
                                 main()
