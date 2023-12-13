@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.ekasi.stylelink.R
 import com.ekasi.stylelink.data.models.UserModel
 import com.ekasi.stylelink.data.viewModels.UserViewModel
 import com.ekasi.stylelink.databinding.ActivityHomeBinding
@@ -132,7 +133,7 @@ class HomeActivity : AppCompatActivity() {
                         Glide.with(baseContext).load("https://stylelinkapi.onrender.com/api/cloud/d164a270-cd95-4aed-b63d-58435cc073f0").into(homeProfileAvatar)
                     } else {
                         Glide.with(baseContext).load(retrievedUser.profileImageURL).into(homeProfileAvatar)
-                        greetingTextView.text = "Hi, ${retrievedUser.username} 👋"
+                        greetingTextView.text = getString(R.string.hi, retrievedUser.username)
                     }
                     activeUser = userViewModel.getLoggedInUserData()!!
                     homeContent.visibility= View.VISIBLE
