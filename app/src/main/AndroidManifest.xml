@@ -15,6 +15,9 @@
         android:theme="@style/Theme.Stylelink"
         tools:targetApi="31">
         <activity
+            android:name=".ui.components.CustomProgressDialogue"
+            android:exported="false" />
+        <activity
             android:name=".ui.activities.HomeActivity"
             android:exported="false" />
         <activity

@@ -1,8 +1,10 @@
 package com.ekasi.stylelink.ui.activities
 
+import android.app.ProgressDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.widget.AutoCompleteTextView
 import android.widget.Button
@@ -21,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 
+@Suppress("DEPRECATION")
 class ConfigurationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityConfigurationBinding
     private lateinit var auth: FirebaseAuth
@@ -28,6 +31,7 @@ class ConfigurationActivity : AppCompatActivity() {
     private lateinit var backButtonImageButton: ImageButton
     private lateinit var profileImage: ImageView
     private lateinit var username: TextView
+    private lateinit var signOutButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityConfigurationBinding.inflate(layoutInflater)
@@ -39,18 +43,32 @@ class ConfigurationActivity : AppCompatActivity() {
         username =  binding.profileUsername
         auth = Firebase.auth
         isUserActive(auth)
+        val userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
+        loadUserInfo(userViewModel)
         backButtonImageButton.setOnClickListener {
             finish()
         }
 
-    }
+        signOutButton = binding.signOutButton
 
-    override fun onStart() {
-        super.onStart()
+        signOutButton.setOnClickListener {
+            ProgressDialog.show(baseContext, "", "Signing Out...")
+//            auth.signOut()
+//            userViewModel.clearLoggedInUser()
+//            val signInActivity = Intent(this, SignInActivity::class.java)
+//
+//            Handler().postDelayed({
+//                try {
+//                    Intent(signInActivity)
+//                    Log.d("signOutProcess", "Yey!! We Signed Out Successfully");
+//                } catch (e: Exception) {
+//                    Log.d("signOutProcess", "For Some Reason We Is Unable To Log Out");
+//                }
+//            }, 2500)
 
-        val userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
 
-        loadUserInfo(userViewModel)
+        }
+
     }
 
     private fun isUserActive(auth: FirebaseAuth) {
@@ -65,17 +83,8 @@ class ConfigurationActivity : AppCompatActivity() {
 
     private fun loadUserInfo(userViewModel: UserViewModel) {
         val activeUser = userViewModel.getLoggedInUserData()
-        try {
-            if (activeUser?.profileImageURL?.length!! < 0) {
-                Glide.with(baseContext).load("https://stylelinkapi.onrender.com/api/cloud/d164a270-cd95-4aed-b63d-58435cc073f0").into(profileImage)
-            } else {
-                Glide.with(baseContext).load(activeUser.profileImageURL).into(profileImage)
-                username.text = activeUser.username
-            }
-        } catch (error: Exception) {
-            Log.d("loadUserInfo", "Unable go get user data")
-        } finally {
-            Log.d("loadUserInfo", "----- completed tasks -----")
-        }
+        Log.d("loadUserInfo", "active user: $activeUser")
+        username.text = activeUser?.username
+        Glide.with(baseContext).load(activeUser?.profileImageURL).into(profileImage)
     }
 }

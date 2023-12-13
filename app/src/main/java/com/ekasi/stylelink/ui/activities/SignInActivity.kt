@@ -7,12 +7,15 @@ import android.app.ProgressDialog.show
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import com.ekasi.stylelink.R
 import com.ekasi.stylelink.databinding.ActivitySignInBinding
+import com.ekasi.stylelink.ui.components.CustomProgressDialog
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
@@ -30,9 +33,9 @@ class SignInActivity : AppCompatActivity() {
     private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_in)
         binding = ActivitySignInBinding.inflate(layoutInflater)
+        super.onCreate(savedInstanceState)
+        setContentView(binding.root)
 
         email = findViewById(R.id.signInEmail)
         password = findViewById(R.id.signInPassword)
@@ -47,12 +50,10 @@ class SignInActivity : AppCompatActivity() {
         val homeIntent = Intent(this, HomeActivity::class.java)
 
         signInButton.setOnClickListener {
-            show(this, "", "")
-
             val email = email.text.toString()
             val password = password.text.toString()
             authenticateUser(email, password, homeIntent)
-            ProgressDialog.BUTTON_NEGATIVE
+
         }
 
         val redirectButton = findViewById<Button>(R.id.redirectButton)
@@ -62,18 +63,24 @@ class SignInActivity : AppCompatActivity() {
 
             startActivity(createAccountIntent)
         }
-
     }
 
     private fun authenticateUser(email:String, password: String, homeIntent: Intent) {
+
+
         if (email.isEmpty()  || password.isEmpty()) {
             snackbarPrompt("please fill both fields")
         } else if (email.isEmpty()) {
             snackbarPrompt("please enter a valid email")
-
         } else if (password.isEmpty()) {
             snackbarPrompt("password cant be less than 1 - 4 character")
         } else {
+            val dialog = CustomProgressDialog(this)
+            dialog.show()
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                dialog.dismiss()
+            }, 10000)
             firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) {task ->
                 if (task.isSuccessful) {
                     val user = firebaseAuth.currentUser
@@ -84,6 +91,7 @@ class SignInActivity : AppCompatActivity() {
                 } else {
                     Log.d("sign_in_1", "authentication failed")
                     snackbarPrompt("Authentication Failed", "Try Again")
+                    dialog.dismiss()
                 }
             }
         }
