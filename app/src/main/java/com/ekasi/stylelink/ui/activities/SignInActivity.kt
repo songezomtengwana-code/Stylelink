@@ -29,18 +29,20 @@ class SignInActivity : AppCompatActivity() {
     private lateinit var email: TextInputEditText
     private lateinit var password: TextInputEditText
     private lateinit var signInButton: Button
+    private lateinit var resetPasswordConfigurator: Button
     private lateinit var contextView: View
     private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivitySignInBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_sign_in)
 
         email = findViewById(R.id.signInEmail)
         password = findViewById(R.id.signInPassword)
         signInButton = findViewById(R.id.signInButton)
         contextView = findViewById(R.id.signInContext)
+        resetPasswordConfigurator = findViewById(R.id.resetPasswordConfigurator)
 
         val signInIndicator = findViewById<LinearProgressIndicator>(R.id.signInIndicator)
 
@@ -48,20 +50,22 @@ class SignInActivity : AppCompatActivity() {
 
         firebaseAuth = Firebase.auth
         val homeIntent = Intent(this, HomeActivity::class.java)
-
         signInButton.setOnClickListener {
             val email = email.text.toString()
             val password = password.text.toString()
             authenticateUser(email, password, homeIntent)
-
         }
 
         val redirectButton = findViewById<Button>(R.id.redirectButton)
-
         redirectButton.setOnClickListener {
             val createAccountIntent = Intent(this, SignUpActivity::class.java)
 
             startActivity(createAccountIntent)
+        }
+
+        resetPasswordConfigurator.setOnClickListener {
+            val resetPasswordIntent = Intent(this, PasswordResetActivity::class.java)
+            startActivity(resetPasswordIntent)
         }
     }
 

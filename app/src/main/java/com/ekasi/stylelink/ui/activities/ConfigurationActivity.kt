@@ -1,10 +1,12 @@
 package com.ekasi.stylelink.ui.activities
 
+import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.AutoCompleteTextView
 import android.widget.Button
@@ -17,6 +19,7 @@ import com.ekasi.stylelink.R
 import com.ekasi.stylelink.data.models.UserModel
 import com.ekasi.stylelink.data.viewModels.UserViewModel
 import com.ekasi.stylelink.databinding.ActivityConfigurationBinding
+import com.ekasi.stylelink.ui.components.CustomProgressDialog
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -52,21 +55,7 @@ class ConfigurationActivity : AppCompatActivity() {
         signOutButton = binding.signOutButton
 
         signOutButton.setOnClickListener {
-            ProgressDialog.show(baseContext, "", "Signing Out...")
-//            auth.signOut()
-//            userViewModel.clearLoggedInUser()
-//            val signInActivity = Intent(this, SignInActivity::class.java)
-//
-//            Handler().postDelayed({
-//                try {
-//                    Intent(signInActivity)
-//                    Log.d("signOutProcess", "Yey!! We Signed Out Successfully");
-//                } catch (e: Exception) {
-//                    Log.d("signOutProcess", "For Some Reason We Is Unable To Log Out");
-//                }
-//            }, 2500)
-
-
+            signOut(userViewModel)
         }
 
     }
@@ -86,5 +75,32 @@ class ConfigurationActivity : AppCompatActivity() {
         Log.d("loadUserInfo", "active user: $activeUser")
         username.text = activeUser?.username
         Glide.with(baseContext).load(activeUser?.profileImageURL).into(profileImage)
+    }
+    private fun signOut(UserViewModel: UserViewModel) {
+        val dialog = CustomProgressDialog(this)
+        val signInActivity = Intent(this, SignInActivity::class.java)
+
+        dialog.show()
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            dialog.dismiss()
+        }, 10000)
+
+        try {
+            UserViewModel.clearLoggedInUser()
+            auth.signOut()
+        } catch (e: Exception) {
+            Log.d("signOutUser", "Unable to get active user")
+        } finally {
+            Log.d("signOutProcess", "Yey!! We Signed Out Successfully");
+            Handler().postDelayed({
+                try {
+                    Intent(signInActivity)
+                    dialog.dismiss()
+                } catch (e: Exception) {
+                    Log.d("signOutProcess", "For Some Reason We Is Unable To Log Out");
+                }
+            }, 2500)
+        }
     }
 }

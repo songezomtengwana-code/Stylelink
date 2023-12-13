@@ -92,6 +92,17 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <Button
+                    android:id="@+id/resetPasswordConfigurator"
+                    style="@style/Widget.Material3.Button.ElevatedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/white"
+                    android:text="Reset Password"
+                    android:textAlignment="viewEnd"
+                    android:textColor="@color/two" />
+
             </LinearLayout>
 
             <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -108,6 +119,7 @@
 
             <Button
                 android:id="@+id/signInButton"
+                style="@style/Widget.Material3.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -116,8 +128,8 @@
                 android:text="@string/sign_in"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="15sp"
 
+                android:textSize="15sp"
                 android:textStyle="bold"
                 app:rippleColor="@color/dark_900" />
 
