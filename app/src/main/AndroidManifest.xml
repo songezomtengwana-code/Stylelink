@@ -15,6 +15,12 @@
         android:theme="@style/Theme.Stylelink"
         tools:targetApi="31">
         <activity
+            android:name=".ui.activities.PasswordResetActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ResetPasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.components.CustomProgressDialogue"
             android:exported="false" />
         <activity
