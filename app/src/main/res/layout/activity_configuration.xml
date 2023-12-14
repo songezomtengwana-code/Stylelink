@@ -19,59 +19,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
-            <ImageButton
-                android:id="@+id/backButton"
-                android:layout_width="5dp"
-                android:layout_height="75dp"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:padding="20dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/arrow" />
-
-            <Space
-                android:layout_width="wrap_content"
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/topAppBar"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:minHeight="?attr/actionBarSize"
+                app:title="$username" />
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/poppins_bold"
-                android:text="Profile"
-                android:textAlignment="center"
-                android:textColor="@color/two"
-                android:textSize="20sp" />
+        </com.google.android.material.appbar.AppBarLayout>
 
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <ImageButton
-                android:id="@+id/imageButton3"
-                android:layout_width="5dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:padding="22.5dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/edit" />
-        </LinearLayout>
     </androidx.cardview.widget.CardView>
 
     <ScrollView
-        android:layout_width="391dp"
-        android:layout_height="774dp"
+        android:layout_width="390dp"
+        android:layout_height="797dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -80,7 +45,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
 
             <Space
@@ -100,8 +65,7 @@
                 <ImageView
                     android:id="@+id/profileImage"
                     android:layout_width="125dp"
-                    android:layout_height="125dp"
-                    tools:src="@tools:sample/avatars" />
+                    android:layout_height="125dp" />
 
             </androidx.cardview.widget.CardView>
 
@@ -110,17 +74,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
+                android:layout_marginBottom="10dp"
                 android:fontFamily="@font/poppins_bold"
                 android:text="$username"
                 android:textAlignment="center"
                 android:textColor="@color/two"
                 android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView" />
 
             <Button
                 android:id="@+id/signOutButton"

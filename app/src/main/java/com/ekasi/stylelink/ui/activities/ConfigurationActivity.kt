@@ -20,6 +20,7 @@ import com.ekasi.stylelink.data.models.UserModel
 import com.ekasi.stylelink.data.viewModels.UserViewModel
 import com.ekasi.stylelink.databinding.ActivityConfigurationBinding
 import com.ekasi.stylelink.ui.components.CustomProgressDialog
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -35,22 +36,19 @@ class ConfigurationActivity : AppCompatActivity() {
     private lateinit var profileImage: ImageView
     private lateinit var username: TextView
     private lateinit var signOutButton: Button
+    private lateinit var topbar: MaterialToolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        binding = ActivityConfigurationBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
+        binding = ActivityConfigurationBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        backButtonImageButton = binding.backButton
+        topbar = binding.topAppBar
         profileImage = binding.profileImage
         username =  binding.profileUsername
+
         auth = Firebase.auth
-        isUserActive(auth)
+        topbar.title = auth.currentUser?.displayName
         val userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
-        loadUserInfo(userViewModel)
-        backButtonImageButton.setOnClickListener {
-            finish()
-        }
 
         signOutButton = binding.signOutButton
 
@@ -58,12 +56,15 @@ class ConfigurationActivity : AppCompatActivity() {
             signOut(userViewModel)
         }
 
+        isUserActive(auth, userViewModel)
+
     }
 
-    private fun isUserActive(auth: FirebaseAuth) {
+    private fun isUserActive(auth: FirebaseAuth, userViewModel: UserViewModel) {
         val user = auth.currentUser
         if (user != null) {
             firebaseUser = user
+            loadUserInfo(userViewModel)
         } else {
             val signInActivity = Intent(this, SignInActivity::class.java)
             startActivity(signInActivity)
@@ -72,7 +73,7 @@ class ConfigurationActivity : AppCompatActivity() {
 
     private fun loadUserInfo(userViewModel: UserViewModel) {
         val activeUser = userViewModel.getLoggedInUserData()
-        Log.d("loadUserInfo", "active user: $activeUser")
+        Log.d("loadUserInfo", "active user: ${activeUser?.username}")
         username.text = activeUser?.username
         Glide.with(baseContext).load(activeUser?.profileImageURL).into(profileImage)
     }
@@ -93,9 +94,10 @@ class ConfigurationActivity : AppCompatActivity() {
             Log.d("signOutUser", "Unable to get active user")
         } finally {
             Log.d("signOutProcess", "Yey!! We Signed Out Successfully");
+            finish()
             Handler().postDelayed({
                 try {
-                    Intent(signInActivity)
+                    startActivity(signInActivity)
                     dialog.dismiss()
                 } catch (e: Exception) {
                     Log.d("signOutProcess", "For Some Reason We Is Unable To Log Out");

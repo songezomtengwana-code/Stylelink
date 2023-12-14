@@ -14,6 +14,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Stylelink"
         tools:targetApi="31">
+        <service
+            android:name=".util.sevices.UserService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <activity
             android:name=".ui.activities.PasswordResetActivity"
             android:exported="false" />

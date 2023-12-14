@@ -101,21 +101,10 @@
                     android:background="@color/white"
                     android:text="Reset Password"
                     android:textAlignment="viewEnd"
-                    android:textColor="@color/two" />
+                    android:textColor="@color/two"
+                    app:backgroundTint="@color/white" />
 
             </LinearLayout>
-
-            <com.google.android.material.progressindicator.LinearProgressIndicator
-                android:id="@+id/signInIndicator"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="2dp"
-                android:indeterminate="true"
-                app:indicatorColor="@color/black"
-                app:trackColor="@color/one"
-                app:trackCornerRadius="10dp"
-                tools:visibility="gone" />
 
             <Button
                 android:id="@+id/signInButton"

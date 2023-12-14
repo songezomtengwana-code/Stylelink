@@ -13,7 +13,9 @@ import com.ekasi.stylelink.R
 import com.ekasi.stylelink.databinding.ActivityPasswordResetBinding
 import com.ekasi.stylelink.ui.components.CustomProgressDialog
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 
 class PasswordResetActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPasswordResetBinding
@@ -25,6 +27,7 @@ class PasswordResetActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityPasswordResetBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        auth = Firebase.auth
         email = binding.signInEmail
         submit = binding.submit
 
@@ -39,7 +42,6 @@ class PasswordResetActivity : AppCompatActivity() {
         val dialog = CustomProgressDialog(this)
         dialog.show()
 
-        if  (email != null) {
             auth.sendPasswordResetEmail(emailConverter).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Toast.makeText(baseContext, "Email Sent Successfully", Toast.LENGTH_LONG).show()
@@ -56,11 +58,10 @@ class PasswordResetActivity : AppCompatActivity() {
                         Toast.makeText(baseContext, "No email app found", Toast.LENGTH_SHORT).show()
                     }
 
-                } else  {
+                } else {
                     Log.d("resetPassword", "##### Error #####")
                     dialog.dismiss()
                 }
             }
-        }
     }
 }

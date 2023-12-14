@@ -34,19 +34,16 @@ class SignInActivity : AppCompatActivity() {
     private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        binding = ActivitySignInBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_in)
 
-        email = findViewById(R.id.signInEmail)
-        password = findViewById(R.id.signInPassword)
-        signInButton = findViewById(R.id.signInButton)
-        contextView = findViewById(R.id.signInContext)
-        resetPasswordConfigurator = findViewById(R.id.resetPasswordConfigurator)
+        binding = ActivitySignInBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val signInIndicator = findViewById<LinearProgressIndicator>(R.id.signInIndicator)
-
-        signInIndicator.visibility = View.GONE
+        email = binding.signInEmail
+        password = binding.signInPassword
+        signInButton =binding.signInButton
+        contextView = binding.signInContext
+        resetPasswordConfigurator = binding.resetPasswordConfigurator
 
         firebaseAuth = Firebase.auth
         val homeIntent = Intent(this, HomeActivity::class.java)
@@ -56,7 +53,7 @@ class SignInActivity : AppCompatActivity() {
             authenticateUser(email, password, homeIntent)
         }
 
-        val redirectButton = findViewById<Button>(R.id.redirectButton)
+        val redirectButton: Button = binding.redirectButton
         redirectButton.setOnClickListener {
             val createAccountIntent = Intent(this, SignUpActivity::class.java)
 
@@ -70,8 +67,6 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun authenticateUser(email:String, password: String, homeIntent: Intent) {
-
-
         if (email.isEmpty()  || password.isEmpty()) {
             snackbarPrompt("please fill both fields")
         } else if (email.isEmpty()) {
