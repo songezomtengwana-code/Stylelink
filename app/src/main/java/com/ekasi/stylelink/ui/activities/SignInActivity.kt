@@ -2,8 +2,6 @@
 
 package com.ekasi.stylelink.ui.activities
 
-import android.app.ProgressDialog
-import android.app.ProgressDialog.show
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,15 +11,12 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
-import com.ekasi.stylelink.R
 import com.ekasi.stylelink.databinding.ActivitySignInBinding
 import com.ekasi.stylelink.ui.components.CustomProgressDialog
-import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 
 class SignInActivity : AppCompatActivity() {
@@ -66,6 +61,12 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
+
     private fun authenticateUser(email:String, password: String, homeIntent: Intent) {
         if (email.isEmpty()  || password.isEmpty()) {
             snackbarPrompt("please fill both fields")
@@ -89,7 +90,7 @@ class SignInActivity : AppCompatActivity() {
 
                 } else {
                     Log.d("sign_in_1", "authentication failed")
-                    snackbarPrompt("Authentication Failed", "Try Again")
+                    snackbarPrompt("cant login user", "Try Again")
                     dialog.dismiss()
                 }
             }

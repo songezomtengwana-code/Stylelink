@@ -1,27 +1,20 @@
 package com.ekasi.stylelink.ui.activities
 
-import android.app.Dialog
-import android.app.ProgressDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.widget.AutoCompleteTextView
 import android.widget.Button
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.ekasi.stylelink.R
-import com.ekasi.stylelink.data.models.UserModel
 import com.ekasi.stylelink.data.viewModels.UserViewModel
 import com.ekasi.stylelink.databinding.ActivityConfigurationBinding
 import com.ekasi.stylelink.ui.components.CustomProgressDialog
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -32,7 +25,6 @@ class ConfigurationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityConfigurationBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var firebaseUser: FirebaseUser
-    private lateinit var backButtonImageButton: ImageButton
     private lateinit var profileImage: ImageView
     private lateinit var username: TextView
     private lateinit var signOutButton: Button
@@ -80,6 +72,7 @@ class ConfigurationActivity : AppCompatActivity() {
     private fun signOut(UserViewModel: UserViewModel) {
         val dialog = CustomProgressDialog(this)
         val signInActivity = Intent(this, SignInActivity::class.java)
+        signInActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
 
         dialog.show()
 
@@ -93,14 +86,13 @@ class ConfigurationActivity : AppCompatActivity() {
         } catch (e: Exception) {
             Log.d("signOutUser", "Unable to get active user")
         } finally {
-            Log.d("signOutProcess", "Yey!! We Signed Out Successfully");
-            finish()
+            Log.d("signOutProcess", "Yey!! We Signed Out Successfully")
             Handler().postDelayed({
                 try {
                     startActivity(signInActivity)
                     dialog.dismiss()
                 } catch (e: Exception) {
-                    Log.d("signOutProcess", "For Some Reason We Is Unable To Log Out");
+                    Log.d("signOutProcess", "For Some Reason We Is Unable To Log Out")
                 }
             }, 2500)
         }
