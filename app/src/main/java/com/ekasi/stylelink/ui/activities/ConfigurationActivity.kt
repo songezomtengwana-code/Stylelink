@@ -62,6 +62,8 @@ class ConfigurationActivity : AppCompatActivity() {
 
     private fun loadUserInfo(userViewModel: UserViewModel) {
         val activeUser = userViewModel.getLoggedInUserData()
+        val _user = userViewModel.loggedInUser.value
+        Log.d("User Value Test", "${_user}")
         Log.d("loadUserInfo", "active user: ${activeUser?.username}")
         username.text = activeUser?.username
         Glide.with(baseContext).load(activeUser?.profileImageURL).into(profileImage)

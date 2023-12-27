@@ -8,30 +8,25 @@
     tools:context=".ui.activities.ConfigurationActivity">
 
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
-        android:layout_width="0dp"
-        android:layout_height="75dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="2dp"
-        app:cardElevation="4dp"
+    <Button
+        android:id="@+id/signOutButton"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="344dp"
+        android:layout_height="59dp"
+        android:text="@string/button_log_out_text"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.appbar.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-    </androidx.cardview.widget.CardView>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ScrollView
+        android:id="@+id/scrollView3"
         android:layout_width="390dp"
         android:layout_height="797dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -71,13 +66,6 @@
                 android:textAlignment="center"
                 android:textColor="@color/two"
                 android:textSize="16sp" />
-
-            <Button
-                android:id="@+id/signOutButton"
-                style="@style/Widget.Material3.Button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/button_log_out_text" />
 
         </LinearLayout>
     </ScrollView>

@@ -37,6 +37,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var greetingTextView: TextView
     private lateinit var reloadImageView: ImageView
     private lateinit var homeProfileAvatarContainerCardView: CardView
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
@@ -102,7 +103,7 @@ class HomeActivity : AppCompatActivity() {
                 reloadImageView.visibility = View.VISIBLE
                 homeLoadingTextView.text = "Unable to connect to servers"
                 try {
-                    val snack = Snackbar.make(binding.homeViewContainer, "Unable to connect to servers", 12000)
+                    val snack = Snackbar.make(binding.homeViewContainer, "Unable to connect to servers", 120000)
                         snack.setTextColor(Color.WHITE)
                         snack.setBackgroundTint(Color.BLACK)
                         snack.setActionTextColor(Color.WHITE)
@@ -129,6 +130,7 @@ class HomeActivity : AppCompatActivity() {
 
                     // save user in ViewModel
                     userViewModel.saveLoggedInUser(retrievedUser)
+
                     if (retrievedUser?.profileImageURL?.length!! < 0) {
                         Glide.with(baseContext).load("https://stylelinkapi.onrender.com/api/cloud/d164a270-cd95-4aed-b63d-58435cc073f0").into(homeProfileAvatar)
                     } else {
