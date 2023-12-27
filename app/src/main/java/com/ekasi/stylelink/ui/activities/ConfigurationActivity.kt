@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide
 import com.ekasi.stylelink.data.viewModels.UserViewModel
 import com.ekasi.stylelink.databinding.ActivityConfigurationBinding
 import com.ekasi.stylelink.ui.components.CustomProgressDialog
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -28,18 +27,16 @@ class ConfigurationActivity : AppCompatActivity() {
     private lateinit var profileImage: ImageView
     private lateinit var username: TextView
     private lateinit var signOutButton: Button
-    private lateinit var topbar: MaterialToolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityConfigurationBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        topbar = binding.topAppBar
         profileImage = binding.profileImage
         username =  binding.profileUsername
 
+
         auth = Firebase.auth
-        topbar.title = auth.currentUser?.displayName
         val userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
 
         signOutButton = binding.signOutButton
