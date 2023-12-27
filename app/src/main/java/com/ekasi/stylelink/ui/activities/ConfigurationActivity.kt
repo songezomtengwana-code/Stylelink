@@ -11,22 +11,29 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.ekasi.stylelink.data.models.UserModel
 import com.ekasi.stylelink.data.viewModels.UserViewModel
 import com.ekasi.stylelink.databinding.ActivityConfigurationBinding
 import com.ekasi.stylelink.ui.components.CustomProgressDialog
+import com.ekasi.stylelink.util.network.NetworkClient
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Suppress("DEPRECATION")
 class ConfigurationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityConfigurationBinding
+    private lateinit var currentActiveUser: UserModel
     private lateinit var auth: FirebaseAuth
     private lateinit var firebaseUser: FirebaseUser
     private lateinit var profileImage: ImageView
     private lateinit var username: TextView
     private lateinit var signOutButton: Button
+    private lateinit var userViewModel: UserViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,9 +42,8 @@ class ConfigurationActivity : AppCompatActivity() {
         profileImage = binding.profileImage
         username =  binding.profileUsername
 
-
         auth = Firebase.auth
-        val userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
+        userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
 
         signOutButton = binding.signOutButton
 
@@ -45,28 +51,52 @@ class ConfigurationActivity : AppCompatActivity() {
             signOut(userViewModel)
         }
 
-        isUserActive(auth, userViewModel)
+        isUserActive(auth)
 
     }
 
-    private fun isUserActive(auth: FirebaseAuth, userViewModel: UserViewModel) {
+    private fun isUserActive(auth: FirebaseAuth) {
         val user = auth.currentUser
         if (user != null) {
             firebaseUser = user
-            loadUserInfo(userViewModel)
+            try {
+                getActiveUser(user.email.toString())
+            } catch (error: Exception) {
+                Log.d("isUserActive", "${error.message.toString()}")
+            } finally {
+                loadUserInfo()
+            }
         } else {
             val signInActivity = Intent(this, SignInActivity::class.java)
             startActivity(signInActivity)
         }
     }
 
-    private fun loadUserInfo(userViewModel: UserViewModel) {
-        val activeUser = userViewModel.getLoggedInUserData()
-        val _user = userViewModel.loggedInUser.value
-        Log.d("User Value Test", "${_user}")
-        Log.d("loadUserInfo", "active user: ${activeUser?.username}")
-        username.text = activeUser?.username
-        Glide.with(baseContext).load(activeUser?.profileImageURL).into(profileImage)
+    private fun getActiveUser(email: String) {
+        NetworkClient.NetworkClient.userService.getUserSingleAccount(email).enqueue(object :
+            Callback<UserModel> {
+            override fun onFailure(call: Call<UserModel>, t: Throwable) {
+                Log.d("getActiveUser", "No user was seen")
+            }
+
+            override fun onResponse(call: Call<UserModel>, response: Response<UserModel>) {
+                if (response.isSuccessful) {
+                    var activeUser = response.body()
+                    userViewModel.saveLoggedInUser(activeUser)
+                    currentActiveUser = userViewModel.getLoggedInUserData()!!
+                    Log.d("loadUserInfo", "active user: ${currentActiveUser?.username}")
+                    username.text = currentActiveUser?.username
+                    Glide.with(baseContext).load(currentActiveUser?.profileImageURL).into(profileImage)
+                } else {
+                    // handle error
+                    Log.d("getActiveUser", "User Not Available")
+                }
+            }
+        })
+    }
+
+    private fun loadUserInfo() {
+
     }
     private fun signOut(UserViewModel: UserViewModel) {
         val dialog = CustomProgressDialog(this)

@@ -18,10 +18,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_weight="1"
+        android:scaleType="centerInside"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/settings" />
+
     <ScrollView
         android:id="@+id/scrollView3"
-        android:layout_width="390dp"
-        android:layout_height="797dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -31,29 +43,31 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="24dp">
 
 
-            <Space
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="25dp" />
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/profileImageContainer"
-                android:layout_width="125dp"
-                android:layout_height="125dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:foregroundGravity="center"
-                app:cardCornerRadius="500dp"
-                app:cardElevation="4dp">
-
-                <ImageView
-                    android:id="@+id/profileImage"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/profileImageContainer"
                     android:layout_width="125dp"
-                    android:layout_height="125dp" />
+                    android:layout_height="125dp"
+                    android:foregroundGravity="center"
+                    app:cardCornerRadius="500dp"
+                    app:cardElevation="4dp">
 
-            </androidx.cardview.widget.CardView>
+                    <ImageView
+                        android:id="@+id/profileImage"
+                        android:layout_width="125dp"
+                        android:layout_height="125dp" />
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/profileUsername"
@@ -63,9 +77,19 @@
                 android:layout_marginBottom="10dp"
                 android:fontFamily="@font/poppins_bold"
                 android:text="@string/dynamic_username_placeholder"
-                android:textAlignment="center"
+                android:textAlignment="textStart"
                 android:textColor="@color/two"
-                android:textSize="16sp" />
+                android:textSize="24sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="25dp" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
 
         </LinearLayout>
     </ScrollView>
