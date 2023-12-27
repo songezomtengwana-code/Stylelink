@@ -36,4 +36,6 @@
     <string name="available_stores">Available Stores</string>
     <string name="hi">Hi, %1$s 👋</string>
     <string name="elevated_button">Elevated button</string>
+    <string name="dynamic_username_placeholder">$username</string>
+    <string name="button_log_out_text">Log Out</string>
 </resources>
