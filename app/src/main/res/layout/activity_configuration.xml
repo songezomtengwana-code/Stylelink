@@ -38,7 +38,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,6 +57,7 @@
                     android:id="@+id/profileImageContainer"
                     android:layout_width="125dp"
                     android:layout_height="125dp"
+                    android:layout_marginTop="50dp"
                     android:foregroundGravity="center"
                     app:cardCornerRadius="500dp"
                     app:cardElevation="4dp">
