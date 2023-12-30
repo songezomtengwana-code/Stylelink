@@ -64,7 +64,7 @@ class ConfigurationActivity : AppCompatActivity() {
             try {
                 getActiveUser(user.email.toString())
             } catch (error: Exception) {
-                Log.d("isUserActive", "${error.message.toString()}")
+                Log.d("isUserActive", error.message.toString())
             }
         } else {
             val signInActivity = Intent(this, SignInActivity::class.java)

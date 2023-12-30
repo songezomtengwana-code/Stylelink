@@ -180,6 +180,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_margin="12dp"
+            android:visibility="gone"
             app:srcCompat="@drawable/baseline_cached_24"
             tools:visibility="gone" />
 
