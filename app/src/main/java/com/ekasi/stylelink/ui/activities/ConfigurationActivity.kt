@@ -34,6 +34,7 @@ class ConfigurationActivity : AppCompatActivity() {
     private lateinit var username: TextView
     private lateinit var signOutButton: Button
     private lateinit var userViewModel: UserViewModel
+    private lateinit var userLocation: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +42,7 @@ class ConfigurationActivity : AppCompatActivity() {
         setContentView(binding.root)
         profileImage = binding.profileImage
         username =  binding.profileUsername
+        userLocation = binding.userLocation
 
         auth = Firebase.auth
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
@@ -63,8 +65,6 @@ class ConfigurationActivity : AppCompatActivity() {
                 getActiveUser(user.email.toString())
             } catch (error: Exception) {
                 Log.d("isUserActive", "${error.message.toString()}")
-            } finally {
-                loadUserInfo()
             }
         } else {
             val signInActivity = Intent(this, SignInActivity::class.java)
@@ -84,8 +84,10 @@ class ConfigurationActivity : AppCompatActivity() {
                     var activeUser = response.body()
                     userViewModel.saveLoggedInUser(activeUser)
                     currentActiveUser = userViewModel.getLoggedInUserData()!!
+                    userLocation.text = currentActiveUser.address
                     Log.d("loadUserInfo", "active user: ${currentActiveUser?.username}")
                     username.text = currentActiveUser?.username
+
                     Glide.with(baseContext).load(currentActiveUser?.profileImageURL).into(profileImage)
                 } else {
                     // handle error
@@ -95,9 +97,6 @@ class ConfigurationActivity : AppCompatActivity() {
         })
     }
 
-    private fun loadUserInfo() {
-
-    }
     private fun signOut(UserViewModel: UserViewModel) {
         val dialog = CustomProgressDialog(this)
         val signInActivity = Intent(this, SignInActivity::class.java)

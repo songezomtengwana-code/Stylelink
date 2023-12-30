@@ -16,6 +16,7 @@
         android:text="@string/button_log_out_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ScrollView
@@ -38,25 +39,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="start|top"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/profileUsername"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginBottom="10dp"
-                    android:fontFamily="@font/poppins_bold"
-                    android:text="@string/dynamic_username_placeholder"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/two"
-                    android:textSize="24sp" />
-
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/profileImageContainer"
@@ -73,48 +57,78 @@
 
                 </androidx.cardview.widget.CardView>
 
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/profileUsername"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="@string/dynamic_username_placeholder"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/two"
+                    android:textSize="30sp" />
+
+                <TextView
+                    android:id="@+id/user_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView" />
+
             </LinearLayout>
 
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="25dp" />
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="25dp" />
-
-            <LinearLayout
+            <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="fill"
+                android:gravity="center_horizontal"
                 android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/activity_option"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Button" />
+                <TableRow>
 
-                <Button
-                    android:id="@+id/payment_option"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Button" />
+                    <TextView
+                        android:id="@+id/user_following_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="3dp"
+                        android:text="TextView" />
 
-                <Button
-                    android:id="@+id/faq_option"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Button" />
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/user_favorites_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="3dp"
+                        android:text="TextView" />
+
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/user_following_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="3dp"
+                        android:text="Following" />
+
+                    <TextView
+                        android:id="@+id/user_favorites_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="3dp"
+                        android:text="Favorites" />
+
+                </TableRow>
+
+            </TableLayout>
 
         </LinearLayout>
     </ScrollView>
