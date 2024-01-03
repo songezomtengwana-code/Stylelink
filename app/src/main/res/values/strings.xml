@@ -1,0 +1,41 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" tools:ignore="MissingTranslation">Stylelink</string>
+    <string name="ekasi_signiture" tools:ignore="MissingTranslation">Stylelink 2023 © Ekasi Innovation</string>
+    <string name="username" tools:ignore="MissingTranslation">Username</string>
+    <string name="email_address" tools:ignore="MissingTranslation">Email Address</string>
+    <string name="password" tools:ignore="MissingTranslation">Password</string>
+    <string name="mobile" tools:ignore="MissingTranslation">Mobile</string>
+    <string name="create_account" tools:ignore="MissingTranslation">Create Account</string>
+    <string name="by_checking_this_box_you_agree_to_sylelink_s_terms_and_condition" tools:ignore="MissingTranslation">By checking this box you agree to Sylelink\'s terms and condition</string>
+    <string name="already_have_an_account_log_in" tools:ignore="MissingTranslation">Already Have An Account ? Log In</string>
+    <string name="create_your_new_account" tools:ignore="MissingTranslation">Create Your New Account.</string>
+    <string name="sign_up_subtitle" tools:ignore="MissingTranslation">Create your new account with to unlock infinite styling solutions.</string>
+    <string name="invalid_input_values" tools:ignore="MissingTranslation">All fields are required</string>
+    <string name="valid_input_values" tools:ignore="MissingTranslation">All fields have been filled</string>
+    <string name="invalid_input_values_action" translatable="false">Try again</string>
+    <string name="valid_input_values_action" translatable="false">Good Job</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="edit_profile" translatable="false">Edit Profile</string>
+    <string name="set_up_your_profile_to_get_started" translatable="false">Set up your profile to get started</string>
+    <string name="preferences" translatable="false">Preferences</string>
+    <string name="address" translatable="false">Address</string>
+    <string name="state_province" translatable="false">State / Province</string>
+    <string name="sign_in_to_your_account" translatable="false">Sign In To Your Account</string>
+    <string name="continue_from_where_you_left_off" translatable="false">Continue from where you left off</string>
+    <string name="sign_in" translatable="false">Sign In</string>
+    <string name="don_t_have_an_account_create_one" translatable="false">Don\'t have an account ? create one</string>
+    <string name="zip_code" translatable="false">Zip Code</string>
+    <string name="username_placeholder" translatable="false">$username</string>
+    <string name="greeting_placeholder" translatable="false">$greeting</string>
+    <string name="search_salon" translatable="false">Search Salon</string>
+    <string name="general" translatable="false">General</string>
+    <string name="chip_women" translatable="false">Women</string>
+    <string name="chip_men" translatable="false">Men</string>
+    <string name="loading" translatable="false">Loading</string>
+    <string name="available_stores" translatable="false">Available Stores</string>
+    <string name="hi" translatable="false">Hi, %1$s 👋</string>
+    <string name="elevated_button" translatable="false">Elevated button</string>
+    <string name="dynamic_username_placeholder" translatable="false">$username</string>
+    <string name="button_log_out_text" translatable="false">Log Out</string>
+</resources>
