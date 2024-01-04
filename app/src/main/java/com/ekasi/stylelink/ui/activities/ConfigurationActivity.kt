@@ -81,14 +81,16 @@ class ConfigurationActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call<UserModel>, response: Response<UserModel>) {
                 if (response.isSuccessful) {
-                    var activeUser = response.body()
+                    val activeUser = response.body()
                     userViewModel.saveLoggedInUser(activeUser)
                     currentActiveUser = userViewModel.getLoggedInUserData()!!
                     userLocation.text = currentActiveUser.address
-                    Log.d("loadUserInfo", "active user: ${currentActiveUser?.username}")
-                    username.text = currentActiveUser?.username
+                    val userFollowing = binding.userFavoritesCount
+                    userFollowing.text = currentActiveUser.interests.size.toString()
+                    Log.d("loadUserInfo", "active user: ${currentActiveUser.username}")
+                    username.text = currentActiveUser.username
 
-                    Glide.with(baseContext).load(currentActiveUser?.profileImageURL).into(profileImage)
+                    Glide.with(baseContext).load(currentActiveUser.profileImageURL).into(profileImage)
                 } else {
                     // handle error
                     Log.d("getActiveUser", "User Not Available")

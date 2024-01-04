@@ -38,4 +38,8 @@
     <string name="elevated_button" translatable="false">Elevated button</string>
     <string name="dynamic_username_placeholder" translatable="false">$username</string>
     <string name="button_log_out_text" translatable="false">Log Out</string>
+    <string name="following">Following</string>
+    <string name="favorites">Favorites</string>
+    <string name="textview">TextView</string>
+    <string name="userprofileimage">UserProfileImage</string>
 </resources>

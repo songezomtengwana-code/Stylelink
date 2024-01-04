@@ -51,6 +51,7 @@
                     app:cardElevation="4dp">
 
                     <ImageView
+                        android:contentDescription="@string/userprofileimage"
                         android:id="@+id/profileImage"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
@@ -59,7 +60,7 @@
 
                 <Space
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_weight="1" />
 
                 <TextView
@@ -78,7 +79,7 @@
                     android:id="@+id/user_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TextView" />
+                    android:text="@string/textview" />
 
             </LinearLayout>
 
@@ -89,42 +90,44 @@
             <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center_horizontal"
+                android:gravity="center|center_horizontal"
                 android:orientation="horizontal">
 
-                <TableRow>
+                <TableRow android:layout_width="wrap_content">
 
                     <TextView
                         android:id="@+id/user_following_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="3dp"
-                        android:text="TextView" />
+                        android:text="@string/textview" />
 
                     <TextView
                         android:id="@+id/user_favorites_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="3dp"
-                        android:text="TextView" />
+                        android:text="@string/textview" />
 
                 </TableRow>
 
-                <TableRow>
+                <TableRow
+                    android:gravity="fill"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/user_following_tag"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="3dp"
-                        android:text="Following" />
+                        android:text="@string/following" />
 
                     <TextView
                         android:id="@+id/user_favorites_tag"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="3dp"
-                        android:text="Favorites" />
+                        android:text="@string/favorites" />
 
                 </TableRow>
 
