@@ -42,4 +42,11 @@
     <string name="favorites">Favorites</string>
     <string name="textview">TextView</string>
     <string name="userprofileimage">UserProfileImage</string>
+    <string name="icon">icon</string>
+    <string name="activeuserprofileimage">activeUserProfileImage</string>
+    <string name="greeting">$greeting</string>
+    <string name="drake_once_asked_what_s_next">Drake Once Asked, What\'s next ?</string>
+    <string name="searchiconimage">searchIconImage</string>
+    <string name="promotions">Promotions 🎉</string>
+    <string name="reloadiconsmall">reloadIconSmall</string>
 </resources>
