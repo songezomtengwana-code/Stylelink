@@ -24,14 +24,14 @@
             android:id="@+id/homeMenuIcon"
             android:layout_width="105dp"
             android:layout_height="50dp"
-            android:contentDescription="icon"
+            android:contentDescription="@string/icon"
             android:scaleType="centerCrop"
             app:srcCompat="@drawable/stylelink_large"
             tools:ignore="ImageContrastCheck"
             tools:srcCompat="@drawable/stylelink_full_clear" />
 
         <Space
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
@@ -43,6 +43,7 @@
             app:cardElevation="4dp">
 
             <ImageView
+                android:contentDescription="@string/activeuserprofileimage"
                 android:id="@+id/homeProfileAvatar"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -85,7 +86,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_bold"
-                        android:text="$greeting"
+                        android:text="@string/greeting"
                         android:textColor="@color/two"
                         android:textSize="20sp" />
 
@@ -94,12 +95,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_medium"
-                        android:text="Drake Once Asked, What's next ?"
+                        android:text="@string/drake_once_asked_what_s_next"
                         android:textColor="@color/grey_900" />
                 </LinearLayout>
 
                 <Space
-                    android:layout_width="165dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
@@ -112,6 +113,7 @@
 
                     <ImageButton
                         android:id="@+id/imageButton2"
+                        android:contentDescription="@string/searchiconimage"
                         android:layout_width="match_parent"
                         android:layout_height="49dp"
                         android:layout_weight="1"
@@ -134,8 +136,8 @@
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_medium"
-                android:text="Promotions 🎉"
+                android:fontFamily="@font/poppins_bold"
+                android:text="@string/promotions"
                 android:textColor="@color/two"
                 android:textSize="16sp" />
 
@@ -176,6 +178,7 @@
             app:trackCornerRadius="10dp" />
 
         <ImageView
+            android:contentDescription="@string/reloadiconsmall"
             android:id="@+id/reloadImageView"
             android:layout_width="25dp"
             android:layout_height="25dp"
