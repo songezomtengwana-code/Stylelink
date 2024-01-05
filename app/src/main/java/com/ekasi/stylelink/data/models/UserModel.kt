@@ -22,5 +22,6 @@ data class UserModel(
     val state: String,
     val userId: String,
     val username: String,
-    val zipCode: String
+    val zipCode: String,
+    val following: List<Any>
 )

@@ -85,8 +85,10 @@ class ConfigurationActivity : AppCompatActivity() {
                     userViewModel.saveLoggedInUser(activeUser)
                     currentActiveUser = userViewModel.getLoggedInUserData()!!
                     userLocation.text = currentActiveUser.address
-                    val userFollowing = binding.userFavoritesCount
+                    val userFollowing = binding.userFollowingCount
+                    //val userFavorites = binding.userFavoritesCount
                     userFollowing.text = currentActiveUser.interests.size.toString()
+//                    userFollowing.text = currentActiveUser.
                     Log.d("loadUserInfo", "active user: ${currentActiveUser.username}")
                     username.text = currentActiveUser.username
 
