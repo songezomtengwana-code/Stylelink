@@ -1,0 +1,27 @@
+package com.ekasi.studios.stylelink.navigation
+
+import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import com.ekasi.studios.stylelink.ui.splash.MainScreen
+import com.ekasi.studios.stylelink.ui.register.RegisterScreen
+import com.ekasi.studios.stylelink.ui.splash.SplashScreen
+
+@Composable
+fun SetupNavGraph(navController: NavHostController) {
+    NavHost(
+        navController = navController,
+        startDestination = Screen.Splash.route
+    ) {
+        composable(route = Screen.Splash.route) {
+            SplashScreen(navController = navController)
+        }
+        composable(route = Screen.Register.route) {
+            RegisterScreen()
+        }
+        composable(route = Screen.Main.route) {
+            MainScreen()
+        }
+    }
+}
