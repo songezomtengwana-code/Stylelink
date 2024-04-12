@@ -1,7 +1,7 @@
 package com.ekasi.studios.stylelink.data.model
 
-data class UserModel(
-    val _id: Id?,
+data class ServerUserModel(
+    val _id: IdModel?,
     val address: String,
     val city: String?,
     val country: String?,
@@ -13,13 +13,13 @@ data class UserModel(
     val fullname: String,
     val hairColor: String?,
     val hairType: String?,
-    val latitude: Latitude?,
-    val longitude: Longitude?,
+    val latitude: LatitudeModel?,
+    val longitude: LongitudeModel?,
     val password: String,
     val phoneNumber: String,
     val preferredSalon: String?,
     val profileImageURL: String?,
-    val registrationDate: RegistrationDate?,
+    val registrationDate: RegistrationDateModel?,
     val state: String?,
     val userId: String,
     val zipCode: String?

@@ -1,6 +1,6 @@
 package com.ekasi.studios.stylelink.data.model
 
-data class LocalUserStorageModel(
+data class StorageUserModel(
     val fullname: String,
     val _id: String,
     val userId: String,

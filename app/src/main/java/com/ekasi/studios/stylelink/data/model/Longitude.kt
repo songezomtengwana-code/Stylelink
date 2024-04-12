@@ -1,5 +1,5 @@
 package com.ekasi.studios.stylelink.data.model
 
-data class Longitude(
+data class LongitudeModel(
     val `$numberDecimal`: String
 )

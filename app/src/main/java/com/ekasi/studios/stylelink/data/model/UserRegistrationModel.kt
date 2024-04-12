@@ -1,6 +1,6 @@
 package com.ekasi.studios.stylelink.data.model
 
-data class UserRegistrationModel(
+data class RegistrationUserModel(
     val fullname: String,
     val email: String,
     val password: String,

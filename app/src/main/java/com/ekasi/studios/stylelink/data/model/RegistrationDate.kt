@@ -1,5 +1,5 @@
 package com.ekasi.studios.stylelink.data.model
 
-data class RegistrationDate(
+data class RegistrationDateModel(
     val `$date`: String
 )
