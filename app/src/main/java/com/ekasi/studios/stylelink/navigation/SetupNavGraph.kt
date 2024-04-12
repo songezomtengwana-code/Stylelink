@@ -6,10 +6,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.ekasi.studios.stylelink.ui.splash.MainScreen
 import com.ekasi.studios.stylelink.ui.register.RegisterScreen
+import com.ekasi.studios.stylelink.ui.register.RegisterViewModel
 import com.ekasi.studios.stylelink.ui.splash.SplashScreen
+import com.ekasi.studios.stylelink.viewModels.UserViewModel
 
 @Composable
-fun SetupNavGraph(navController: NavHostController) {
+fun SetupNavGraph(navController: NavHostController, registerViewModel: RegisterViewModel) {
     NavHost(
         navController = navController,
         startDestination = Screen.Splash.route
@@ -18,7 +20,7 @@ fun SetupNavGraph(navController: NavHostController) {
             SplashScreen(navController = navController)
         }
         composable(route = Screen.Register.route) {
-            RegisterScreen()
+            RegisterScreen(registerViewModel, navController = navController)
         }
         composable(route = Screen.Main.route) {
             MainScreen()

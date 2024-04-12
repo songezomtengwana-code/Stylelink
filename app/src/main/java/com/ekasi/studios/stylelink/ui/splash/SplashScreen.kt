@@ -69,8 +69,6 @@ fun SplashScreen(navController: NavController) {
                     color = MaterialTheme.colorScheme.secondary,
                     trackColor = MaterialTheme.colorScheme.primary,
                 )
-
-
             }
 
             LaunchedEffect(Unit) {

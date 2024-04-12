@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "311587067115",
+    "project_id": "local-stylelink",
+    "storage_bucket": "local-stylelink.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:311587067115:android:09e5c32056cb3af5789aae",
+        "android_client_info": {
+          "package_name": "com.ekasi.studios.stylelink"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYlX-tKgkX6TTp1CHP3KIPOSytS-5rTQU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

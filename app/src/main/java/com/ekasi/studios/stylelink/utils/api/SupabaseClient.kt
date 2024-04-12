@@ -1,4 +1,4 @@
-package com.ekasi.studios.stylelink.utils.network
+package com.ekasi.studios.stylelink.utils.api
 
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest

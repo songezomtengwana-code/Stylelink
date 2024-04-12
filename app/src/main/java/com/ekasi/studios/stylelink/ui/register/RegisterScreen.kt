@@ -1,6 +1,5 @@
 package com.ekasi.studios.stylelink.ui.register
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,8 +19,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,18 +33,14 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.ekasi.studios.stylelink.R
 import com.ekasi.studios.stylelink.base.common.composables.StylelinkTheme
-import com.ekasi.studios.stylelink.data.model.UserRegistrationModel
-import com.ekasi.studios.stylelink.ui.theme.mediumSize
-import com.ekasi.studios.stylelink.ui.theme.microSize
 import com.ekasi.studios.stylelink.ui.theme.smallSize
 import com.ekasi.studios.stylelink.ui.theme.tinySize
-import io.ktor.websocket.Serializer
 
 @Composable
-fun RegisterScreen() {
-    val viewModel = RegisterViewModel()
+fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
 
     // State
     var fullname: String by rememberSaveable { mutableStateOf("") }
@@ -79,7 +72,7 @@ fun RegisterScreen() {
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth(),
-                label = { Text("Fullname") },
+                label = { Text("Full Name") },
             )
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -139,7 +132,7 @@ fun RegisterScreen() {
             ) {
                 Checkbox(checked = checkBox, onCheckedChange = { checkBox = !checkBox })
                 Text(
-                    text = "I have fully read and understand to stylelink's terms of service.",
+                    text = "I have fully read and understand to Stylelink Inc. terms of service.",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -147,7 +140,7 @@ fun RegisterScreen() {
 
             Button(
                 enabled = checkBox,
-                onClick = { viewModel.registerUserAccount(fullname, email, password) },
+                onClick = { viewModel.registerUserAccount(fullname, email, password, phone, navController) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(smallSize),
@@ -163,6 +156,6 @@ fun RegisterScreen() {
 @Composable
 fun RegisterScreenPreview() {
     StylelinkTheme {
-        RegisterScreen()
+//        RegisterScreen(viewModel = RegisterViewModel)
     }
 }
