@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.ekasi.studios.stylelink.ui.login.LoginScreen
 import com.ekasi.studios.stylelink.ui.splash.MainScreen
 import com.ekasi.studios.stylelink.ui.register.RegisterScreen
 import com.ekasi.studios.stylelink.ui.register.RegisterViewModel
@@ -24,6 +25,9 @@ fun SetupNavGraph(navController: NavHostController, registerViewModel: RegisterV
         }
         composable(route = Screen.Main.route) {
             MainScreen()
+        }
+        composable(route = Screen.Login.route) {
+            LoginScreen()
         }
     }
 }

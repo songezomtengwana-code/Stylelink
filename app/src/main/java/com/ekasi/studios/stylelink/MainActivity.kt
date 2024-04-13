@@ -21,7 +21,7 @@ import java.util.prefs.Preferences
 
 
 class MainActivity : ComponentActivity() {
-    private val registerViewModel = RegisterViewModel(AuthRepository(Firebase.auth),UserRepository(NetworkClient.NetworkClient.userApiService))
+    private val registerViewModel = RegisterViewModel(AuthRepository(Firebase.auth),UserRepository(NetworkClient.NetworkClient.userApiService()))
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)

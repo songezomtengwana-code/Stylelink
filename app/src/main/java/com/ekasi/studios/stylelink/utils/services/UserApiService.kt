@@ -10,8 +10,8 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface UserApiService {
-    @POST("/users")
-    fun registerNewUserAccount(@Body body: ServerUserModel): ServerUserModel
-    @GET("/users/{id}")
-    fun getSingleUserAccount(@Path("id") id: String): ServerUserModel
+    @POST("api/users/register")
+    suspend fun registerNewUserAccount(@Body body: RegistrationUserModel): Call<ServerUserModel>
+    @GET("api/users/{userId}")
+    suspend fun getSingleUserAccount(@Path("userId") id: String): ServerUserModel
 }
