@@ -1,5 +1,6 @@
 package com.ekasi.studios.stylelink.ui.register
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,12 +12,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -28,7 +25,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,17 +40,14 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.ekasi.studios.stylelink.R
-import com.ekasi.studios.stylelink.base.common.composables.StylelinkTheme
-import com.ekasi.studios.stylelink.navigation.Screen
+import com.ekasi.studios.stylelink.base.components.LoadingDialog
+import com.ekasi.studios.stylelink.ui.theme.StylelinkTheme
 import com.ekasi.studios.stylelink.ui.theme.smallSize
 import com.ekasi.studios.stylelink.ui.theme.tinySize
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @Composable
-fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
+fun RegisterScreen(viewModel: RegisterViewModel) {
     // Snackbar State
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -67,13 +60,11 @@ fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
     var passwordHidden by rememberSaveable { mutableStateOf(false) }
     var checkBox by rememberSaveable { mutableStateOf(true) }
 
-
-
     // View
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
-        } ,
+        },
 //        floatingActionButton = {
 //            ExtendedFloatingActionButton(
 //                text = { Text("Show snackbar") },
@@ -86,11 +77,14 @@ fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
 //            )
 //        }
     ) { contentPadding ->
+//        if (viewModel.isLoading) {
+
+//        }
         Surface(
             modifier = Modifier
                 .padding(contentPadding)
-                .fillMaxSize()
         ) {
+            LoadingDialog()
             Column(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.background)
@@ -146,7 +140,8 @@ fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
                             val visibilityIcon =
                                 if (passwordHidden) R.drawable.eye else R.drawable.eye_closed
                             // Please provide localized description for accessibility services
-                            val description = if (passwordHidden) "Show password" else "Hide password"
+                            val description =
+                                if (passwordHidden) "Show password" else "Hide password"
                             Icon(
                                 painterResource(id = visibilityIcon),
                                 contentDescription = description,
@@ -167,7 +162,7 @@ fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
                 ) {
                     Checkbox(checked = checkBox, onCheckedChange = { checkBox = !checkBox })
                     Text(
-                        text = "I have fully read and understand to Stylelink Inc. terms of service.",
+                        text = "I have fully read and understand to Stylelink Inc. privacy policy and terms of service.",
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
@@ -181,7 +176,6 @@ fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
                             email,
                             password,
                             phone,
-                            navController
                         )
                     },
                     modifier = Modifier
@@ -200,13 +194,6 @@ fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
                     )
                 }
             }
-        }
-
-        LaunchedEffect(Unit) {
-            if (viewModel.navigateToMain) {
-                navController.navigate(Screen.Main.route)
-            }
-
         }
     }
 }

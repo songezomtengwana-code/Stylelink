@@ -1,4 +1,4 @@
-package com.ekasi.studios.stylelink.ui.login
+package com.ekasi.studios.stylelink.ui.signup
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -41,13 +41,12 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.ekasi.studios.stylelink.R
-import com.ekasi.studios.stylelink.base.components.ActionButton
-import com.ekasi.studios.stylelink.base.components.LoadingDialog
+import com.ekasi.studios.stylelink.navigation.Screen
 import com.ekasi.studios.stylelink.ui.theme.smallSize
 import com.ekasi.studios.stylelink.ui.theme.tinySize
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel) {
+fun SignupScreen(viewModel: SignupViewModel) {
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -55,14 +54,24 @@ fun LoginScreen(viewModel: LoginViewModel) {
     var password: String by rememberSaveable { mutableStateOf("S34ND0NLIF3") }
     var email: String by rememberSaveable { mutableStateOf("songezomtengwana@gmail.com") }
     var passwordHidden by rememberSaveable { mutableStateOf(false) }
+    var checkBox by rememberSaveable { mutableStateOf(true) }
 
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
         },
+//        floatingActionButton = {
+//            ExtendedFloatingActionButton(
+//                text = { Text("Show snackbar") },
+//                icon = { Icon(Icons.Filled.ArrowForward, contentDescription = "") },
+//                onClick = {
+//                    scope.launch {
+//                        snackbarHostState.showSnackbar("Snackbar")
+//                    }
+//                }
+//            )
+//        }
     ) { contentPadding ->
-
-        LoadingDialog()
         Surface(
             modifier = Modifier
                 .padding(contentPadding)
@@ -73,11 +82,13 @@ fun LoginScreen(viewModel: LoginViewModel) {
                     .background(MaterialTheme.colorScheme.background)
                     .padding(16.dp, 8.dp)
             ) {
-                Text("Welcome back", style = MaterialTheme.typography.displayLarge)
+                Text("Sign up your new account", style = MaterialTheme.typography.displayLarge)
                 Text(
-                    "Sign in to pick up from where you left off :)"
+                    "Keeping up with beauty trends ? Create an account and lets help you get started."
                 )
                 Spacer(modifier = Modifier.height(12.dp))
+
+
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
@@ -117,8 +128,22 @@ fun LoginScreen(viewModel: LoginViewModel) {
                     }
                 )
                 Spacer(modifier = Modifier.height(12.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    Checkbox(checked = checkBox, onCheckedChange = { checkBox = !checkBox })
+                    Text(
+                        text = "I have fully read and understand to Stylelink Inc. terms of service.",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
                 Spacer(modifier = Modifier.height(12.dp))
-                ActionButton(onClick = { viewModel.signin(email, password)}, title = "Log in")
+                SignUpActionButton(
+                    onClick = { viewModel.authenticateUserAccount(email, password) },
+                    isEnabled = checkBox
+                )
                 Spacer(modifier = Modifier.height(10.dp))
                 if (viewModel.isLoading) {
                     LinearProgressIndicator(
@@ -127,15 +152,14 @@ fun LoginScreen(viewModel: LoginViewModel) {
                         trackColor = MaterialTheme.colorScheme.primary,
                     )
                 }
-
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    "Don't have an account ? Sign Up!",
+                    "Already have an account ? Log in !",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
-                        .clickable { viewModel.navigateToSignup() })
+                        .clickable { viewModel.navigateToLogin() })
             }
         }
 
@@ -145,5 +169,22 @@ fun LoginScreen(viewModel: LoginViewModel) {
 //            }
 
         }
+    }
+}
+
+@Composable
+fun SignUpActionButton(
+    onClick: () -> Unit,
+    isEnabled: Boolean
+) {
+    Button(
+        enabled = isEnabled,
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(smallSize),
+        shape = MaterialTheme.shapes.small
+    ) {
+        Text("Create Account", fontWeight = FontWeight.Bold)
     }
 }
