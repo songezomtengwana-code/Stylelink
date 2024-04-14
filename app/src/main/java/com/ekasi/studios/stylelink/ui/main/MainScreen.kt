@@ -46,16 +46,6 @@ fun MainScreen(viewModel: MainViewModel) {
                     .background(white100)
             ) {
                 ActionButton(onClick = { viewModel.signOut() }, title = "Log In")
-                Text("MainScreen", style = MaterialTheme.typography.displayLarge)
-                Text("MainScreen", style = MaterialTheme.typography.displayLarge)
-                Text("MainScreen", style = MaterialTheme.typography.displayLarge)
-                Text("MainScreen", style = MaterialTheme.typography.displayLarge)
-                Text("MainScreen", style = MaterialTheme.typography.displayLarge)
-                Text("MainScreen", style = MaterialTheme.typography.displayLarge)
-                Text("MainScreen", style = MaterialTheme.typography.displayLarge)
-                Text("MainScreen", style = MaterialTheme.typography.displayLarge)
-                Text("MainScreen", style = MaterialTheme.typography.displayLarge)
-                Text("MainScreen", style = MaterialTheme.typography.displayLarge)
             }
         }
 
