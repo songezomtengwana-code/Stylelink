@@ -15,6 +15,9 @@ import com.ekasi.studios.stylelink.data.repository.AuthRepository
 import com.ekasi.studios.stylelink.navigation.Screen
 import com.ekasi.studios.stylelink.utils.services.popUpToTop
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.userProfileChangeRequest
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
 class SignupViewModel(
@@ -41,7 +44,14 @@ class SignupViewModel(
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
                                 dismissLoading()
-                                navigateToCreateAccount()
+
+                                val user = Firebase.auth.currentUser
+
+                                if (user !== null) {
+                                    navigateToCreateAccount()
+                                } else {
+                                    Log.d("authResponse", "Unable to update user profile.")
+                                }
                                 Log.d(
                                     "authResponse", task.result.user.toString()
                                 )
@@ -66,7 +76,7 @@ class SignupViewModel(
     }
 
     fun navigateToLogin() {
-        navController.navigate(Screen.Login.route) { popUpToTop(navController)}
+        navController.navigate(Screen.Login.route) { popUpToTop(navController) }
     }
 
     private fun showLoading() {

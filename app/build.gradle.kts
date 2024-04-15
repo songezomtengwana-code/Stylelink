@@ -51,7 +51,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.11"
     }
     packaging {
         resources {
@@ -81,7 +81,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     // google fonts
-    implementation("androidx.compose.ui:ui-text-google-fonts:1.6.4")
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.6.5")
 
     // glide_image_retriever
     implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
@@ -144,7 +144,8 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
     annotationProcessor("androidx.room:room-compiler:2.6.1")
-//    ksp("androidx.room:room-compiler:2.6.1")
+//    kapt "androidx.room:room-compiler:2.5.2"
+    ksp("androidx.room:room-compiler:2.6.1")
 
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0")
     testImplementation("com.google.truth:truth:1.1.3")

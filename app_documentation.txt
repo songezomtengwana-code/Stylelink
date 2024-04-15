@@ -1,0 +1,30 @@
+https resquest cut-out (optmized code from the previous version)
+
+//                    .enqueue(object : Callback<ServerUserModel> {
+//                        override fun onResponse(
+//                            call: Call<ServerUserModel>,
+//                            response: Response<ServerUserModel>
+//                        ) {
+//                            if (response.isSuccessful) {
+//                                val user = response.body()!!
+//                                _userServerData.value = user
+//                                Log.d("registerUserAccount", user.toString())
+//                                navigateTo(Screen.Main.route)
+//                            } else {
+//                                Log.d("registerUserAccount", response.message())
+//                                dismissLoading()
+//                                activateSnackBar("Sorry, there was a problem with creating your account")
+//                            }
+//                        }
+//
+//                        override fun onFailure(call: Call<ServerUserModel>, t: Throwable) {
+//                            dismissLoading()
+//                            isSnackBarVisible = true
+//                            Log.d("registerUserAccount", t.message.toString())
+//                        }
+//                    })
+
+====TO====
+
+@Params email: string, password: string
+val result = authRepository.createUserAccount(email, password)

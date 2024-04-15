@@ -84,7 +84,7 @@ fun RegisterScreen(viewModel: RegisterViewModel) {
             modifier = Modifier
                 .padding(contentPadding)
         ) {
-            LoadingDialog()
+
             Column(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.background)
@@ -187,11 +187,7 @@ fun RegisterScreen(viewModel: RegisterViewModel) {
                 }
                 Spacer(modifier = Modifier.height(10.dp))
                 if (viewModel.isLoading) {
-                    LinearProgressIndicator(
-                        modifier = Modifier.fillMaxWidth(),
-                        color = MaterialTheme.colorScheme.secondary,
-                        trackColor = MaterialTheme.colorScheme.primary,
-                    )
+                    LoadingDialog()
                 }
             }
         }

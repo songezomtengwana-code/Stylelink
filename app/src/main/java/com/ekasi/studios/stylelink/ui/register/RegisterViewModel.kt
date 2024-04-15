@@ -13,21 +13,26 @@ import com.ekasi.studios.stylelink.data.model.RegistrationUserModel
 import com.ekasi.studios.stylelink.data.model.ServerUserModel
 import com.ekasi.studios.stylelink.data.repository.UserRepository
 import com.ekasi.studios.stylelink.navigation.Screen
+import com.ekasi.studios.stylelink.viewModels.UserViewModel
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.auth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.userProfileChangeRequest
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import retrofit2.Call
 
 class RegisterViewModel(
     private val userRepository: UserRepository,
+    private val userViewModel: UserViewModel,
     private val navController: NavController
 ) : ViewModel() {
-    var isLoading: Boolean by mutableStateOf(true)
+    var isLoading: Boolean by mutableStateOf(false)
     var isSnackBarVisible by mutableStateOf(false)
     private val _userLiveData = MutableLiveData<FirebaseUser?>()
-    private val _userServerData = MutableLiveData<Call<ServerUserModel>?>()
+    private val _userServerData = MutableLiveData<ServerUserModel?>()
     val userLiveData: LiveData<FirebaseUser?> get() = _userLiveData
-    val userServerLiveData: LiveData<Call<ServerUserModel>?> get() = _userServerData
-
+    val userServerLiveData: LiveData<ServerUserModel?> get() = _userServerData
 
     private val _errorMessageLiveData = MutableLiveData<String?>()
     val errorMessageLiveData: LiveData<String?> get() = _errorMessageLiveData
@@ -38,6 +43,7 @@ class RegisterViewModel(
         password: String,
         phoneNumber: String
     ) {
+        var value by mutableStateOf(false)
         showLoading()
         Log.d("registerUserAccount", "Starting Registration Service")
         val newUserAccount = RegistrationUserModel(
@@ -50,19 +56,72 @@ class RegisterViewModel(
             try {
                 Log.d("registerUserAccount", "Initiating Registration Service")
                 val response = userRepository.createUserAccount(newUserAccount)
+                Log.d("registerUserAccount", "response : ${response.result}")
 
-                if (response.isExecuted) {
-                    val user = response  // Use !! for non-null assertion after successful response
-                    _userServerData.value = user
-                    Log.d("registerUserAccount", user.toString())
-                    navigateTo(Screen.Main.route)
-                    dismissLoading()
+                if (response.success) {
+                    val user = response.result
+                    try {
+                        userViewModel.storeCurrentUser(response.result)
+                    } catch (e: Exception) {
+                        Log.d("registerUserAccount", e.localizedMessage.toString())
+                    }
+                } else {
+                    Log.d("registerUserAccount", response.message)
                 }
+
+
+
+//                try {
+//
+//                    val profileConfiguration = userProfileChangeRequest {
+//                        displayName = fullname
+//                    }
+//                    val user = Firebase.auth.currentUser
+//
+//                    user!!.updateProfile(profileConfiguration)
+//                        .addOnCompleteListener { task ->
+//                            if (task.isSuccessful) {
+//                                _userServerData.value = response.result
+//
+//                                try {
+//                                    dismissLoading()
+//                                    navigateTo(Screen.Main.route)
+//                                    Log.d("registerUserAccount", response.toString())
+//
+//                                } catch (e: Exception) {
+//                                    Log.d(
+//                                        "registerUserAccount",
+//                                        "navigationException: ${e.message.toString()}"
+//                                    )
+//                                }
+//                            } else {
+//                                Log.d(
+//                                    "registerUserAccount",
+//                                    task.exception.toString()
+//                                )
+//                            }
+//                        }
+//
+//
+//                } catch (e: Exception) {
+//                    _errorMessageLiveData.value = e.localizedMessage
+//                    activateSnackBar("Sorry, there was a problem with creating your account")
+//                    dismissLoading()
+//                }
+
+
             } catch (e: Exception) {
-                _errorMessageLiveData.value = e.localizedMessage
+                Log.d("registerUserAccount", e.localizedMessage.toString())
                 activateSnackBar("Sorry, there was a problem with creating your account")
-               dismissLoading()
+                dismissLoading()
             }
+        }
+
+        if (value) {
+            dismissLoading()
+            navigateTo(Screen.Main.route)
+        } else {
+            showLoading()
         }
     }
 

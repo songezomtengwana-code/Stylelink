@@ -41,6 +41,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.ekasi.studios.stylelink.R
+import com.ekasi.studios.stylelink.base.components.LoadingDialog
 import com.ekasi.studios.stylelink.navigation.Screen
 import com.ekasi.studios.stylelink.ui.theme.smallSize
 import com.ekasi.studios.stylelink.ui.theme.tinySize
@@ -145,13 +146,6 @@ fun SignupScreen(viewModel: SignupViewModel) {
                     isEnabled = checkBox
                 )
                 Spacer(modifier = Modifier.height(10.dp))
-                if (viewModel.isLoading) {
-                    LinearProgressIndicator(
-                        modifier = Modifier.fillMaxWidth(),
-                        color = MaterialTheme.colorScheme.secondary,
-                        trackColor = MaterialTheme.colorScheme.primary,
-                    )
-                }
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     "Already have an account ? Log in !",
@@ -160,6 +154,10 @@ fun SignupScreen(viewModel: SignupViewModel) {
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .clickable { viewModel.navigateToLogin() })
+
+                if (viewModel.isLoading) {
+                    LoadingDialog()
+                }
             }
         }
 

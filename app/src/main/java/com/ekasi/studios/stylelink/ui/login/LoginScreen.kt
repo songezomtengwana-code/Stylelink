@@ -62,7 +62,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
         },
     ) { contentPadding ->
 
-        LoadingDialog()
+
         Surface(
             modifier = Modifier
                 .padding(contentPadding)
@@ -120,14 +120,6 @@ fun LoginScreen(viewModel: LoginViewModel) {
                 Spacer(modifier = Modifier.height(12.dp))
                 ActionButton(onClick = { viewModel.signin(email, password)}, title = "Log in")
                 Spacer(modifier = Modifier.height(10.dp))
-                if (viewModel.isLoading) {
-                    LinearProgressIndicator(
-                        modifier = Modifier.fillMaxWidth(),
-                        color = MaterialTheme.colorScheme.secondary,
-                        trackColor = MaterialTheme.colorScheme.primary,
-                    )
-                }
-
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     "Don't have an account ? Sign Up!",
@@ -136,6 +128,10 @@ fun LoginScreen(viewModel: LoginViewModel) {
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .clickable { viewModel.navigateToSignup() })
+
+                if (viewModel.isLoading) {
+                    LoadingDialog()
+                }
             }
         }
 

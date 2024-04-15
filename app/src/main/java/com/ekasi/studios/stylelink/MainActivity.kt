@@ -5,6 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.ViewModel
 import androidx.navigation.compose.rememberNavController
+import androidx.room.Room
+import com.ekasi.studios.stylelink.data.converters.ListConverter
+import com.ekasi.studios.stylelink.data.local.AppDatabase
 import com.ekasi.studios.stylelink.ui.theme.StylelinkTheme
 import com.ekasi.studios.stylelink.data.repository.AuthRepository
 import com.ekasi.studios.stylelink.data.repository.UserRepository
@@ -15,15 +18,24 @@ import com.ekasi.studios.stylelink.ui.signup.SignupViewModel
 import com.ekasi.studios.stylelink.ui.login.LoginViewModel
 import com.ekasi.studios.stylelink.ui.splash.SplashViewModel
 import com.ekasi.studios.stylelink.utils.network.NetworkClient
+import com.ekasi.studios.stylelink.viewModels.UserViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 
 class MainActivity : ComponentActivity() {
+    companion object {
+        lateinit var appDatabase: AppDatabase
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
+
+        appDatabase =
+            Room.databaseBuilder(applicationContext, AppDatabase::class.java, "stylelink.db")
+                .addTypeConverter(ListConverter())
+                .build()
+
         setContent {
             StylelinkTheme {
                 val navController = rememberNavController()
@@ -40,13 +52,14 @@ class MainActivity : ComponentActivity() {
 
                 val registerViewModel = RegisterViewModel(
                     userRepository = UserRepository(NetworkClient.NetworkClient.userApiService()),
-                    navController = navController
+                    navController = navController,
+                    userViewModel = UserViewModel(appDatabase.userDao())
                 )
 
                 val mainViewModel = MainViewModel(
                     authRepository = AuthRepository(auth),
-                    navController = navController
-
+                    navController = navController,
+                    userViewModel = UserViewModel(appDatabase.userDao())
                 )
 
                 val loginViewModel = LoginViewModel(
