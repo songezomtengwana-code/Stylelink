@@ -32,7 +32,9 @@ class MainViewModel(
     fun configuration() {
         viewModelScope.launch {
             user = userViewModel.getCurrentUser()
+            val firebaseUser = userViewModel.getAuthUser()
             Log.d("configuration", user.toString())
+            Log.d("getAuthUser", firebaseUser!!.email!!)
         }
     }
 }

@@ -1,8 +1,9 @@
 syntax = "proto3";
 
 message LocalUser {
-  string fullname = 1;
+  string name = 1;
   string _id = 2;
   string userId = 3;
   string password = 4;
+  string email = 5;
 }

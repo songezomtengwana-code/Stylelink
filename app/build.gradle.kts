@@ -1,11 +1,13 @@
 import com.android.build.api.variant.BuildConfigField
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import com.google.protobuf.gradle.id
 
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("com.google.gms.google-services")
+    id("com.google.protobuf")
 }
 
 android {
@@ -149,5 +151,32 @@ dependencies {
 
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0")
     testImplementation("com.google.truth:truth:1.1.3")
-    testImplementation("org.mockito:mockito-kotlin:4.0.0") // Mockito for mocking
+//    testImplementation("org.mockito:mockito-kotlin:4.0.0") // Mockito for mocking
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.24.1"
+    }
+    // Generates the java Protobuf-lite code for the Protobufs in this project. See
+    // https://github.com/google/protobuf-gradle-plugin#customizing-protobuf-compilation
+    // for more information.
+    generateProtoTasks {
+        // see https://github.com/google/protobuf-gradle-plugin/issues/518
+        // see https://github.com/google/protobuf-gradle-plugin/issues/491
+        // all() here because of android multi-variant
+        all().forEach { task ->
+            // this only works on version 3.8+ that has buildins for javalite / kotlin lite
+            // with previous version the java build in is to be removed and a new plugin
+            // need to be declared
+            task.builtins {
+                id("java") { // id is imported above
+                    option("lite")
+                }
+                id("kotlin") {
+                    option("lite")
+                }
+            }
+        }
+    }
 }
