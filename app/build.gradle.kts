@@ -17,6 +17,8 @@ android {
 //    var supabase_url: String = gradleLocalProperties(rootDir).getProperty("SUPABASE_URL").toString();
 //    val supabase_key: String = gradleLocalProperties(rootDir).getProperty("SUPABASE_ANON_KEY").toString();
 
+    // stackoverflow protobuf for kotlin configuration
+
     defaultConfig {
         applicationId = "com.ekasi.studios.stylelink"
         minSdk = 21
@@ -129,7 +131,8 @@ dependencies {
     // proto datastore
     implementation("androidx.datastore:datastore:1.0.0")
     implementation("androidx.datastore:datastore:1.0.0")
-    implementation("com.google.protobuf:protobuf-javalite:3.18.0")
+    implementation("com.google.protobuf:protobuf-javalite:3.20.1")
+    implementation("com.google.protobuf:protobuf-kotlin-lite:3.20.1")
 
     // optional - RxJava2 support
     implementation("androidx.datastore:datastore-rxjava2:1.0.0")
@@ -165,11 +168,11 @@ protobuf {
         // see https://github.com/google/protobuf-gradle-plugin/issues/518
         // see https://github.com/google/protobuf-gradle-plugin/issues/491
         // all() here because of android multi-variant
-        all().forEach { task ->
-            // this only works on version 3.8+ that has buildins for javalite / kotlin lite
+        all().configureEach {
+            // this only works on version 3.8+ that has build-ins for javalite / kotlin lite
             // with previous version the java build in is to be removed and a new plugin
             // need to be declared
-            task.builtins {
+            builtins {
                 id("java") { // id is imported above
                     option("lite")
                 }
