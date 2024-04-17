@@ -30,8 +30,10 @@ object UserDetailSerializer: Serializer<UserDetail> {
         output: OutputStream
     )  = t.writeTo(output)
 
-    val Context.userDetailDatastore: DataStore<UserDetail> by dataStore(
-        fileName = "user.pb",
-        serializer = UserDetailSerializer
-    )
+
 }
+
+val Context.userDetailDatastore: DataStore<UserDetail> by dataStore(
+    fileName = "user.pb",
+    serializer = UserDetailSerializer
+)

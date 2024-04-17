@@ -12,6 +12,8 @@ import com.ekasi.studios.stylelink.data.repository.AuthRepository
 import com.ekasi.studios.stylelink.navigation.Screen
 import com.ekasi.studios.stylelink.utils.services.popUpToTop
 import com.ekasi.studios.stylelink.viewModels.UserViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainViewModel(
@@ -20,6 +22,7 @@ class MainViewModel(
     private val userViewModel: UserViewModel
 ) : ViewModel() {
     var user: List<ServerUserModel>? by mutableStateOf(null)
+    var protoUserDetails: String = "empty"
     fun signOut() {
         viewModelScope.launch {
             authRepository.signOut()
@@ -35,6 +38,28 @@ class MainViewModel(
             val firebaseUser = userViewModel.getAuthUser()
             Log.d("configuration", user.toString())
             Log.d("getAuthUser", firebaseUser!!.email!!)
+        }
+    }
+
+    fun setUserDetails(userid: String) {
+        viewModelScope.launch {
+            userViewModel.setUserDetails(userid)
+//            protoUserDetails = userid
+        }
+    }
+
+    fun getUserDetails() {
+        viewModelScope.launch {
+            val details = userViewModel.getUserDetails()!!.collect { protoUserDetails ->
+                protoUserDetails.userId
+            }
+
+            protoUserDetails = details.toString()
+
+            Log.v(
+                "getUserDetails",
+                details.toString()
+            )
         }
     }
 }

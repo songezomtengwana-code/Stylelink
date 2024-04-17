@@ -9,11 +9,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -26,6 +33,9 @@ import com.ekasi.studios.stylelink.data.model.ServerUserModel
 fun MainScreen(viewModel: MainViewModel) {
 
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current
+    var userid by rememberSaveable {
+        mutableStateOf("")
+    }
 
     LaunchedEffect(Unit) {
         viewModel.configuration()
@@ -52,7 +62,14 @@ fun MainScreen(viewModel: MainViewModel) {
                 ActionButton(onClick = { viewModel.signOut() }, title = "Log Out")
                 Spacer(modifier = Modifier.height(10.dp))
                 ActionButton(onClick = { viewModel.configuration() }, title = "Log User Details")
-
+                Spacer(modifier = Modifier.height(10.dp))
+                ActionButton(onClick = { viewModel.getUserDetails() }, title = "getUserDetails")
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(text = "Proto Datastore Manual Test #1")
+                OutlinedTextField(value = userid, onValueChange = { userid = it })
+                Spacer(modifier = Modifier.height(10.dp))
+                ActionButton(onClick = { viewModel.setUserDetails(userid) }, title = "Save")
+                Text(text = viewModel.protoUserDetails, style = MaterialTheme.typography.bodyMedium)
             }
         }
     }

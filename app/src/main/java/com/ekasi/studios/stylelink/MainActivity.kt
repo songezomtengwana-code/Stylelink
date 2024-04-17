@@ -53,13 +53,13 @@ class MainActivity : ComponentActivity() {
                 val registerViewModel = RegisterViewModel(
                     userRepository = UserRepository(NetworkClient.NetworkClient.userApiService()),
                     navController = navController,
-                    userViewModel = UserViewModel(appDatabase.userDao())
+                    userViewModel = UserViewModel(appDatabase.userDao(), application)
                 )
 
                 val mainViewModel = MainViewModel(
                     authRepository = AuthRepository(auth),
                     navController = navController,
-                    userViewModel = UserViewModel(appDatabase.userDao())
+                    userViewModel = UserViewModel(appDatabase.userDao(), application)
                 )
 
                 val loginViewModel = LoginViewModel(
