@@ -7,13 +7,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.ekasi.studios.stylelink.data.model.ServerUserModel
 import com.ekasi.studios.stylelink.data.repository.AuthRepository
 import com.ekasi.studios.stylelink.navigation.Screen
 import com.ekasi.studios.stylelink.utils.services.popUpToTop
 import com.ekasi.studios.stylelink.viewModels.UserViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainViewModel(
@@ -21,8 +18,16 @@ class MainViewModel(
     private val authRepository: AuthRepository,
     private val userViewModel: UserViewModel
 ) : ViewModel() {
-    var user: List<ServerUserModel>? by mutableStateOf(null)
-    var protoUserDetails: String = "empty"
+    var user: String? by mutableStateOf(null)
+    var protoUserDetailsUserId: String by mutableStateOf("empty")
+
+    init {
+        viewModelScope.launch {
+            Log.v("MainViewModel init{}", "Initiating initEffect")
+            protoUserDetailsUserId = userViewModel.getUserDetails()
+        }
+    }
+
     fun signOut() {
         viewModelScope.launch {
             authRepository.signOut()
@@ -34,7 +39,7 @@ class MainViewModel(
 
     fun configuration() {
         viewModelScope.launch {
-            user = userViewModel.getCurrentUser()
+            user = userViewModel.getUserDetails()
             val firebaseUser = userViewModel.getAuthUser()
             Log.d("configuration", user.toString())
             Log.d("getAuthUser", firebaseUser!!.email!!)
@@ -50,16 +55,18 @@ class MainViewModel(
 
     fun getUserDetails() {
         viewModelScope.launch {
-            val details = userViewModel.getUserDetails()!!.collect { protoUserDetails ->
-                protoUserDetails.userId
-            }
+            Log.v("getUserDetails", "initiating")
+                val details = userViewModel.getUserDetails()
 
-            protoUserDetails = details.toString()
+                protoUserDetailsUserId = details.toString()
 
-            Log.v(
-                "getUserDetails",
-                details.toString()
-            )
+                Log.v(
+                    "getUserDetails",
+                    "userid: $details"
+                )
+//            } catch (e: Exception) {
+//                Log.v("getUserDetails", e.message.toString())
+//            }
         }
     }
 }

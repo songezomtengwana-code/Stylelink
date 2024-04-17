@@ -3,6 +3,7 @@ package com.ekasi.studios.stylelink.ui.register
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -59,62 +60,54 @@ class RegisterViewModel(
                 Log.d("registerUserAccount", "response : ${response.result}")
 
                 if (response.success) {
-                    val user = response.result
-                    try {
-                        userViewModel.storeCurrentUser(response.result)
-                    } catch (e: Exception) {
-                        Log.d("registerUserAccount", e.localizedMessage.toString())
-                    }
+                    userViewModel.setUserDetails(response.result.userId.toString())
+                    Log.d("registerUserAccount", "onSuccess: ${response.message}")
+                    navigateTo(Screen.Main.route)
                 } else {
                     Log.d("registerUserAccount", response.message)
                 }
-
-
-
-//                try {
-//
-//                    val profileConfiguration = userProfileChangeRequest {
-//                        displayName = fullname
-//                    }
-//                    val user = Firebase.auth.currentUser
-//
-//                    user!!.updateProfile(profileConfiguration)
-//                        .addOnCompleteListener { task ->
-//                            if (task.isSuccessful) {
-//                                _userServerData.value = response.result
-//
-//                                try {
-//                                    dismissLoading()
-//                                    navigateTo(Screen.Main.route)
-//                                    Log.d("registerUserAccount", response.toString())
-//
-//                                } catch (e: Exception) {
-//                                    Log.d(
-//                                        "registerUserAccount",
-//                                        "navigationException: ${e.message.toString()}"
-//                                    )
-//                                }
-//                            } else {
-//                                Log.d(
-//                                    "registerUserAccount",
-//                                    task.exception.toString()
-//                                )
-//                            }
-//                        }
-//
-//
-//                } catch (e: Exception) {
-//                    _errorMessageLiveData.value = e.localizedMessage
-//                    activateSnackBar("Sorry, there was a problem with creating your account")
-//                    dismissLoading()
-//                }
-
-
             } catch (e: Exception) {
-                Log.d("registerUserAccount", e.localizedMessage.toString())
+                Log.d("registerUserAccount", e.message.toString())
                 activateSnackBar("Sorry, there was a problem with creating your account")
                 dismissLoading()
             }
+//            try {
+//
+//                val profileConfiguration = userProfileChangeRequest {
+//                    displayName = fullname
+//                }
+//                val user = Firebase.auth.currentUser
+//
+//                user!!.updateProfile(profileConfiguration)
+//                    .addOnCompleteListener { task ->
+//                        if (task.isSuccessful) {
+//                            _userServerData.value = response.result
+//
+//                            try {
+//                                dismissLoading()
+//                                navigateTo(Screen.Main.route)
+//                                Log.d("registerUserAccount", response.toString())
+//
+//                            } catch (e: Exception) {
+//                                Log.d(
+//                                    "registerUserAccount",
+//                                    "navigationException: ${e.message.toString()}"
+//                                )
+//                            }
+//                        } else {
+//                            Log.d(
+//                                "registerUserAccount",
+//                                task.exception.toString()
+//                            )
+//                        }
+//                    }
+//
+//
+//            } catch (e: Exception) {
+//                _errorMessageLiveData.value = e.localizedMessage
+//                activateSnackBar("Sorry, there was a problem with creating your account")
+//                dismissLoading()
+//            }
         }
 
         if (value) {

@@ -34,20 +34,19 @@ class UserViewModel(
 
     var userDetailsId: String? = null
 
-
-    init {
-        viewModelScope.launch {
-            val userDetailFlowUserId: Unit =
-                provideApplicationContext(application).userDetailDatastore.data.map { preferences ->
-                    preferences.userId
-                }.collect{ formattedUserId ->
-                    userDetailsId = formattedUserId
-                    Log.v("userViewModel init{}", formattedUserId)
-                }
-
-            Log.v("userViewModel init{}", userDetailFlowUserId.toString())
-        }
-    }
+//    init {
+//        viewModelScope.launch {
+//            val userDetailFlowUserId: Unit =
+//                provideApplicationContext(application).userDetailDatastore.data.map { preferences ->
+//                    preferences.userId
+//                }.collect{ formattedUserId ->
+//                    userDetailsId = formattedUserId
+////                    Log.v("userViewModel init{}", formattedUserId)
+//                }
+//            userDetailsId = userDetailFlowUserId.toString()
+//            Log.v("userViewModel init{}","external:  $userDetailFlowUserId")
+//        }
+//    }
 
     private val _loggedInUser = MutableStateFlow<FirebaseUser?>(null)
     private val _currentUser by lazy { MutableStateFlow<ServerUserModel?>(null) }
@@ -136,19 +135,16 @@ class UserViewModel(
         }
     }
 
-    suspend fun getUserDetails(): Flow<UserDetail>? {
+    suspend fun getUserDetails(): String {
+        val userDetailFlowUserId: Unit =
+            provideApplicationContext(application).userDetailDatastore.data.map { preferences ->
+                preferences.userId
+            }.collect{ formattedUserId ->
+                userDetailsId = formattedUserId
+            }
 
-        return try {
-            val userDetailFlow: Flow<UserDetail> =
-                provideApplicationContext(application).userDetailDatastore.data.map { userDetail ->
-                    userDetail
-                }
-
-            userDetailFlow
-        } catch (e: Exception) {
-            Log.v("getUserDetails", e.localizedMessage as String)
-            null
-        }
+        Log.v("userViewModel init{}", userDetailFlowUserId.toString())
+        return userDetailFlowUserId.toString()
     }
 }
 

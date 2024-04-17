@@ -61,15 +61,9 @@ fun MainScreen(viewModel: MainViewModel) {
 //                TopHeader(items = viewModel.user.value)
                 ActionButton(onClick = { viewModel.signOut() }, title = "Log Out")
                 Spacer(modifier = Modifier.height(10.dp))
-                ActionButton(onClick = { viewModel.configuration() }, title = "Log User Details")
+                Text(text = viewModel.protoUserDetailsUserId, style = MaterialTheme.typography.bodyMedium)
                 Spacer(modifier = Modifier.height(10.dp))
-                ActionButton(onClick = { viewModel.getUserDetails() }, title = "getUserDetails")
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(text = "Proto Datastore Manual Test #1")
-                OutlinedTextField(value = userid, onValueChange = { userid = it })
-                Spacer(modifier = Modifier.height(10.dp))
-                ActionButton(onClick = { viewModel.setUserDetails(userid) }, title = "Save")
-                Text(text = viewModel.protoUserDetails, style = MaterialTheme.typography.bodyMedium)
+                ActionButton(onClick = { viewModel.getUserDetails()}, title = "Get User Id")
             }
         }
     }
