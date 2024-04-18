@@ -61,7 +61,9 @@ fun MainScreen(viewModel: MainViewModel) {
 //                TopHeader(items = viewModel.user.value)
                 ActionButton(onClick = { viewModel.signOut() }, title = "Log Out")
                 Spacer(modifier = Modifier.height(10.dp))
-                Text(text = viewModel.protoUserDetailsUserId, style = MaterialTheme.typography.bodyMedium)
+                Text(text = viewModel.protoUserDetailsUserId!!, style = MaterialTheme.typography.bodyMedium)
+                Spacer(modifier = Modifier.height(10.dp))
+                ActionButton(onClick = { viewModel.setUserDetails("6620140b60cb7ce4e76996c9")}, title = "Set User Id")
                 Spacer(modifier = Modifier.height(10.dp))
                 ActionButton(onClick = { viewModel.getUserDetails()}, title = "Get User Id")
             }

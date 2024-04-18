@@ -3,6 +3,7 @@ package com.ekasi.studios.stylelink.ui.main
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,6 +12,7 @@ import com.ekasi.studios.stylelink.data.repository.AuthRepository
 import com.ekasi.studios.stylelink.navigation.Screen
 import com.ekasi.studios.stylelink.utils.services.popUpToTop
 import com.ekasi.studios.stylelink.viewModels.UserViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainViewModel(
@@ -19,12 +21,13 @@ class MainViewModel(
     private val userViewModel: UserViewModel
 ) : ViewModel() {
     var user: String? by mutableStateOf(null)
-    var protoUserDetailsUserId: String by mutableStateOf("empty")
+    var protoUserDetailsUserId: String? by mutableStateOf("empty")
 
     init {
         viewModelScope.launch {
             Log.v("MainViewModel init{}", "Initiating initEffect")
             protoUserDetailsUserId = userViewModel.getUserDetails()
+                .collect { formattedValue -> protoUserDetailsUserId = formattedValue }.toString()
         }
     }
 
@@ -39,9 +42,8 @@ class MainViewModel(
 
     fun configuration() {
         viewModelScope.launch {
-            user = userViewModel.getUserDetails()
             val firebaseUser = userViewModel.getAuthUser()
-            Log.d("configuration", user.toString())
+            Log.d("protoDatastoreUser", user.toString())
             Log.d("getAuthUser", firebaseUser!!.email!!)
         }
     }
@@ -49,24 +51,22 @@ class MainViewModel(
     fun setUserDetails(userid: String) {
         viewModelScope.launch {
             userViewModel.setUserDetails(userid)
-//            protoUserDetails = userid
         }
     }
 
     fun getUserDetails() {
+        var container: String by mutableStateOf("")
         viewModelScope.launch {
-            Log.v("getUserDetails", "initiating")
-                val details = userViewModel.getUserDetails()
-
-                protoUserDetailsUserId = details.toString()
-
-                Log.v(
-                    "getUserDetails",
-                    "userid: $details"
-                )
-//            } catch (e: Exception) {
-//                Log.v("getUserDetails", e.message.toString())
-//            }
+            try {
+                Log.d("getUserDetails", "initiating")
+                val details = userViewModel.getUserDetails().collect { format ->
+                    container = format
+                }
+                protoUserDetailsUserId = "response"
+                Log.d("getUserDetails", "results: $details")
+            } catch (e: Exception) {
+                Log.d("getUserDetails", "nullPointerException: ${e.message.toString()}")
+            }
         }
     }
 }

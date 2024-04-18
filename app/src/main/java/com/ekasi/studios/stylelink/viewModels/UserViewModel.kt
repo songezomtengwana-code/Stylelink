@@ -34,19 +34,19 @@ class UserViewModel(
 
     var userDetailsId: String? = null
 
-//    init {
-//        viewModelScope.launch {
-//            val userDetailFlowUserId: Unit =
-//                provideApplicationContext(application).userDetailDatastore.data.map { preferences ->
-//                    preferences.userId
-//                }.collect{ formattedUserId ->
-//                    userDetailsId = formattedUserId
-////                    Log.v("userViewModel init{}", formattedUserId)
-//                }
-//            userDetailsId = userDetailFlowUserId.toString()
-//            Log.v("userViewModel init{}","external:  $userDetailFlowUserId")
-//        }
-//    }
+    init {
+        viewModelScope.launch {
+            val userDetailFlowUserId: Unit =
+                provideApplicationContext(application).userDetailDatastore.data.map { preferences ->
+                    preferences.userId
+                }.collect { formattedUserId ->
+                    userDetailsId = formattedUserId
+                    Log.v("userViewModel init{}", "intenal: $formattedUserId")
+                }
+            userDetailsId = userDetailFlowUserId.toString()
+            Log.v("userViewModel init{}", "external:  $userDetailFlowUserId")
+        }
+    }
 
     private val _loggedInUser = MutableStateFlow<FirebaseUser?>(null)
     private val _currentUser by lazy { MutableStateFlow<ServerUserModel?>(null) }
@@ -79,7 +79,7 @@ class UserViewModel(
             //            return storedUser.value
             users.value
         } catch (e: Exception) {
-            Log.d("userViewModel", e.localizedMessage)
+            Log.d("userViewModel", e.message.toString())
             null
         }
     }
@@ -135,16 +135,26 @@ class UserViewModel(
         }
     }
 
-    suspend fun getUserDetails(): String {
-        val userDetailFlowUserId: Unit =
-            provideApplicationContext(application).userDetailDatastore.data.map { preferences ->
-                preferences.userId
-            }.collect{ formattedUserId ->
-                userDetailsId = formattedUserId
-            }
+    suspend fun getUserDetails(): Flow<String> {
+//        return try {
+//            val userDetailFlowUserId: Unit =
+//                provideApplicationContext(application).userDetailDatastore.data.map { preferences ->
+//                    preferences.userId
+//                }.collect { formattedUserId ->
+//                    userDetailsId = formattedUserId
+//                }
+//
+//            Log.v("getUserDetails", userDetailFlowUserId.toString())
+//            userDetailFlowUserId.toString()
+//        } catch (e: Exception) {
+//
+//            Log.d("getUserDetails", e.message.toString())
+//            return null
+//        }
 
-        Log.v("userViewModel init{}", userDetailFlowUserId.toString())
-        return userDetailFlowUserId.toString()
+        return provideApplicationContext(application).userDetailDatastore.data.map { user ->
+            user.userId
+        }
     }
 }
 
