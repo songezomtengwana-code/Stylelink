@@ -40,6 +40,9 @@ class MainActivity : ComponentActivity() {
             StylelinkTheme {
                 val navController = rememberNavController()
                 val auth = Firebase.auth
+                val userRepository = UserRepository(NetworkClient.NetworkClient.userApiService())
+                val userViewModel =
+                    UserViewModel(appDatabase.userDao(), application, userRepository)
                 val signupViewModel = SignupViewModel(
                     authRepository = AuthRepository(auth),
                     navController = navController
@@ -51,15 +54,15 @@ class MainActivity : ComponentActivity() {
                 )
 
                 val registerViewModel = RegisterViewModel(
-                    userRepository = UserRepository(NetworkClient.NetworkClient.userApiService()),
+                    userRepository = userRepository,
                     navController = navController,
-                    userViewModel = UserViewModel(appDatabase.userDao(), application)
+                    userViewModel = userViewModel,
                 )
 
                 val mainViewModel = MainViewModel(
                     authRepository = AuthRepository(auth),
                     navController = navController,
-                    userViewModel = UserViewModel(appDatabase.userDao(), application)
+                    userViewModel = userViewModel
                 )
 
                 val loginViewModel = LoginViewModel(

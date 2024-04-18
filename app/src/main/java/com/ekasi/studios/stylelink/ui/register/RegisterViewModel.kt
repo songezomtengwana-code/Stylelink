@@ -31,13 +31,6 @@ class RegisterViewModel(
 ) : ViewModel() {
     var isLoading: Boolean by mutableStateOf(false)
     var isSnackBarVisible by mutableStateOf(false)
-    private val _userLiveData = MutableLiveData<FirebaseUser?>()
-    private val _userServerData = MutableLiveData<ServerUserModel?>()
-    val userLiveData: LiveData<FirebaseUser?> get() = _userLiveData
-    val userServerLiveData: LiveData<ServerUserModel?> get() = _userServerData
-
-    private val _errorMessageLiveData = MutableLiveData<String?>()
-    val errorMessageLiveData: LiveData<String?> get() = _errorMessageLiveData
 
     fun registerUserAccount(
         fullname: String,
@@ -72,43 +65,7 @@ class RegisterViewModel(
                 activateSnackBar("Sorry, there was a problem with creating your account")
                 dismissLoading()
             }
-//            try {
-//
-//                val profileConfiguration = userProfileChangeRequest {
-//                    displayName = fullname
-//                }
-//                val user = Firebase.auth.currentUser
-//
-//                user!!.updateProfile(profileConfiguration)
-//                    .addOnCompleteListener { task ->
-//                        if (task.isSuccessful) {
-//                            _userServerData.value = response.result
-//
-//                            try {
-//                                dismissLoading()
-//                                navigateTo(Screen.Main.route)
-//                                Log.d("registerUserAccount", response.toString())
-//
-//                            } catch (e: Exception) {
-//                                Log.d(
-//                                    "registerUserAccount",
-//                                    "navigationException: ${e.message.toString()}"
-//                                )
-//                            }
-//                        } else {
-//                            Log.d(
-//                                "registerUserAccount",
-//                                task.exception.toString()
-//                            )
-//                        }
-//                    }
-//
-//
-//            } catch (e: Exception) {
-//                _errorMessageLiveData.value = e.localizedMessage
-//                activateSnackBar("Sorry, there was a problem with creating your account")
-//                dismissLoading()
-//            }
+
         }
 
         if (value) {

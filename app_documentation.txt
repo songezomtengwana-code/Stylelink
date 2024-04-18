@@ -28,3 +28,42 @@ https resquest cut-out (optmized code from the previous version)
 
 @Params email: string, password: string
 val result = authRepository.createUserAccount(email, password)
+
+// registration clean up 
+//            try {
+//
+//                val profileConfiguration = userProfileChangeRequest {
+//                    displayName = fullname
+//                }
+//                val user = Firebase.auth.currentUser
+//
+//                user!!.updateProfile(profileConfiguration)
+//                    .addOnCompleteListener { task ->
+//                        if (task.isSuccessful) {
+//                            _userServerData.value = response.result
+//
+//                            try {
+//                                dismissLoading()
+//                                navigateTo(Screen.Main.route)
+//                                Log.d("registerUserAccount", response.toString())
+//
+//                            } catch (e: Exception) {
+//                                Log.d(
+//                                    "registerUserAccount",
+//                                    "navigationException: ${e.message.toString()}"
+//                                )
+//                            }
+//                        } else {
+//                            Log.d(
+//                                "registerUserAccount",
+//                                task.exception.toString()
+//                            )
+//                        }
+//                    }
+//
+//
+//            } catch (e: Exception) {
+//                _errorMessageLiveData.value = e.localizedMessage
+//                activateSnackBar("Sorry, there was a problem with creating your account")
+//                dismissLoading()
+//            }

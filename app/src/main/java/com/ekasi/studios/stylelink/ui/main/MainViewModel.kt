@@ -25,7 +25,6 @@ class MainViewModel(
 
     init {
         viewModelScope.launch {
-            Log.v("MainViewModel init{}", "Initiating initEffect")
             protoUserDetailsUserId = userViewModel.getUserDetails()
                 .collect { formattedValue -> protoUserDetailsUserId = formattedValue }.toString()
         }

@@ -14,5 +14,5 @@ interface UserApiService {
     @POST("api/users/register")
     suspend fun registerNewUserAccount(@Body body: RegistrationUserModel): RegisterUserResponse
     @GET("api/users/{userId}")
-    suspend fun getSingleUserAccount(@Path("userId") id: String): ServerUserModel
+    suspend fun getSingleUserAccount(@Path("_id") id: String): ServerUserModel
 }
