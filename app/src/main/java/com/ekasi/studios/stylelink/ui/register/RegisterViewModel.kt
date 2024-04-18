@@ -14,6 +14,7 @@ import com.ekasi.studios.stylelink.data.model.RegistrationUserModel
 import com.ekasi.studios.stylelink.data.model.ServerUserModel
 import com.ekasi.studios.stylelink.data.repository.UserRepository
 import com.ekasi.studios.stylelink.navigation.Screen
+import com.ekasi.studios.stylelink.utils.services.popUpToTop
 import com.ekasi.studios.stylelink.viewModels.UserViewModel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
@@ -60,7 +61,7 @@ class RegisterViewModel(
                 Log.d("registerUserAccount", "response : ${response.result}")
 
                 if (response.success) {
-                    userViewModel.setUserDetails(response.result.userId.toString())
+                    userViewModel.setUserDetails(response.result._id)
                     Log.d("registerUserAccount", "onSuccess: ${response.message}")
                     navigateTo(Screen.Main.route)
                 } else {
@@ -119,7 +120,7 @@ class RegisterViewModel(
     }
 
     private fun navigateTo(route: String) {
-        navController.navigate(route)
+        navController.navigate(route) { popUpToTop(navController) }
     }
 
     private fun showLoading() {
