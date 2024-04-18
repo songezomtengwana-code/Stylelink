@@ -13,6 +13,6 @@ import retrofit2.http.Path
 interface UserApiService {
     @POST("api/users/register")
     suspend fun registerNewUserAccount(@Body body: RegistrationUserModel): RegisterUserResponse
-    @GET("api/users/{userId}")
-    suspend fun getSingleUserAccount(@Path("_id") id: String): ServerUserModel
+    @GET("api/users/{id}")
+    suspend fun getSingleUserAccount(@Path("id") id: String): ServerUserModel
 }

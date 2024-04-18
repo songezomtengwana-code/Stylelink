@@ -67,3 +67,25 @@ val result = authRepository.createUserAccount(email, password)
 //                activateSnackBar("Sorry, there was a problem with creating your account")
 //                dismissLoading()
 //            }
+
+// main scree clean up
+ActionButton(onClick = { viewModel.signOut() }, title = "Log Out")
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        text = viewModel.protoUserDetailsUserId!!,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                        text = "Hi, ${viewModel.user!!.fullname} 👋",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    ActionButton(
+                        onClick = { viewModel.setUserDetails("6620140b60cb7ce4e76996c9") },
+                        title = "Set User Id"
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    ActionButton(
+                        onClick = { viewModel.fetchUser() },
+                        title = "Fetch User From Server"
+                    )

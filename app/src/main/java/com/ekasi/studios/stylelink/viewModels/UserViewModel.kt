@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide.init
 import com.ekasi.studios.stylelink.UserDetail
 import com.ekasi.studios.stylelink.data.local.UserDao
 import com.ekasi.studios.stylelink.data.model.ServerUserModel
+import com.ekasi.studios.stylelink.data.repository.UserRepository
 import com.ekasi.studios.stylelink.data.serializer.userDetailDatastore
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -25,7 +26,8 @@ import kotlinx.coroutines.launch
 
 class UserViewModel(
     private val userDao: UserDao,
-    private val application: Application
+    private val application: Application,
+    private val userRepository: UserRepository
 ) :
     AndroidViewModel(application = application) {
 
@@ -136,25 +138,13 @@ class UserViewModel(
     }
 
     suspend fun getUserDetails(): Flow<String> {
-//        return try {
-//            val userDetailFlowUserId: Unit =
-//                provideApplicationContext(application).userDetailDatastore.data.map { preferences ->
-//                    preferences.userId
-//                }.collect { formattedUserId ->
-//                    userDetailsId = formattedUserId
-//                }
-//
-//            Log.v("getUserDetails", userDetailFlowUserId.toString())
-//            userDetailFlowUserId.toString()
-//        } catch (e: Exception) {
-//
-//            Log.d("getUserDetails", e.message.toString())
-//            return null
-//        }
-
         return provideApplicationContext(application).userDetailDatastore.data.map { user ->
             user.userId
         }
+    }
+
+    suspend fun fetchUser(id: String): ServerUserModel {
+        return userRepository.getUserAccount(id)
     }
 }
 

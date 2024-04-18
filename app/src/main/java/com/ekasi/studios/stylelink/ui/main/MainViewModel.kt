@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.ekasi.studios.stylelink.data.model.ServerUserModel
 import com.ekasi.studios.stylelink.data.repository.AuthRepository
 import com.ekasi.studios.stylelink.navigation.Screen
 import com.ekasi.studios.stylelink.utils.services.popUpToTop
@@ -20,8 +21,10 @@ class MainViewModel(
     private val authRepository: AuthRepository,
     private val userViewModel: UserViewModel
 ) : ViewModel() {
-    var user: String? by mutableStateOf(null)
-    var protoUserDetailsUserId: String? by mutableStateOf("empty")
+    var user: ServerUserModel? by mutableStateOf(null)
+    var protoUserDetailsUserId: String? by mutableStateOf("")
+    var success: Boolean by mutableStateOf(false)
+    var isLoading by mutableStateOf(true);
 
     init {
         viewModelScope.launch {
@@ -53,18 +56,26 @@ class MainViewModel(
         }
     }
 
-    fun getUserDetails() {
-        var container: String by mutableStateOf("")
+    fun fetchUser() {
+        isLoading = true
         viewModelScope.launch {
             try {
-                Log.d("getUserDetails", "initiating")
-                val details = userViewModel.getUserDetails().collect { format ->
-                    container = format
+                Log.d("fetchUser", "initiating")
+                if (protoUserDetailsUserId!!.isNotEmpty()) {
+                    val details = userViewModel.fetchUser(protoUserDetailsUserId!!)
+                    user = details
+                    Log.d("fetchUser", "results: $user")
+                    isLoading = false
+                    success = true
+                } else {
+                    Log.d("fetchUser", "userid: $protoUserDetailsUserId")
+                    isLoading = false
+                    success = false
                 }
-                protoUserDetailsUserId = "response"
-                Log.d("getUserDetails", "results: $details")
             } catch (e: Exception) {
-                Log.d("getUserDetails", "nullPointerException: ${e.message.toString()}")
+                isLoading = false
+                success = false
+                Log.d("fetchUser", "nullPointerException: ${e.message.toString()}")
             }
         }
     }
