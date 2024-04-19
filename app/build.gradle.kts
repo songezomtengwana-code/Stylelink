@@ -68,9 +68,9 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.core:core-ktx:1.13.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
-    implementation("androidx.activity:activity-compose:1.8.2")
+    implementation("androidx.activity:activity-compose:1.9.0")
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
@@ -87,7 +87,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     // google fonts
-    implementation("androidx.compose.ui:ui-text-google-fonts:1.6.5")
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.6.6")
 
     // glide_image_retriever
     implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
@@ -122,29 +122,29 @@ dependencies {
     implementation("io.ktor:ktor-client-android:2.3.9")
 
     // preference
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("androidx.datastore:datastore-preferences:1.1.0")
 
     // optional - RxJava2 support
-    implementation("androidx.datastore:datastore-preferences-rxjava2:1.0.0")
+    implementation("androidx.datastore:datastore-preferences-rxjava2:1.1.0")
 
     // optional - RxJava3 support
-    implementation("androidx.datastore:datastore-preferences-rxjava3:1.0.0")
+    implementation("androidx.datastore:datastore-preferences-rxjava3:1.1.0")
 
     // proto datastore
-    implementation("androidx.datastore:datastore:1.0.0")
-    implementation("androidx.datastore:datastore:1.0.0")
+    implementation("androidx.datastore:datastore:1.1.0")
+    implementation("androidx.datastore:datastore:1.1.0")
     implementation("com.google.protobuf:protobuf-javalite:3.20.1")
     implementation("com.google.protobuf:protobuf-kotlin-lite:3.20.1")
 
     // optional - RxJava2 support
-    implementation("androidx.datastore:datastore-rxjava2:1.0.0")
+    implementation("androidx.datastore:datastore-rxjava2:1.1.0")
 
     // optional - RxJava3 support
-    implementation("androidx.datastore:datastore-rxjava3:1.0.0")
+    implementation("androidx.datastore:datastore-rxjava3:1.1.0")
 
     // Alternatively - use the following artifact without an Android dependency.
-    implementation("androidx.datastore:datastore-core:1.0.0")
-    implementation("androidx.datastore:datastore-preferences-core:1.0.0")
+    implementation("androidx.datastore:datastore-core:1.1.0")
+    implementation("androidx.datastore:datastore-preferences-core:1.1.0")
 
     // Room local storage
     implementation("androidx.room:room-runtime:2.6.1")
@@ -169,6 +169,8 @@ dependencies {
     //Hilt
     implementation("com.google.dagger:hilt-android:2.44")
     ksp("com.google.dagger:hilt-compiler:2.44")
+
+    // secrets
 }
 
 protobuf {
