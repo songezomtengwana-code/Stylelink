@@ -48,14 +48,14 @@ import com.ekasi.studios.stylelink.ui.theme.tinySize
 
 @Composable
 fun SignupScreen(viewModel: SignupViewModel) {
-    val scope = rememberCoroutineScope()
+//    val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
     // inputs
-    var password: String by rememberSaveable { mutableStateOf("S34ND0NLIF3") }
-    var email: String by rememberSaveable { mutableStateOf("songezomtengwana@gmail.com") }
-    var passwordHidden by rememberSaveable { mutableStateOf(false) }
-    var checkBox by rememberSaveable { mutableStateOf(true) }
+    var password: String by rememberSaveable { mutableStateOf("") }
+    var email: String by rememberSaveable { mutableStateOf("") }
+    var passwordHidden by rememberSaveable { mutableStateOf(true) }
+    var checkBox by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         snackbarHost = {
@@ -88,8 +88,6 @@ fun SignupScreen(viewModel: SignupViewModel) {
                     "Keeping up with beauty trends ? Create an account and lets help you get started."
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-
-
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
@@ -129,7 +127,6 @@ fun SignupScreen(viewModel: SignupViewModel) {
                     }
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Start
@@ -154,6 +151,9 @@ fun SignupScreen(viewModel: SignupViewModel) {
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .clickable { viewModel.navigateToLogin() })
+                Button(onClick = { viewModel.navigateTo(Screen.Register.route) }) {
+                 Text(text = "Navigate to register screen")
+                }
 
                 if (viewModel.isLoading) {
                     LoadingDialog()

@@ -10,8 +10,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.bumptech.glide.Glide.init
 import com.ekasi.studios.stylelink.data.model.RegistrationUserModel
 import com.ekasi.studios.stylelink.data.model.ServerUserModel
+import com.ekasi.studios.stylelink.data.repository.AuthRepository
 import com.ekasi.studios.stylelink.data.repository.UserRepository
 import com.ekasi.studios.stylelink.navigation.Screen
 import com.ekasi.studios.stylelink.utils.services.popUpToTop
@@ -27,26 +29,46 @@ import retrofit2.Call
 class RegisterViewModel(
     private val userRepository: UserRepository,
     private val userViewModel: UserViewModel,
-    private val navController: NavController
+    private val navController: NavController,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
     var isLoading: Boolean by mutableStateOf(false)
     var isSnackBarVisible by mutableStateOf(false)
+    var firebaseUser: FirebaseUser? by mutableStateOf(null)
+
+    init {
+        viewModelScope.launch {
+            val currentUser = authRepository.getCurrentUser()
+
+            if (currentUser !== null) {
+                firebaseUser = currentUser
+            }
+        }
+    }
 
     fun registerUserAccount(
         fullname: String,
         email: String,
         password: String,
-        phoneNumber: String
+        phoneNumber: String,
+        address: String,
+        city: String,
+        state: String
     ) {
         var value by mutableStateOf(false)
         showLoading()
         Log.d("registerUserAccount", "Starting Registration Service")
+
         val newUserAccount = RegistrationUserModel(
             fullname = fullname,
-            email = email,
+            email = authRepository.getCurrentUser()?.email!!,
             password = password,
-            phoneNumber = phoneNumber
+            phoneNumber = phoneNumber,
+            address = address,
+            city = city,
+            state = state
         )
+        Log.d("registerUserAccount", newUserAccount.toString())
         viewModelScope.launch {
             try {
                 Log.d("registerUserAccount", "Initiating Registration Service")
@@ -76,7 +98,7 @@ class RegisterViewModel(
         }
     }
 
-    private fun navigateTo(route: String) {
+    fun navigateTo(route: String) {
         navController.navigate(route) { popUpToTop(navController) }
     }
 
@@ -91,5 +113,13 @@ class RegisterViewModel(
     fun activateSnackBar(message: String): String {
         isSnackBarVisible = true
         return message
+    }
+
+    fun userEmailAddress() {
+        val currentUser = authRepository.getCurrentUser()
+
+        if (currentUser !== null) {
+
+        }
     }
 }

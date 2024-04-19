@@ -57,6 +57,7 @@ class MainActivity : ComponentActivity() {
                     userRepository = userRepository,
                     navController = navController,
                     userViewModel = userViewModel,
+                    authRepository = AuthRepository(auth)
                 )
 
                 val mainViewModel = MainViewModel(

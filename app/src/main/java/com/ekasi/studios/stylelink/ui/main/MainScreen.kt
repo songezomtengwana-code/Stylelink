@@ -1,11 +1,14 @@
 package com.ekasi.studios.stylelink.ui.main
 
+import android.util.Log
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -42,14 +45,17 @@ import com.ekasi.studios.stylelink.data.model.ServerUserModel
 
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
-
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current
     var userid by rememberSaveable {
         mutableStateOf("")
     }
 
     LaunchedEffect(Unit) {
-        viewModel.fetchUser()
+        if (viewModel.user === null) {
+            viewModel.fetchUser()
+        } else {
+            Log.d("lanchedEffect", viewModel.user.toString())
+        }
     }
 
     Scaffold(
@@ -60,20 +66,30 @@ fun MainScreen(viewModel: MainViewModel) {
         if (viewModel.isLoading) {
             LoadingDialog()
         } else {
-            Surface(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .background(Color.White)
-                    .fillMaxWidth()
-            ) {
-                Column(
+            if (viewModel.user !== null) {
+                Surface(
                     modifier = Modifier
-                        .verticalScroll(rememberScrollState())
-                        .background(white100)
-                        .padding(16.dp)
+                        .padding(paddingValues)
+                        .background(Color.White)
+                        .fillMaxWidth()
                 ) {
-                    TopHeader(user = viewModel.user!!)
-
+                    Column(
+                        modifier = Modifier
+                            .verticalScroll(rememberScrollState())
+                            .background(white100)
+                            .padding(16.dp)
+                    ) {
+                        TopHeader(user = viewModel.user!!)
+                    }
+                }
+            } else {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text("Unable to connect to server")
+                    ActionButton(onClick = { viewModel.fetchUser() }, title = "Retry")
                 }
             }
         }
@@ -98,7 +114,7 @@ fun TopHeader(user: ServerUserModel) {
             )
             Text(text = "Where to next ?")
         }
-        FilledIconButton(onClick = { /*TODO*/ }) {
+        FilledIconButton(onClick = { /*TODO*/ }, shape = IconButtonDefaults.filledShape) {
             Icon(
                 imageVector = Icons.Rounded.Search,
                 contentDescription = "search_icon",

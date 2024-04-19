@@ -19,6 +19,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
+import okhttp3.Route
 
 class SignupViewModel(
     private val authRepository: AuthRepository,
@@ -85,5 +86,9 @@ class SignupViewModel(
 
     private fun dismissLoading() {
         isLoading = false
+    }
+
+    fun navigateTo(route: String) {
+        navController.navigate(route)
     }
 }
