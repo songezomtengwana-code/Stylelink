@@ -146,6 +146,30 @@ class UserViewModel(
     suspend fun fetchUser(id: String): ServerUserModel {
         return userRepository.getUserAccount(id)
     }
+
+    fun fetchServerUser() {
+        viewModelScope.launch {
+            try {
+                var pref = ""
+                val userid = provideApplicationContext(application).userDetailDatastore.data.map {
+                    user -> user.userId
+                }.collect{
+                    preference -> pref = preference
+                }.toString()
+
+                Log.d("fetchServerUser", "initiating")
+                if (userid.isNotEmpty()) {
+                    val details = userRepository.getUserAccount(userid);
+                    Log.d("fetchServerUser", "results: $details")
+
+                } else {
+                    Log.d("fetchServerUser", "userid: $userid")
+                }
+            } catch (e: Exception) {
+                Log.d("fetchServerUser", "nullPointerException: ${e.message.toString()}")
+            }
+        }
+    }
 }
 
 //data class UserDetailDatastoreModel(

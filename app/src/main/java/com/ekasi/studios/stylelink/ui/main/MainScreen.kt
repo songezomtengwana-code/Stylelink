@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -37,11 +38,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ekasi.studios.stylelink.base.common.composables.white100
 import com.ekasi.studios.stylelink.base.components.ActionButton
+import com.ekasi.studios.stylelink.base.components.ActionIconButton
 import com.ekasi.studios.stylelink.base.components.LoadingDialog
 import com.ekasi.studios.stylelink.base.components.SolidNavbar
 import com.ekasi.studios.stylelink.data.model.ServerUserModel
+import com.ekasi.studios.stylelink.navigation.Screen
 
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
@@ -50,12 +54,14 @@ fun MainScreen(viewModel: MainViewModel) {
         mutableStateOf("")
     }
 
+    val user: ServerUserModel? by mutableStateOf(viewModel.user)
+
     LaunchedEffect(Unit) {
-        if (viewModel.user === null) {
-            viewModel.fetchUser()
-        } else {
-            Log.d("lanchedEffect", viewModel.user.toString())
-        }
+//        if (viewModel.user === null) {
+        viewModel.fetchUser()
+//        } else {
+//            Log.d("lanchedEffect", viewModel.user.toString())
+//        }
     }
 
     Scaffold(
@@ -79,16 +85,43 @@ fun MainScreen(viewModel: MainViewModel) {
                             .background(white100)
                             .padding(16.dp)
                     ) {
-                        TopHeader(user = viewModel.user!!)
+//                        TopHeader(user = viewModel.user!!)
+                        Row(
+                            modifier = Modifier
+                                .padding(0.dp, 16.dp)
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(
+                            ) {
+                                Text(
+                                    text = "Hi, ${user?.fullname} 👋",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Black
+                                )
+                                Text(text = "Where to next ?")
+                            }
+                            ActionIconButton(
+                                onClick = { viewModel.navigateTo(Screen.Search.route) },
+                                icon = Icons.Rounded.Search,
+                                iconSize = 24
+                            )
+                        }
+                        Text(
+                            "Favorite Salons (${user?.favorites?.count()})",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
                     }
                 }
             } else {
                 Column(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxHeight(),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text("Unable to connect to server")
+                    Spacer(modifier = Modifier.height(10.dp))
                     ActionButton(onClick = { viewModel.fetchUser() }, title = "Retry")
                 }
             }
@@ -114,13 +147,11 @@ fun TopHeader(user: ServerUserModel) {
             )
             Text(text = "Where to next ?")
         }
-        FilledIconButton(onClick = { /*TODO*/ }, shape = IconButtonDefaults.filledShape) {
-            Icon(
-                imageVector = Icons.Rounded.Search,
-                contentDescription = "search_icon",
-                tint = MaterialTheme.colorScheme.background
-            )
-        }
+        ActionIconButton(onClick = { }, icon = Icons.Rounded.Search, iconSize = 24)
     }
+}
+
+@Composable
+fun PromoSlider(promos: String) {
 
 }

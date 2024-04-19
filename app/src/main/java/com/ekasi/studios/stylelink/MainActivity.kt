@@ -16,6 +16,7 @@ import com.ekasi.studios.stylelink.ui.main.MainViewModel
 import com.ekasi.studios.stylelink.ui.register.RegisterViewModel
 import com.ekasi.studios.stylelink.ui.signup.SignupViewModel
 import com.ekasi.studios.stylelink.ui.login.LoginViewModel
+import com.ekasi.studios.stylelink.ui.search.SearchViewModel
 import com.ekasi.studios.stylelink.ui.splash.SplashViewModel
 import com.ekasi.studios.stylelink.utils.network.NetworkClient
 import com.ekasi.studios.stylelink.viewModels.UserViewModel
@@ -71,6 +72,7 @@ class MainActivity : ComponentActivity() {
                     navController = navController
                 )
 
+                val searchViewModel = SearchViewModel()
 
                 SetupNavGraph(
                     navController = navController,
@@ -78,7 +80,8 @@ class MainActivity : ComponentActivity() {
                     signupViewModel = signupViewModel,
                     registerViewModel = registerViewModel,
                     mainViewModel = mainViewModel,
-                    loginViewModel = loginViewModel
+                    loginViewModel = loginViewModel,
+                    searchViewModel = searchViewModel
                 )
             }
         }

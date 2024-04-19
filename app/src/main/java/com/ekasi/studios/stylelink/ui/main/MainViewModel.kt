@@ -42,6 +42,10 @@ class MainViewModel(
         }
     }
 
+    fun navigateTo(route: String) {
+        navController.navigate(route) { popUpToTop(navController) }
+    }
+
     fun configuration() {
         viewModelScope.launch {
             val firebaseUser = userViewModel.getAuthUser()

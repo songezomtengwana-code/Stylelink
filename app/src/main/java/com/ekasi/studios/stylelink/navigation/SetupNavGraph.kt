@@ -14,6 +14,8 @@ import com.ekasi.studios.stylelink.ui.signup.SignupViewModel
 import com.ekasi.studios.stylelink.ui.splash.SplashScreen
 import com.ekasi.studios.stylelink.ui.splash.SplashViewModel
 import com.ekasi.studios.stylelink.ui.login.LoginViewModel
+import com.ekasi.studios.stylelink.ui.search.SearchScreen
+import com.ekasi.studios.stylelink.ui.search.SearchViewModel
 
 @Composable
 fun SetupNavGraph(
@@ -22,7 +24,8 @@ fun SetupNavGraph(
     signupViewModel: SignupViewModel,
     splashScreenViewModel: SplashViewModel,
     mainViewModel: MainViewModel,
-    loginViewModel: LoginViewModel
+    loginViewModel: LoginViewModel,
+    searchViewModel: SearchViewModel
 ) {
     NavHost(
         navController = navController,
@@ -42,6 +45,9 @@ fun SetupNavGraph(
         }
         composable(route = Screen.Signup.route) {
             SignupScreen(viewModel = signupViewModel)
+        }
+        composable(route = Screen.Search.route) {
+            SearchScreen(viewModel = searchViewModel)
         }
     }
 }
