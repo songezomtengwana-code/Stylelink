@@ -1,6 +1,7 @@
 package com.ekasi.studios.stylelink.base.components
 
 import android.util.Size
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
@@ -19,14 +20,17 @@ fun ActionIconButton(
 ) {
     FilledIconButton(
         onClick,
-        shape = MaterialTheme.shapes.small
+        shape = MaterialTheme.shapes.small,
+        modifier = Modifier
+            .padding(0.dp)
     ) {
         Icon(
             imageVector = icon,
             contentDescription = "search_icon",
             tint = MaterialTheme.colorScheme.background,
             modifier = Modifier
-                .size(iconSize.dp)
+                .size(iconSize.dp).
+            padding(4.dp)
         )
     }
 }

@@ -43,7 +43,7 @@ class MainViewModel(
     }
 
     fun navigateTo(route: String) {
-        navController.navigate(route) { popUpToTop(navController) }
+        navController.navigate(route)
     }
 
     fun configuration() {

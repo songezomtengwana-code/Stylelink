@@ -57,11 +57,11 @@ fun MainScreen(viewModel: MainViewModel) {
     val user: ServerUserModel? by mutableStateOf(viewModel.user)
 
     LaunchedEffect(Unit) {
-//        if (viewModel.user === null) {
+        if (viewModel.user === null) {
         viewModel.fetchUser()
-//        } else {
-//            Log.d("lanchedEffect", viewModel.user.toString())
-//        }
+        } else {
+            Log.d("lanchedEffect", viewModel.user.toString())
+        }
     }
 
     Scaffold(
@@ -105,7 +105,7 @@ fun MainScreen(viewModel: MainViewModel) {
                             ActionIconButton(
                                 onClick = { viewModel.navigateTo(Screen.Search.route) },
                                 icon = Icons.Rounded.Search,
-                                iconSize = 24
+                                iconSize = 35
                             )
                         }
                         Text(

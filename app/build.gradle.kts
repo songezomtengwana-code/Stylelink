@@ -8,6 +8,8 @@ plugins {
     id("com.google.devtools.ksp")
     id("com.google.gms.google-services")
     id("com.google.protobuf")
+    id("com.google.dagger.hilt.android")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -155,6 +157,18 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0")
     testImplementation("com.google.truth:truth:1.1.3")
 //    testImplementation("org.mockito:mockito-kotlin:4.0.0") // Mockito for mocking
+
+    //Google Services & Maps
+    implementation("com.google.android.gms:play-services-location:21.2.0")
+    implementation("com.google.maps.android:maps-compose:2.9.0")
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+
+    //Accompanist (Permission)
+    implementation("com.google.accompanist:accompanist-permissions:0.31.3-beta")
+
+    //Hilt
+    implementation("com.google.dagger:hilt-android:2.44")
+    ksp("com.google.dagger:hilt-compiler:2.44")
 }
 
 protobuf {
