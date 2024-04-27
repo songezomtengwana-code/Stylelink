@@ -1,8 +1,13 @@
 package com.ekasi.studios.stylelink
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
@@ -19,7 +24,10 @@ import com.ekasi.studios.stylelink.ui.login.LoginViewModel
 import com.ekasi.studios.stylelink.ui.search.SearchViewModel
 import com.ekasi.studios.stylelink.ui.splash.SplashViewModel
 import com.ekasi.studios.stylelink.utils.network.NetworkClient
+import com.ekasi.studios.stylelink.utils.services.LocationService
 import com.ekasi.studios.stylelink.viewModels.UserViewModel
+import com.google.android.gms.location.LocationServices
+import com.google.android.libraries.places.api.Places
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -31,6 +39,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val locationPermissionGranted by mutableStateOf(false)
 
         appDatabase =
             Room.databaseBuilder(applicationContext, AppDatabase::class.java, "stylelink.db")
@@ -72,7 +81,7 @@ class MainActivity : ComponentActivity() {
                     navController = navController
                 )
 
-                val searchViewModel = SearchViewModel()
+                val searchViewModel = SearchViewModel(navController, application)
 
                 SetupNavGraph(
                     navController = navController,
@@ -85,5 +94,14 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
+
+        // Construct a PlacesClient
+        Places.initialize(applicationContext, getString(R.string.maps_api_key))
+        var placesClient = Places.createClient(this)
+
+        // Constructs a FusedLocationProviderClient.
+        var fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+
+
     }
 }

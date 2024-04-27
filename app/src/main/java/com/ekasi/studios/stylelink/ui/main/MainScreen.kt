@@ -1,78 +1,73 @@
 package com.ekasi.studios.stylelink.ui.main
 
 import android.util.Log
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ekasi.studios.stylelink.base.common.composables.black20
 import com.ekasi.studios.stylelink.base.common.composables.white100
-import com.ekasi.studios.stylelink.base.components.ActionButton
 import com.ekasi.studios.stylelink.base.components.ActionIconButton
 import com.ekasi.studios.stylelink.base.components.LoadingDialog
 import com.ekasi.studios.stylelink.base.components.SolidNavbar
+import com.ekasi.studios.stylelink.base.composable.Empty
 import com.ekasi.studios.stylelink.data.model.ServerUserModel
 import com.ekasi.studios.stylelink.navigation.Screen
 
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
-    val backDispatcher = LocalOnBackPressedDispatcherOwner.current
-    var userid by rememberSaveable {
-        mutableStateOf("")
-    }
-
     val user: ServerUserModel? by mutableStateOf(viewModel.user)
+    val uiState = viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
         if (viewModel.user === null) {
-        viewModel.fetchUser()
+            viewModel.fetchUser()
         } else {
-            Log.d("lanchedEffect", viewModel.user.toString())
+            Log.d("LaunchedEffect", viewModel.user.toString())
         }
     }
 
     Scaffold(
         modifier = Modifier
             .background(white100),
-        topBar = { SolidNavbar() }
+        topBar = { SolidNavbar(imageUrl = if (user !== null ) user?.profileImageURL!! else "")  }
     ) { paddingValues ->
-        if (viewModel.isLoading) {
-            LoadingDialog()
-        } else {
-            if (viewModel.user !== null) {
+
+        when (uiState.value) {
+            is MainState.Loading -> {
+                LoadingDialog()
+            }
+
+            is MainState.Success -> {
+                val success = (uiState.value as MainState.Success)
+                Text(text = success.user.fullname)
                 Surface(
                     modifier = Modifier
                         .padding(paddingValues)
@@ -85,7 +80,6 @@ fun MainScreen(viewModel: MainViewModel) {
                             .background(white100)
                             .padding(16.dp)
                     ) {
-//                        TopHeader(user = viewModel.user!!)
                         Row(
                             modifier = Modifier
                                 .padding(0.dp, 16.dp)
@@ -96,7 +90,7 @@ fun MainScreen(viewModel: MainViewModel) {
                             Column(
                             ) {
                                 Text(
-                                    text = "Hi, ${user?.fullname} 👋",
+                                    text = "Hi, ${success.user.fullname} 👋",
                                     style = MaterialTheme.typography.titleLarge,
                                     fontWeight = FontWeight.Black
                                 )
@@ -109,25 +103,66 @@ fun MainScreen(viewModel: MainViewModel) {
                             )
                         }
                         Text(
-                            "Favorite Salons (${user?.favorites?.count()})",
+                            "Favorite Salons (${success.user.favorites.count()})",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                        if (success.user.favorites.isNotEmpty()) {
+                            val favorites = success.user.favorites
+
+                            favorites.forEach { favorite: String -> Text(text = favorite) }
+                        } else {
+                            Empty(
+                                text = "You don't have any favorites yet :(",
+                                suggestion = "Browse available stores that you might like",
+                                onClick = {}
+                            )
+                        }
+                        Text(
+                            "Bookings History (${success.user.favorites.count()})",
                             style = MaterialTheme.typography.bodyLarge
                         )
                     }
                 }
-            } else {
+            }
+
+            is MainState.Error -> {
+                val error = (uiState.value as MainState.Error)
                 Column(
-                    modifier = Modifier.fillMaxHeight(),
+                    modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("Unable to connect to server")
+                    Text(
+                        text = "error code: ${viewModel.protoUserDetailsUserId}",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = black20
+                    )
+                    Text(error.message)
                     Spacer(modifier = Modifier.height(10.dp))
-                    ActionButton(onClick = { viewModel.fetchUser() }, title = "Retry")
+                    TextButton(
+                        onClick = {
+                            viewModel.displayLoadingState()
+                            viewModel.fetchUser()
+                        }
+                    ) {
+                        Row(
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.Refresh,
+                                contentDescription = "refresh_icon"
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text("Refresh", fontWeight = FontWeight.Bold)
+                        }
+                    }
                 }
             }
         }
     }
 }
+
 
 @Composable
 fun TopHeader(user: ServerUserModel) {
