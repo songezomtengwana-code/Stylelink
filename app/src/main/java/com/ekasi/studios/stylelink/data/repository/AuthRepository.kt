@@ -5,7 +5,9 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
-class AuthRepository(val auth: FirebaseAuth) {
+class AuthRepository(
+    private val auth: FirebaseAuth
+) {
 
     suspend fun signInWithEmailAndPassword(email: String, password: String): Task<AuthResult> {
         return auth.signInWithEmailAndPassword(email, password)

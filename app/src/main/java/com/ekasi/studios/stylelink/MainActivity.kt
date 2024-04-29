@@ -1,30 +1,27 @@
 package com.ekasi.studios.stylelink
 
-import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModel
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.ekasi.studios.stylelink.data.converters.ListConverter
 import com.ekasi.studios.stylelink.data.local.AppDatabase
-import com.ekasi.studios.stylelink.ui.theme.StylelinkTheme
 import com.ekasi.studios.stylelink.data.repository.AuthRepository
+import com.ekasi.studios.stylelink.data.repository.StoreRepository
 import com.ekasi.studios.stylelink.data.repository.UserRepository
 import com.ekasi.studios.stylelink.navigation.SetupNavGraph
+import com.ekasi.studios.stylelink.ui.login.LoginViewModel
 import com.ekasi.studios.stylelink.ui.main.MainViewModel
 import com.ekasi.studios.stylelink.ui.register.RegisterViewModel
-import com.ekasi.studios.stylelink.ui.signup.SignupViewModel
-import com.ekasi.studios.stylelink.ui.login.LoginViewModel
 import com.ekasi.studios.stylelink.ui.search.SearchViewModel
+import com.ekasi.studios.stylelink.ui.signup.SignupViewModel
 import com.ekasi.studios.stylelink.ui.splash.SplashViewModel
+import com.ekasi.studios.stylelink.ui.theme.StylelinkTheme
 import com.ekasi.studios.stylelink.utils.network.NetworkClient
-import com.ekasi.studios.stylelink.utils.services.LocationService
+import com.ekasi.studios.stylelink.viewModels.StoresViewModel
 import com.ekasi.studios.stylelink.viewModels.UserViewModel
 import com.google.android.gms.location.LocationServices
 import com.google.android.libraries.places.api.Places
@@ -51,6 +48,8 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val auth = Firebase.auth
                 val userRepository = UserRepository(NetworkClient.NetworkClient.userApiService())
+                val storesRepository =
+                    StoreRepository(NetworkClient.NetworkClient.storesApiService())
                 val userViewModel =
                     UserViewModel(appDatabase.userDao(), application, userRepository)
                 val signupViewModel = SignupViewModel(
@@ -81,6 +80,10 @@ class MainActivity : ComponentActivity() {
                     navController = navController
                 )
 
+                val storesViewModel = StoresViewModel(
+                    storeRepository = storesRepository,
+                )
+
                 val searchViewModel = SearchViewModel(navController, application)
 
                 SetupNavGraph(
@@ -90,7 +93,8 @@ class MainActivity : ComponentActivity() {
                     registerViewModel = registerViewModel,
                     mainViewModel = mainViewModel,
                     loginViewModel = loginViewModel,
-                    searchViewModel = searchViewModel
+                    searchViewModel = searchViewModel,
+                    storesViewModel = storesViewModel
                 )
             }
         }

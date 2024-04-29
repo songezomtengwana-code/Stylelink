@@ -3,8 +3,6 @@ package com.ekasi.studios.stylelink.utils.services
 import com.ekasi.studios.stylelink.data.model.RegistrationUserModel
 import com.ekasi.studios.stylelink.data.model.ServerUserModel
 import com.ekasi.studios.stylelink.data.model.responses.RegisterUserResponse
-import okhttp3.ResponseBody
-import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

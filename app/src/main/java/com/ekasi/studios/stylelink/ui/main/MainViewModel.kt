@@ -32,12 +32,6 @@ class MainViewModel(
     var user: ServerUserModel? by mutableStateOf(null)
     var protoUserDetailsUserId: String? by mutableStateOf("")
 
-    /*
-     * To be rendered useless after successfully integrating UI State Management
-     */
-    var success: Boolean by mutableStateOf(false)
-    var isLoading by mutableStateOf(true);
-
     init {
         viewModelScope.launch {
             protoUserDetailsUserId = userViewModel.getUserDetails()
@@ -83,7 +77,7 @@ class MainViewModel(
     fun fetchUser() {
         viewModelScope.launch {
             try {
-                Log.d("fetchUser", "initiating")
+                Log.d("fetchUser", "fetching $protoUserDetailsUserId server information")
                 if (protoUserDetailsUserId!!.isNotEmpty()) {
                     val details = userViewModel.fetchUser(protoUserDetailsUserId!!)
                     // change state after successful data retrieval

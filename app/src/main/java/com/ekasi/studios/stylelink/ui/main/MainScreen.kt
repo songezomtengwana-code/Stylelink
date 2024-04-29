@@ -2,6 +2,7 @@ package com.ekasi.studios.stylelink.ui.main
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,11 +13,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.FavoriteBorder
+import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.Share
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -29,22 +39,35 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.ekasi.studios.stylelink.base.common.composables.black20
 import com.ekasi.studios.stylelink.base.common.composables.white100
 import com.ekasi.studios.stylelink.base.components.ActionIconButton
 import com.ekasi.studios.stylelink.base.components.LoadingDialog
 import com.ekasi.studios.stylelink.base.components.SolidNavbar
 import com.ekasi.studios.stylelink.base.composable.Empty
+import com.ekasi.studios.stylelink.base.composable.SectionTitle
 import com.ekasi.studios.stylelink.data.model.ServerUserModel
 import com.ekasi.studios.stylelink.navigation.Screen
+import com.ekasi.studios.stylelink.ui.theme.StylelinkTheme
+import com.ekasi.studios.stylelink.ui.theme.tinySize
+import com.ekasi.studios.stylelink.utils.services.stores.models.Store
+import com.ekasi.studios.stylelink.viewModels.StoreState
+import com.ekasi.studios.stylelink.viewModels.StoresViewModel
 
 @Composable
-fun MainScreen(viewModel: MainViewModel) {
+fun MainScreen(
+    viewModel: MainViewModel,
+    storesViewModel: StoresViewModel
+) {
     val user: ServerUserModel? by mutableStateOf(viewModel.user)
     val uiState = viewModel.uiState.collectAsState()
+    val storesState = storesViewModel.storeState.collectAsState()
 
     LaunchedEffect(Unit) {
         if (viewModel.user === null) {
@@ -57,7 +80,7 @@ fun MainScreen(viewModel: MainViewModel) {
     Scaffold(
         modifier = Modifier
             .background(white100),
-        topBar = { SolidNavbar(imageUrl = if (user !== null ) user?.profileImageURL!! else "")  }
+        topBar = { SolidNavbar(imageUrl = if (user !== null) user?.profileImageURL!! else "") }
     ) { paddingValues ->
 
         when (uiState.value) {
@@ -102,10 +125,10 @@ fun MainScreen(viewModel: MainViewModel) {
                                 iconSize = 35
                             )
                         }
-                        Text(
-                            "Favorite Salons (${success.user.favorites.count()})",
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.Bold
+                        SectionTitle(
+                            title = "Favourites",
+                            count = success.user.favorites.count(),
+                            moreAction = {}
                         )
                         if (success.user.favorites.isNotEmpty()) {
                             val favorites = success.user.favorites
@@ -118,10 +141,18 @@ fun MainScreen(viewModel: MainViewModel) {
                                 onClick = {}
                             )
                         }
-                        Text(
-                            "Bookings History (${success.user.favorites.count()})",
-                            style = MaterialTheme.typography.bodyLarge
+                        SectionTitle(
+                            title = "Booking History",
+                            count = success.user.favorites.size,
+                            moreAction = {}
                         )
+                        SectionTitle(
+                            title = "More Stores",
+                            count = 0,
+                            moreAction = {}
+                        )
+
+                        StoreSlider(storesViewModel = storesViewModel)
                     }
                 }
             }
@@ -187,6 +218,159 @@ fun TopHeader(user: ServerUserModel) {
 }
 
 @Composable
-fun PromoSlider(promos: String) {
+fun StoreSlider(storesViewModel: StoresViewModel) {
+    val state = storesViewModel.storeState.collectAsState()
 
+    when (state.value) {
+        is StoreState.Loading -> {
+            Text(text = "Fetching Stores")
+            LinearProgressIndicator()
+        }
+
+        is StoreState.Success -> {
+            val success = (state.value as StoreState.Success)
+            Column(
+
+            ) {
+                success.stores.forEach { store: Store -> StoreCard(store = store) }
+            }
+        }
+
+        is StoreState.Error -> {
+            TextButton(onClick = { /*TODO*/ }) {
+                Text("Reloading")
+            }
+            Log.d("MainScreen", "error: ${state.value}")
+        }
+    }
+}
+
+@Composable
+fun StoreCard(store: Store) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(0.dp, tinySize)
+            .clickable {  }
+
+    ) {
+        Card(
+            modifier = Modifier
+                .clickable {  }
+        ) {
+            AsyncImage(model = store.profileImage, contentDescription = store.name)
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(0.dp, 4.dp)
+        ) {
+            when (store.isActive) {
+                true -> {
+                    Text(
+                        text = "Active",
+                        color = Color.Green,
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
+
+                false -> {
+                    Card(
+                        modifier = Modifier
+                            .padding(0.dp, 12.dp)
+                            .clip(RoundedCornerShape(12.dp)),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.LightGray
+                        )
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(8.dp, 2.dp),
+                            text = "offline",
+                            color = Color.Black,
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+
+                else -> Text(
+                    text = "Smoking my nappy dreads",
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
+            Text(
+                text = store.name.capitalize(),
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Black
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.LocationOn,
+                    contentDescription = "location_on_ion_location",
+                    modifier = Modifier
+                        .height(tinySize),
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = store.address.toString(),
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+            Row {
+                Text(text = "Business Hours: ${store.businessHours!![0]} - ${store.businessHours[1]}")
+            }
+            Row {
+                Button(
+                    onClick = { /*TODO*/ },
+                ) {
+                    Text(text = "Visit Profile")
+                }
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(imageVector = Icons.Rounded.Share, contentDescription = "share_icon")
+                }
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(
+                        imageVector = Icons.Rounded.FavoriteBorder,
+                        contentDescription = "favorite_icon"
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun StoreCardPreview() {
+    StylelinkTheme {
+
+        val mockStore = Store(
+            name = "Stylelink .Inc",
+            email = "support@stylelink.com",
+            id = "2380tyrh23840f95fy2",
+            address = "1991 Down Main Street",
+            servicesFor = "Uni-sexual",
+            profileImage = "https://i.imgur.com/ZW5wkBq.jpeg",
+            rating = 4.5f,
+            company = "EKasi",
+            registered = "2024-04-29T10:10:37+02:00",
+            isActive = true
+        )
+        Surface(
+//            modifier = Modifier
+//                .background(Color.Black)
+//                .fillMaxSize(),
+//            color = Color.Green
+        ) {
+            StoreCard(store = mockStore)
+        }
+    }
 }

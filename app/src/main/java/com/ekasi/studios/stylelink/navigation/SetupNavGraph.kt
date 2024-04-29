@@ -5,17 +5,18 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.ekasi.studios.stylelink.ui.login.LoginScreen
+import com.ekasi.studios.stylelink.ui.login.LoginViewModel
 import com.ekasi.studios.stylelink.ui.main.MainScreen
 import com.ekasi.studios.stylelink.ui.main.MainViewModel
 import com.ekasi.studios.stylelink.ui.register.RegisterScreen
 import com.ekasi.studios.stylelink.ui.register.RegisterViewModel
+import com.ekasi.studios.stylelink.ui.search.SearchScreen
+import com.ekasi.studios.stylelink.ui.search.SearchViewModel
 import com.ekasi.studios.stylelink.ui.signup.SignupScreen
 import com.ekasi.studios.stylelink.ui.signup.SignupViewModel
 import com.ekasi.studios.stylelink.ui.splash.SplashScreen
 import com.ekasi.studios.stylelink.ui.splash.SplashViewModel
-import com.ekasi.studios.stylelink.ui.login.LoginViewModel
-import com.ekasi.studios.stylelink.ui.search.SearchScreen
-import com.ekasi.studios.stylelink.ui.search.SearchViewModel
+import com.ekasi.studios.stylelink.viewModels.StoresViewModel
 
 @Composable
 fun SetupNavGraph(
@@ -25,7 +26,8 @@ fun SetupNavGraph(
     splashScreenViewModel: SplashViewModel,
     mainViewModel: MainViewModel,
     loginViewModel: LoginViewModel,
-    searchViewModel: SearchViewModel
+    searchViewModel: SearchViewModel,
+    storesViewModel: StoresViewModel
 ) {
     NavHost(
         navController = navController,
@@ -38,7 +40,7 @@ fun SetupNavGraph(
             RegisterScreen(registerViewModel)
         }
         composable(route = Screen.Main.route) {
-            MainScreen(mainViewModel)
+            MainScreen(mainViewModel, storesViewModel)
         }
         composable(route = Screen.Login.route) {
             LoginScreen(loginViewModel)
