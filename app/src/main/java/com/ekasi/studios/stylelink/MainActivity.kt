@@ -19,6 +19,7 @@ import com.ekasi.studios.stylelink.ui.register.RegisterViewModel
 import com.ekasi.studios.stylelink.ui.search.SearchViewModel
 import com.ekasi.studios.stylelink.ui.signup.SignupViewModel
 import com.ekasi.studios.stylelink.ui.splash.SplashViewModel
+import com.ekasi.studios.stylelink.ui.storeprofile.StoreProfileViewModel
 import com.ekasi.studios.stylelink.ui.theme.StylelinkTheme
 import com.ekasi.studios.stylelink.utils.network.NetworkClient
 import com.ekasi.studios.stylelink.viewModels.StoresViewModel
@@ -86,6 +87,10 @@ class MainActivity : ComponentActivity() {
 
                 val searchViewModel = SearchViewModel(navController, application)
 
+                val storeProfileViewModel = StoreProfileViewModel(
+                    storeRepository = storesRepository,
+                )
+
                 SetupNavGraph(
                     navController = navController,
                     splashScreenViewModel = splashViewModel,
@@ -94,7 +99,8 @@ class MainActivity : ComponentActivity() {
                     mainViewModel = mainViewModel,
                     loginViewModel = loginViewModel,
                     searchViewModel = searchViewModel,
-                    storesViewModel = storesViewModel
+                    storesViewModel = storesViewModel,
+                    storeProfileViewModel = storeProfileViewModel
                 )
             }
         }

@@ -5,11 +5,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ekasi.studios.stylelink.data.repository.StoreRepository
 import com.ekasi.studios.stylelink.utils.services.stores.models.Store
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class StoreProfileViewModel(
     private val storeRepository: StoreRepository
 ) : ViewModel() {
+    private var _state  = MutableStateFlow<StoreProfileState>(StoreProfileState.Loading)
+
+    /**
+     * @param storeRepository
+     */
+    val state: MutableStateFlow<StoreProfileState> = _state
 
     /**
      * @throws IllegalStateException
