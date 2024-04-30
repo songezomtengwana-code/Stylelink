@@ -42,8 +42,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.ekasi.studios.stylelink.base.common.composables.black20
 import com.ekasi.studios.stylelink.base.common.composables.white100
@@ -54,7 +54,6 @@ import com.ekasi.studios.stylelink.base.composable.Empty
 import com.ekasi.studios.stylelink.base.composable.SectionTitle
 import com.ekasi.studios.stylelink.data.model.ServerUserModel
 import com.ekasi.studios.stylelink.navigation.Screen
-import com.ekasi.studios.stylelink.ui.theme.StylelinkTheme
 import com.ekasi.studios.stylelink.ui.theme.tinySize
 import com.ekasi.studios.stylelink.utils.services.stores.models.Store
 import com.ekasi.studios.stylelink.viewModels.StoreState
@@ -63,7 +62,8 @@ import com.ekasi.studios.stylelink.viewModels.StoresViewModel
 @Composable
 fun MainScreen(
     viewModel: MainViewModel,
-    storesViewModel: StoresViewModel
+    storesViewModel: StoresViewModel,
+    navController: NavController
 ) {
     val user: ServerUserModel? by mutableStateOf(viewModel.user)
     val uiState = viewModel.uiState.collectAsState()
@@ -148,11 +148,14 @@ fun MainScreen(
                         )
                         SectionTitle(
                             title = "More Stores",
-                            count = 0,
+                            count = 6,
                             moreAction = {}
                         )
 
-                        StoreSlider(storesViewModel = storesViewModel)
+                        StoreSlider(
+                            storesViewModel = storesViewModel,
+                            navController = navController
+                        )
                     }
                 }
             }
@@ -218,13 +221,21 @@ fun TopHeader(user: ServerUserModel) {
 }
 
 @Composable
-fun StoreSlider(storesViewModel: StoresViewModel) {
+fun StoreSlider(storesViewModel: StoresViewModel, navController: NavController) {
     val state = storesViewModel.storeState.collectAsState()
 
     when (state.value) {
         is StoreState.Loading -> {
-            Text(text = "Fetching Stores")
-            LinearProgressIndicator()
+            Row(
+                modifier = Modifier
+                    .padding(0.dp, 16.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(text = "Fetching Stores", style = MaterialTheme.typography.labelSmall)
+                LinearProgressIndicator()
+            }
         }
 
         is StoreState.Success -> {
@@ -232,31 +243,48 @@ fun StoreSlider(storesViewModel: StoresViewModel) {
             Column(
 
             ) {
-                success.stores.forEach { store: Store -> StoreCard(store = store) }
+                success.stores.forEach { store: Store ->
+                    StoreCard(
+                        store = store,
+                        navController = navController
+                    )
+                }
             }
         }
 
         is StoreState.Error -> {
-            TextButton(onClick = { /*TODO*/ }) {
-                Text("Reloading")
+            Row(
+                modifier = Modifier
+                    .padding(0.dp, 16.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "we ran into a problem,try again",
+                    style = MaterialTheme.typography.labelSmall
+                )
+                TextButton(onClick = {}) {
+                    Text("Reload")
+                }
+                Log.d("MainScreen", "error: ${state.value}")
             }
-            Log.d("MainScreen", "error: ${state.value}")
         }
     }
 }
 
 @Composable
-fun StoreCard(store: Store) {
+fun StoreCard(store: Store, navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(0.dp, tinySize)
-            .clickable {  }
+            .clickable { }
 
     ) {
         Card(
             modifier = Modifier
-                .clickable {  }
+                .clickable { }
         ) {
             AsyncImage(model = store.profileImage, contentDescription = store.name)
         }
@@ -328,8 +356,10 @@ fun StoreCard(store: Store) {
                 Text(text = "Business Hours: ${store.businessHours!![0]} - ${store.businessHours[1]}")
             }
             Row {
+                val storeProfileRoute =
+                    Screen.StoreProfile.route.replace("{storeId}", store._id.toString())
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = { navController.navigate(storeProfileRoute) },
                 ) {
                     Text(text = "Visit Profile")
                 }
@@ -343,34 +373,6 @@ fun StoreCard(store: Store) {
                     )
                 }
             }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun StoreCardPreview() {
-    StylelinkTheme {
-
-        val mockStore = Store(
-            name = "Stylelink .Inc",
-            email = "support@stylelink.com",
-            id = "2380tyrh23840f95fy2",
-            address = "1991 Down Main Street",
-            servicesFor = "Uni-sexual",
-            profileImage = "https://i.imgur.com/ZW5wkBq.jpeg",
-            rating = 4.5f,
-            company = "EKasi",
-            registered = "2024-04-29T10:10:37+02:00",
-            isActive = true
-        )
-        Surface(
-//            modifier = Modifier
-//                .background(Color.Black)
-//                .fillMaxSize(),
-//            color = Color.Green
-        ) {
-            StoreCard(store = mockStore)
         }
     }
 }

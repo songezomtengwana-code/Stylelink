@@ -11,7 +11,7 @@ class StoreRepository(
         return storeService.fetchStores()
     }
 
-    suspend fun fetchStoreWithId(id: String): Store {
+    suspend fun fetchStoreProfile(id: String): Store {
         return storeService.fetchStoreById(id)
     }
 }

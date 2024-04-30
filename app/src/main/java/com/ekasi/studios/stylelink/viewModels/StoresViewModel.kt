@@ -42,6 +42,13 @@ class StoresViewModel(
             }
         }
     }
+
+    suspend fun reload() {
+        viewModelScope.launch {
+            _storeState.value = StoreState.Loading
+            initFetchAllStore()
+        }
+    }
 }
 
 sealed class StoreState {

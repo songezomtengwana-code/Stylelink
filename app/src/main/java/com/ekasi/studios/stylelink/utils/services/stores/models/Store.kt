@@ -2,6 +2,7 @@ package com.ekasi.studios.stylelink.utils.services.stores.models
 
 data class Store(
     // server instantiated
+    val _id: String? = "",
     val id: String? = "",
     val index: String? = "",
     val guid: String? = "",

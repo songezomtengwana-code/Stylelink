@@ -89,6 +89,7 @@ class MainActivity : ComponentActivity() {
 
                 val storeProfileViewModel = StoreProfileViewModel(
                     storeRepository = storesRepository,
+                    navController = navController,
                 )
 
                 SetupNavGraph(

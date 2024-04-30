@@ -2,8 +2,10 @@ package com.ekasi.studios.stylelink.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.ekasi.studios.stylelink.ui.login.LoginScreen
 import com.ekasi.studios.stylelink.ui.login.LoginViewModel
 import com.ekasi.studios.stylelink.ui.main.MainScreen
@@ -43,7 +45,7 @@ fun SetupNavGraph(
             RegisterScreen(registerViewModel)
         }
         composable(route = Screen.Main.route) {
-            MainScreen(mainViewModel, storesViewModel)
+            MainScreen(mainViewModel, storesViewModel, navController)
         }
         composable(route = Screen.Login.route) {
             LoginScreen(loginViewModel)
@@ -54,8 +56,14 @@ fun SetupNavGraph(
         composable(route = Screen.Search.route) {
             SearchScreen(viewModel = searchViewModel)
         }
-        composable(route = Screen.StoreProfile.route) {
-            StoreProfile(storeProfileViewModel = storeProfileViewModel)
+        composable(
+            route = Screen.StoreProfile.route,
+            arguments = listOf(navArgument("storeId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            StoreProfile(
+                storeProfileViewModel = storeProfileViewModel,
+                backStackEntry.arguments?.getString("storeId")
+            )
         }
     }
 }
