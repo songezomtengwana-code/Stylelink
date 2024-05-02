@@ -4,21 +4,27 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.ekasi.studios.stylelink.data.repository.ServicesRepository
 import com.ekasi.studios.stylelink.data.repository.StoreRepository
 import com.ekasi.studios.stylelink.utils.services.stores.models.Store
+import com.ekasi.studios.stylelink.utils.states.ServicesState
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class StoreProfileViewModel(
     private val storeRepository: StoreRepository,
+    private val servicesRepository: ServicesRepository,
     private val navController: NavController
 ) : ViewModel() {
     private var _state = MutableStateFlow<StoreProfileState>(StoreProfileState.Loading)
+    private var _servicesState = MutableStateFlow<ServicesState>(ServicesState.Loading)
 
     /**
      * @param storeRepository
      */
     val state: MutableStateFlow<StoreProfileState> = _state
+    val servicesState: StateFlow<ServicesState> = _servicesState
 
     /**
      * @throws IllegalStateException
@@ -51,16 +57,40 @@ class StoreProfileViewModel(
     }
 
     fun clearState() {
-       viewModelScope.launch {
-           try {
-               navController.popBackStack()
-               _state.value = StoreProfileState.Loading
-           } catch (e: Exception) {
-               Log.d("clearState", e.message.toString())
-           }
-       }
+        viewModelScope.launch {
+            try {
+                navController.popBackStack()
+                _state.value = StoreProfileState.Loading
+                _servicesState.value = ServicesState.Loading
+            } catch (e: Exception) {
+                Log.d("clearState", e.message.toString())
+            }
+        }
     }
 
+    fun fetchStoreServices(storeId: String) {
+        viewModelScope.launch {
+            try {
+                val response = servicesRepository.fetchStoreServices(storeId)
+                _servicesState.value = ServicesState.MultipleServicesSuccess(response)
+                Log.d("fetchStoreServices", "returnedServices: ${_servicesState.value}")
+            } catch (e: Exception) {
+                _servicesState.value = ServicesState.Error(e.message.toString())
+                Log.d("fetchStoreServices", "error: ${_servicesState.value}")
+            }
+        }
+    }
+
+    fun fetchSingleService(id: String) {
+        viewModelScope.launch {
+            try {
+                val response = servicesRepository.fetchServiceById(id)
+                _servicesState.value = ServicesState.SingleServiceSuccess(response)
+            } catch (e: Exception) {
+                _servicesState.value = ServicesState.Error(e.message.toString())
+            }
+        }
+    }
 }
 
 sealed class StoreProfileState {

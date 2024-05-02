@@ -10,6 +10,7 @@ import androidx.room.Room
 import com.ekasi.studios.stylelink.data.converters.ListConverter
 import com.ekasi.studios.stylelink.data.local.AppDatabase
 import com.ekasi.studios.stylelink.data.repository.AuthRepository
+import com.ekasi.studios.stylelink.data.repository.ServicesRepository
 import com.ekasi.studios.stylelink.data.repository.StoreRepository
 import com.ekasi.studios.stylelink.data.repository.UserRepository
 import com.ekasi.studios.stylelink.navigation.SetupNavGraph
@@ -46,13 +47,23 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             StylelinkTheme {
+                // Navigation Controller
                 val navController = rememberNavController()
+
+                // Firebase
                 val auth = Firebase.auth
+
+                // Repositories
                 val userRepository = UserRepository(NetworkClient.NetworkClient.userApiService())
-                val storesRepository =
-                    StoreRepository(NetworkClient.NetworkClient.storesApiService())
-                val userViewModel =
-                    UserViewModel(appDatabase.userDao(), application, userRepository)
+                val storesRepository = StoreRepository(NetworkClient.NetworkClient.storesApiService())
+                val servicesRepository = ServicesRepository(NetworkClient.NetworkClient.servicesApiService())
+
+                // ViewModels
+                val userViewModel = UserViewModel(
+                    userDao = appDatabase.userDao(),
+                    application = application,
+                    userRepository = userRepository)
+
                 val signupViewModel = SignupViewModel(
                     authRepository = AuthRepository(auth),
                     navController = navController
@@ -89,6 +100,7 @@ class MainActivity : ComponentActivity() {
 
                 val storeProfileViewModel = StoreProfileViewModel(
                     storeRepository = storesRepository,
+                    servicesRepository = servicesRepository,
                     navController = navController,
                 )
 
