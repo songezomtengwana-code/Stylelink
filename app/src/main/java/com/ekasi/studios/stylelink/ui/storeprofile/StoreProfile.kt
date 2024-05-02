@@ -120,7 +120,7 @@ fun StoreProfileComponent(store: Store) {
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { TODO("Integrate nav controller for popBackStack()") }) {
+                    IconButton(onClick = {}) {
                         Icon(
                             imageVector = Icons.Rounded.KeyboardArrowLeft,
                             contentDescription = "back_Button"

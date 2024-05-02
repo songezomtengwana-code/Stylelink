@@ -253,18 +253,20 @@ fun StoreSlider(storesViewModel: StoresViewModel, navController: NavController) 
         }
 
         is StoreState.Error -> {
-            Row(
+            Column(
                 modifier = Modifier
                     .padding(0.dp, 16.dp)
                     .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = "we ran into a problem,try again",
                     style = MaterialTheme.typography.labelSmall
                 )
-                TextButton(onClick = {}) {
+                TextButton(onClick = {
+                    storesViewModel.reload()
+                }) {
                     Text("Reload")
                 }
                 Log.d("MainScreen", "error: ${state.value}")

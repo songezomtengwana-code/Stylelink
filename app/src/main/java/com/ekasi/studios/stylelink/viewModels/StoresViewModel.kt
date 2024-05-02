@@ -43,7 +43,7 @@ class StoresViewModel(
         }
     }
 
-    suspend fun reload() {
+     fun reload() {
         viewModelScope.launch {
             _storeState.value = StoreState.Loading
             initFetchAllStore()
