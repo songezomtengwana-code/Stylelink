@@ -35,15 +35,21 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,15 +57,18 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.ekasi.studios.stylelink.R
 import com.ekasi.studios.stylelink.base.composable.CarouselEmpty
 import com.ekasi.studios.stylelink.base.composable.CarouselError
 import com.ekasi.studios.stylelink.base.composable.CarouselLoader
+import com.ekasi.studios.stylelink.base.composable.CheckBoxWithText
 import com.ekasi.studios.stylelink.base.composable.ProfileTitle
 import com.ekasi.studios.stylelink.base.composable.StatBar
 import com.ekasi.studios.stylelink.data.model.Product
@@ -124,7 +133,6 @@ fun StoreProfile(
                 onBackClick = { storeProfileViewModel.backNavigation() }
             )
 
-
             LaunchedEffect(profile._id) {
                 if (profile._id !== null) {
                     storeProfileViewModel.fetchStoreServices(profile._id)
@@ -165,7 +173,7 @@ fun StoreProfileComponent(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = {onBackClick()}) {
+                    IconButton(onClick = { onBackClick() }) {
                         Icon(
                             imageVector = Icons.Rounded.KeyboardArrowLeft,
                             contentDescription = "back_Button"
@@ -247,14 +255,8 @@ fun StoreProfileComponent(
                         .width(IntrinsicSize.Max)
                         .weight(1f),
                 ) {
-
                     Text(text = "Book Services")
                     Spacer(modifier = Modifier.width(4.dp))
-//                    Icon(
-//                        imageVector = Icons.Rounded.Send,
-//                        contentDescription = "chat_with_stylist",
-//                        modifier = Modifier.size(tinySize)
-//                    )
                 }
                 Row(
                     modifier = Modifier
@@ -290,6 +292,7 @@ fun StoreProfileComponent(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ServicesCarousel(servicesState: State<ServicesState>, storeId: String?) {
     when (servicesState.value) {
@@ -301,7 +304,10 @@ fun ServicesCarousel(servicesState: State<ServicesState>, storeId: String?) {
             val services = (servicesState.value as ServicesState.MultipleServicesSuccess).services
 
             if (services.isEmpty()) {
-                CarouselEmpty(text = "Hmm, No Services Yet", suggestion = "Keep a close eye updates can occur any minute")
+                CarouselEmpty(
+                    text = "Hmm, No Services Yet",
+                    suggestion = "Keep a close eye updates can occur any minute"
+                )
             } else {
                 Row(
                     modifier = Modifier
@@ -314,7 +320,10 @@ fun ServicesCarousel(servicesState: State<ServicesState>, storeId: String?) {
                 ) {
                     services.forEach { service: Service ->
 
-                        ServiceCard(service = service)
+
+                        ServiceCard(service = service) {
+
+                        }
                     }
                 }
             }
@@ -331,8 +340,10 @@ fun ServicesCarousel(servicesState: State<ServicesState>, storeId: String?) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductsCarousel(productState: State<ProductState>) {
+
     when (productState.value) {
         is ProductState.Error -> {
             val message = (productState.value as ProductState.Error).message
@@ -375,17 +386,149 @@ fun ProductsCarousel(productState: State<ProductState>) {
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ServiceCard(service: Service) {
+fun ServiceCard(service: Service, onClick: () -> Unit = {}) {
     val configuration = LocalConfiguration.current
     val cardWidth = configuration.screenWidthDp.dp / 2
     val cardHeight = configuration.screenHeightDp.dp / 3
     val backgroundImage = "https://legends-barber.com/wp-content/uploads/2024/04/FLAT-TOP.png"
+
+
+    val sheetState = rememberModalBottomSheetState()
+    var showBottomSheet by remember { mutableStateOf(false) }
+    var policyAgreement by remember { mutableStateOf(false) }
+
+
+    if (showBottomSheet) {
+        ModalBottomSheet(
+            sheetState = sheetState,
+            onDismissRequest = {
+                showBottomSheet = false
+            },
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(tinySize)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(tinySize)
+            ) {
+                Text(
+                    text = service.name,
+                    style = MaterialTheme.typography.displayMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = "Service Description",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = service.description,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Text(
+                    text = "Service Details",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold
+                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.cash_rounded),
+                        contentDescription = "icon",
+                        modifier = Modifier
+                            .height(tinySize)
+                            .width(tinySize)
+                    )
+                    Text(
+                        text = "R${service.price}",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.time_rounded),
+                        contentDescription = "icon",
+                        modifier = Modifier
+                            .height(tinySize)
+                            .width(tinySize)
+                    )
+                    Text(
+                        text = "${service.duration / 100000} Minutes",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+                Text(
+                    text = "Cancellation Policy",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = service.description,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                CheckBoxWithText(
+                    onCheckedChange = { policyAgreement = !policyAgreement },
+                    text = "I have fully read and agree with the cancellation policy."
+                )
+                Column(
+                    modifier = Modifier
+                ) {
+
+                    Row {
+                        OutlinedButton(
+                            onClick = {
+                                showBottomSheet = false
+                            },
+                            modifier = Modifier
+                                .padding(0.dp, 8.dp),
+                        ) {
+                            Text(
+                                text = "Cancel",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Button(
+                            onClick = {
+
+                            },
+                            modifier = Modifier
+                                .padding(0.dp, 8.dp)
+                                .weight(1f)
+                        ) {
+                            Text(
+                                text = "Start Booking",
+                                style = MaterialTheme.typography.labelMedium,
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
     Card(
         modifier = Modifier
             .height(cardHeight)
             .width(cardWidth)
-            .clickable { },
+            .clickable { showBottomSheet = true },
         colors = CardDefaults.cardColors(
             containerColor = Color(0x20000000)
         )
@@ -490,6 +633,7 @@ fun ServiceCardPreview() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductCard(product: Product) {
     val cardWidth = LocalConfiguration.current.screenWidthDp.dp / 3
@@ -497,7 +641,6 @@ fun ProductCard(product: Product) {
         price = product.price,
         discountedBy = product.discountedBy
     )
-
     Row(
         modifier = Modifier
             .width(LocalConfiguration.current.screenWidthDp.dp - 44.dp)
@@ -543,45 +686,53 @@ fun ProductCard(product: Product) {
                 modifier = Modifier
                     .weight(1f)
             ) {
-                Text(text = product.name, maxLines = 2, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.titleLarge)
+                Text(
+                    text = product.name,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.titleLarge
+                )
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "SKU: ", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
-                    Text(text = product.sku,
-                    style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.secondary)
+                    Text(
+                        text = "SKU: ",
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = product.sku,
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.secondary
+                    )
                 }
             }
             if (product.discounted) {
-            Text(
-                text = "from R${product.price}",
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.Bold,
-                textDecoration = TextDecoration.LineThrough,
-                color = MaterialTheme.colorScheme.secondary
-            )
-            Text(
-                text = "R ${
-                    BigDecimal(price.toString()).setScale(
-                        2,
-                        BigDecimal.ROUND_HALF_UP
-                    ).toDouble()
-                }",
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleLarge
-            )
-        } else {
-            Text(
-                text = "R ${product.price}",
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleLarge
-            )
-        }
-//            Button(onClick = { /*TODO*/ }, modifier = Modifier.fillMaxWidth()) {
-//                Text(text = "Read More")
-//            }
+                Text(
+                    text = "from R${product.price}",
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Bold,
+                    textDecoration = TextDecoration.LineThrough,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+                Text(
+                    text = "R ${
+                        BigDecimal(price.toString()).setScale(
+                            2,
+                            BigDecimal.ROUND_HALF_UP
+                        ).toDouble()
+                    }",
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleLarge
+                )
+            } else {
+                Text(
+                    text = "R ${product.price}",
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
         }
     }
 

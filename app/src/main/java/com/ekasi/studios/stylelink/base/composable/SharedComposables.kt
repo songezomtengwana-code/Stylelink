@@ -20,6 +20,7 @@ import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -39,8 +40,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ekasi.studios.stylelink.ui.theme.black20
 import com.ekasi.studios.stylelink.ui.theme.StylelinkTheme
+import com.ekasi.studios.stylelink.ui.theme.black20
 import com.ekasi.studios.stylelink.ui.theme.mediumSize
 import com.ekasi.studios.stylelink.ui.theme.smallSize
 import com.ekasi.studios.stylelink.ui.theme.tinySize
@@ -263,4 +264,23 @@ fun CenteredTopBar(
         },
         scrollBehavior = scrollBehavior,
     )
+}
+
+@Composable
+fun CheckBoxWithText(
+    checkBox: Boolean = false,
+    onCheckedChange: (Boolean) -> Unit,
+    text: String = ""
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start
+    ) {
+        Checkbox(checked = checkBox, onCheckedChange = {onCheckedChange(checkBox)})
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.primary
+        )
+    }
 }
