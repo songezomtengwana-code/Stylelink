@@ -76,7 +76,7 @@ import java.math.BigDecimal
 @Composable
 fun StoreProfile(
     storeProfileViewModel: StoreProfileViewModel,
-    storeId: String?
+    storeId: String?,
 ) {
     val id = storeId ?: return
     val state = storeProfileViewModel.state.collectAsState()
@@ -120,7 +120,8 @@ fun StoreProfile(
             StoreProfileComponent(
                 store = profile,
                 servicesState = servicesState,
-                productState = productState
+                productState = productState,
+                onBackClick = { storeProfileViewModel.backNavigation() }
             )
 
 
@@ -143,7 +144,8 @@ fun StoreProfile(
 fun StoreProfileComponent(
     store: Store,
     servicesState: State<ServicesState>,
-    productState: State<ProductState>
+    productState: State<ProductState>,
+    onBackClick: () -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     Scaffold(
@@ -163,7 +165,7 @@ fun StoreProfileComponent(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = {onBackClick()}) {
                         Icon(
                             imageVector = Icons.Rounded.KeyboardArrowLeft,
                             contentDescription = "back_Button"

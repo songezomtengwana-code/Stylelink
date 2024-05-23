@@ -111,6 +111,12 @@ class StoreProfileViewModel(
             }
         }
     }
+
+     fun backNavigation() {
+        viewModelScope.launch {
+            navController.popBackStack()
+        }
+    }
 }
 
 sealed class StoreProfileState {
