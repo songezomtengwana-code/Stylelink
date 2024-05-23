@@ -2,158 +2,207 @@ package com.ekasi.studios.stylelink.ui.register
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import com.ekasi.studios.stylelink.R
-import com.ekasi.studios.stylelink.base.common.composables.StylelinkTheme
-import com.ekasi.studios.stylelink.data.model.UserRegistrationModel
-import com.ekasi.studios.stylelink.ui.theme.mediumSize
-import com.ekasi.studios.stylelink.ui.theme.microSize
+import coil.compose.AsyncImage
+import com.ekasi.studios.stylelink.base.components.LoadingDialog
+import com.ekasi.studios.stylelink.navigation.Screen
+import com.ekasi.studios.stylelink.ui.theme.StylelinkTheme
 import com.ekasi.studios.stylelink.ui.theme.smallSize
-import com.ekasi.studios.stylelink.ui.theme.tinySize
-import io.ktor.websocket.Serializer
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 @Composable
-fun RegisterScreen() {
-    val viewModel = RegisterViewModel()
+fun RegisterScreen(viewModel: RegisterViewModel) {
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    // State
     var fullname: String by rememberSaveable { mutableStateOf("") }
-    var email: String by rememberSaveable { mutableStateOf("") }
+    var state: String by rememberSaveable { mutableStateOf("") }
+    var address: String by rememberSaveable { mutableStateOf("") }
+    var city: String by rememberSaveable { mutableStateOf("") }
     var phone: String by rememberSaveable { mutableStateOf("") }
-    var password: String by rememberSaveable { mutableStateOf("") }
+    val password: String by rememberSaveable { mutableStateOf("password") }
+    var avatar: String by rememberSaveable {
+        mutableStateOf("")
+    }
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
     var checkBox by rememberSaveable { mutableStateOf(false) }
 
-
     // View
-    Surface(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxSize()
-    ) {
-        Column(
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
+    ) { contentPadding ->
+        Surface(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
+                .padding(contentPadding)
+                .verticalScroll(rememberScrollState())
         ) {
-            Text("Create Your New Account", style = MaterialTheme.typography.displayLarge)
-            Text(
-                "Keeping up with beauty trends ? Create an account and lets help you get started."
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            OutlinedTextField(
-                value = fullname,
-                onValueChange = { fullname = it },
-                singleLine = true,
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                label = { Text("Fullname") },
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-
-            OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                label = { Text("Email Address") },
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-
-            OutlinedTextField(
-                value = phone,
-                onValueChange = { phone = it },
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                label = { Text("Phone Number") },
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                label = { Text("password") },
-                visualTransformation =
-                if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                trailingIcon = {
-                    IconButton(onClick = { passwordHidden = !passwordHidden }) {
-                        val visibilityIcon =
-                            if (passwordHidden) R.drawable.eye else R.drawable.eye_closed
-                        // Please provide localized description for accessibility services
-                        val description = if (passwordHidden) "Show password" else "Hide password"
-                        Icon(
-                            painterResource(id = visibilityIcon),
-                            contentDescription = description,
-                            modifier = Modifier
-                                .height(
-                                    tinySize
-                                )
-                                .width(tinySize)
-                        )
-                    }
-                }
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(16.dp)
             ) {
-                Checkbox(checked = checkBox, onCheckedChange = { checkBox = !checkBox })
                 Text(
-                    text = "I have fully read and understand to stylelink's terms of service.",
-                    style = MaterialTheme.typography.bodyMedium
+                    "Okay, lets set up your profile",
+                    style = MaterialTheme.typography.displayLarge
                 )
-            }
-            Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    "Lets properly set up your profile to be the best."
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+//                Row(
+//                    horizontalArrangement = Arrangement.Start,
+//                    verticalAlignment = Alignment.CenterVertically
+//                ) {
+//                    OutlinedCard(
+//                        modifier = Modifier
+//                            .height(76.dp)
+//                            .width(76.dp)
+//                            .verticalScroll(rememberScrollState())
+//                            .clickable { Log.d("uploadProfileImage", "initiating") },
+//                    ) {
+//                        if (avatar.isEmpty()) {
+//                            Icon(
+//                                imageVector = Icons.Rounded.Person,
+//                                contentDescription = "profile_placeholder",
+//                                modifier = Modifier.size(76.dp)
+//                            )
+//                        } else {
+//                            AsyncImage(model = avatar, contentDescription = "user_profile_image")
+//                        }
+//                    }
+//                    Spacer(modifier = Modifier.width(12.dp))
+//                    Text(
+//                        text = "Click to upload image",
+//                        style = MaterialTheme.typography.labelLarge
+//                    )
+//                }
+                Spacer(modifier = Modifier.height(12.dp))
+                OutlinedTextField(
+                    value = fullname,
+                    onValueChange = { fullname = it },
+                    singleLine = true,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    label = { Text("Full Name") },
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                OutlinedTextField(
+                    value = phone,
+                    onValueChange = { phone = it },
+                    singleLine = true,
+                    prefix = { Text("+27", fontWeight = FontWeight.Bold) },
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    label = { Text("Phone Number") },
+                )
 
-            Button(
-                enabled = checkBox,
-                onClick = { viewModel.registerUserAccount(fullname, email, password) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(smallSize),
-                shape = MaterialTheme.shapes.small
-            ) {
-                Text("Create Account", fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.height(12.dp))
+                OutlinedTextField(
+                    value = address,
+                    onValueChange = { address = it },
+                    singleLine = true,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    label = { Text("Address (Optional)") },
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                OutlinedTextField(
+                    value = city,
+                    onValueChange = { city = it },
+                    singleLine = true,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    label = { Text("City (Optional)") },
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                OutlinedTextField(
+                    value = state,
+                    onValueChange = { state = it },
+                    singleLine = true,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    label = { Text("Province / State (Optional)") },
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Spacer(modifier = Modifier.height(12.dp))
+                Button(
+                    onClick = {
+                        viewModel.registerUserAccount(
+                            fullname,
+                            viewModel.firebaseUser?.email.toString(),
+                            password,
+                            phone,
+                            address,
+                            city, state
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(smallSize),
+                    shape = MaterialTheme.shapes.small
+                ) {
+                    Text("Complete", fontWeight = FontWeight.Bold)
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+                OutlinedButton(
+                    enabled = false,
+                    onClick = { viewModel.navigateTo(Screen.Main.route) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(smallSize),
+                    shape = MaterialTheme.shapes.small
+                ) {
+                    Text("Not yet ? Skip", fontWeight = FontWeight.Bold)
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+                if (viewModel.firebaseUser !== null) Text(text = viewModel.firebaseUser!!.email!!)
+                if (viewModel.isLoading) {
+                    LoadingDialog()
+                }
             }
         }
     }
@@ -163,6 +212,5 @@ fun RegisterScreen() {
 @Composable
 fun RegisterScreenPreview() {
     StylelinkTheme {
-        RegisterScreen()
     }
 }

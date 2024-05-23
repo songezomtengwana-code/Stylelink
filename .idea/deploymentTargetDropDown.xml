@@ -2,6 +2,25 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="ProductCardPreview">
+        <State>
+          <targetSelectedWithDropDown>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="C:\Users\songe\.android\avd\Pixel_7_Pro_API_TiramisuPrivacySandbox.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </targetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-05-03T17:52:03.732673900Z" />
+        </State>
+      </entry>
+      <entry key="ServiceCardPreview">
+        <State />
+      </entry>
       <entry key="app">
         <State>
           <targetSelectedWithDropDown>
@@ -10,12 +29,12 @@
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\songe\.android\avd\Pixel_6_Pro_API_30.avd" />
+                  <value value="C:\Users\songe\.android\avd\Pixel_7_Pro_API_TiramisuPrivacySandbox.avd" />
                 </Key>
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-04-04T17:46:11.185701300Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-05-03T11:57:01.381250700Z" />
         </State>
       </entry>
     </value>

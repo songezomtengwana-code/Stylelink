@@ -1,9 +1,8 @@
-package com.ekasi.studios.stylelink.base.common.composables
+package com.ekasi.studios.stylelink.ui.theme
 
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -11,17 +10,16 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import com.ekasi.studios.stylelink.ui.theme.StylelinkTypography
 
 private val DarkColorScheme = darkColorScheme(
     primary = black80,
     secondary = grey,
     tertiary = white20,
-    background = white80,
-    surface = white60,
-    onPrimary = white80,
+    background = white100,
+    surface = white100,
+    onPrimary = white100,
     onSecondary = black40,
-    onTertiary = white80,
+    onTertiary = white100,
     onBackground = black80,
     onSurface = black60,
 )
@@ -30,13 +28,14 @@ private val LightColorScheme = lightColorScheme(
     primary = black80,
     secondary = grey,
     tertiary = white20,
-    background = white80,
-    surface = white60,
-    onPrimary = white80,
+    background = white100,
+    surface = white100,
+    onPrimary = white100,
     onSecondary = black40,
-    onTertiary = white80,
+    onTertiary = white100,
     onBackground = black80,
     onSurface = black60,
+    onPrimaryContainer = white100
     )
 
 @Composable
