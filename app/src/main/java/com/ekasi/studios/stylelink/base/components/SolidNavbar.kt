@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.ekasi.studios.stylelink.base.common.composables.white100
+import com.ekasi.studios.stylelink.ui.theme.white100
 import com.ekasi.studios.stylelink.ui.theme.StylelinkTheme
 import com.ekasi.studios.stylelink.ui.theme.antonFontFamily
 import com.ekasi.studios.stylelink.ui.theme.smallSize

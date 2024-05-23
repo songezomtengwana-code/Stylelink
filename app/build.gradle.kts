@@ -1,5 +1,4 @@
-import com.android.build.api.variant.BuildConfigField
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 import com.google.protobuf.gradle.id
 
 plugins {
@@ -23,7 +22,7 @@ android {
 
     defaultConfig {
         applicationId = "com.ekasi.studios.stylelink"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -68,15 +67,15 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.13.0")
+    implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.9.0")
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
-    implementation("com.google.firebase:firebase-auth:22.3.1")
+    implementation("com.google.firebase:firebase-auth:23.0.0")
+    implementation("androidx.compose.material3:material3-android:1.2.1")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -87,7 +86,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     // google fonts
-    implementation("androidx.compose.ui:ui-text-google-fonts:1.6.6")
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.6.7")
 
     // glide_image_retriever
     implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
@@ -122,13 +121,13 @@ dependencies {
     implementation("io.ktor:ktor-client-android:2.3.9")
 
     // preference
-    implementation("androidx.datastore:datastore-preferences:1.1.0")
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 
     // optional - RxJava2 support
-    implementation("androidx.datastore:datastore-preferences-rxjava2:1.1.0")
+    implementation("androidx.datastore:datastore-preferences-rxjava2:1.1.1")
 
     // optional - RxJava3 support
-    implementation("androidx.datastore:datastore-preferences-rxjava3:1.1.0")
+    implementation("androidx.datastore:datastore-preferences-rxjava3:1.1.1")
 
     // proto datastore
     implementation("androidx.datastore:datastore:1.1.0")

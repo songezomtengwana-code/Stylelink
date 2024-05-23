@@ -10,12 +10,6 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import com.ekasi.studios.stylelink.base.common.composables.black40
-import com.ekasi.studios.stylelink.base.common.composables.black60
-import com.ekasi.studios.stylelink.base.common.composables.black80
-import com.ekasi.studios.stylelink.base.common.composables.grey
-import com.ekasi.studios.stylelink.base.common.composables.white100
-import com.ekasi.studios.stylelink.base.common.composables.white20
 
 private val DarkColorScheme = darkColorScheme(
     primary = black80,

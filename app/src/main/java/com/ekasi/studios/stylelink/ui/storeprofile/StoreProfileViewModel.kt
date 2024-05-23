@@ -4,9 +4,11 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.ekasi.studios.stylelink.data.repository.ProductRepository
 import com.ekasi.studios.stylelink.data.repository.ServicesRepository
 import com.ekasi.studios.stylelink.data.repository.StoreRepository
 import com.ekasi.studios.stylelink.utils.services.stores.models.Store
+import com.ekasi.studios.stylelink.utils.states.ProductState
 import com.ekasi.studios.stylelink.utils.states.ServicesState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,9 +17,11 @@ import kotlinx.coroutines.launch
 class StoreProfileViewModel(
     private val storeRepository: StoreRepository,
     private val servicesRepository: ServicesRepository,
+    private val productRepository: ProductRepository,
     private val navController: NavController
 ) : ViewModel() {
     private var _state = MutableStateFlow<StoreProfileState>(StoreProfileState.Loading)
+    private var _productState = MutableStateFlow<ProductState>(ProductState.Loading)
     private var _servicesState = MutableStateFlow<ServicesState>(ServicesState.Loading)
 
     /**
@@ -25,6 +29,7 @@ class StoreProfileViewModel(
      */
     val state: MutableStateFlow<StoreProfileState> = _state
     val servicesState: StateFlow<ServicesState> = _servicesState
+    val productState: StateFlow<ProductState> = _productState
 
     /**
      * @throws IllegalStateException
@@ -88,6 +93,21 @@ class StoreProfileViewModel(
                 _servicesState.value = ServicesState.SingleServiceSuccess(response)
             } catch (e: Exception) {
                 _servicesState.value = ServicesState.Error(e.message.toString())
+            }
+        }
+    }
+
+    suspend fun fetchProductsByStoreId(id: String) {
+        viewModelScope.launch {
+            try {
+                val response = productRepository.fetchProductsByStoreId(id)
+                _productState.value = ProductState.MultipleProductsSuccess(response)
+                Log.d("fetchStoreProducts", "returnedProducts: ${_productState.value}")
+
+            } catch (e: Exception) {
+                _productState.value = ProductState.Error(e.message.toString())
+                Log.d("fetchStoreProducts", "error: ${_productState.value}")
+
             }
         }
     }

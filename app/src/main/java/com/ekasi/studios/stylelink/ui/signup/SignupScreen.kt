@@ -16,7 +16,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -29,7 +28,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -42,7 +40,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.ekasi.studios.stylelink.R
 import com.ekasi.studios.stylelink.base.components.LoadingDialog
-import com.ekasi.studios.stylelink.navigation.Screen
 import com.ekasi.studios.stylelink.ui.theme.smallSize
 import com.ekasi.studios.stylelink.ui.theme.tinySize
 
@@ -151,9 +148,9 @@ fun SignupScreen(viewModel: SignupViewModel) {
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .clickable { viewModel.navigateToLogin() })
-                Button(onClick = { viewModel.navigateTo(Screen.Register.route) }) {
-                 Text(text = "Navigate to register screen")
-                }
+//                Button(onClick = { viewModel.navigateTo(Screen.Register.route) }) {
+//                 Text(text = "Navigate to register screen")
+//                }
 
                 if (viewModel.isLoading) {
                     LoadingDialog()

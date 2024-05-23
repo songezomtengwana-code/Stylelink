@@ -3,7 +3,10 @@ package com.ekasi.studios.stylelink.ui.main
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,20 +16,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.FavoriteBorder
-import androidx.compose.material.icons.rounded.LocationOn
+import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material.icons.rounded.Share
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -37,20 +38,25 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.ekasi.studios.stylelink.base.common.composables.black20
-import com.ekasi.studios.stylelink.base.common.composables.white100
+import com.ekasi.studios.stylelink.ui.theme.black20
+import com.ekasi.studios.stylelink.ui.theme.white100
 import com.ekasi.studios.stylelink.base.components.ActionIconButton
 import com.ekasi.studios.stylelink.base.components.LoadingDialog
 import com.ekasi.studios.stylelink.base.components.SolidNavbar
-import com.ekasi.studios.stylelink.base.composable.Empty
+import com.ekasi.studios.stylelink.base.composable.CarouselEmpty
+import com.ekasi.studios.stylelink.base.composable.CarouselLoader
+import com.ekasi.studios.stylelink.base.composable.HomeSearchButton
 import com.ekasi.studios.stylelink.base.composable.SectionTitle
 import com.ekasi.studios.stylelink.data.model.ServerUserModel
 import com.ekasi.studios.stylelink.navigation.Screen
@@ -125,6 +131,7 @@ fun MainScreen(
                                 iconSize = 35
                             )
                         }
+                        HomeSearchButton()
                         SectionTitle(
                             title = "Favourites",
                             count = success.user.favorites.count(),
@@ -135,23 +142,8 @@ fun MainScreen(
 
                             favorites.forEach { favorite: String -> Text(text = favorite) }
                         } else {
-                            Empty(
-                                text = "You don't have any favorites yet :(",
-                                suggestion = "Browse available stores that you might like",
-                                onClick = {}
-                            )
+                            CarouselEmpty(text = "No Favorites Yet.", suggestion = "Click on the heart icon to save a store as a favorite")
                         }
-                        SectionTitle(
-                            title = "Booking History",
-                            count = success.user.favorites.size,
-                            moreAction = {}
-                        )
-                        SectionTitle(
-                            title = "More Stores",
-                            count = 6,
-                            moreAction = {}
-                        )
-
                         StoreSlider(
                             storesViewModel = storesViewModel,
                             navController = navController
@@ -226,24 +218,21 @@ fun StoreSlider(storesViewModel: StoresViewModel, navController: NavController) 
 
     when (state.value) {
         is StoreState.Loading -> {
-            Row(
-                modifier = Modifier
-                    .padding(0.dp, 16.dp)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(text = "Fetching Stores", style = MaterialTheme.typography.labelSmall)
-                LinearProgressIndicator()
-            }
+            CarouselLoader(text = "Loading Stores...")
         }
 
         is StoreState.Success -> {
-            val success = (state.value as StoreState.Success)
-            Column(
+            val stores = (state.value as StoreState.Success).stores
+            SectionTitle(title = "Stores", count = stores.size) {
 
+            }
+            Row(
+                modifier = Modifier
+                    .horizontalScroll(rememberScrollState())
+                    .padding(tinySize, 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(tinySize)
             ) {
-                success.stores.forEach { store: Store ->
+                stores.forEach { store: Store ->
                     StoreCard(
                         store = store,
                         navController = navController
@@ -277,103 +266,117 @@ fun StoreSlider(storesViewModel: StoresViewModel, navController: NavController) 
 
 @Composable
 fun StoreCard(store: Store, navController: NavController) {
-    Column(
+    val storeProfileRoute =
+        Screen.StoreProfile.route.replace("{storeId}", store._id.toString())
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        ),
         modifier = Modifier
-            .fillMaxWidth()
             .padding(0.dp, tinySize)
-            .clickable { }
-
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            ) { navController.navigate(storeProfileRoute) }
     ) {
-        Card(
-            modifier = Modifier
-                .clickable { }
-        ) {
-            AsyncImage(model = store.profileImage, contentDescription = store.name)
-        }
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(0.dp, 4.dp)
         ) {
-            when (store.isActive) {
-                true -> {
-                    Text(
-                        text = "Active",
-                        color = Color.Green,
-                        style = MaterialTheme.typography.labelSmall
-                    )
-                }
-
-                false -> {
-                    Card(
-                        modifier = Modifier
-                            .padding(0.dp, 12.dp)
-                            .clip(RoundedCornerShape(12.dp)),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.LightGray
-                        )
-                    ) {
-                        Text(
-                            modifier = Modifier
-                                .padding(8.dp, 2.dp),
-                            text = "offline",
-                            color = Color.Black,
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
-
-                else -> Text(
-                    text = "Smoking my nappy dreads",
-                    style = MaterialTheme.typography.labelSmall
-                )
-            }
-            Text(
-                text = store.name.capitalize(),
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Black
-            )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
+            Box(
+                contentAlignment = Alignment.TopEnd
             ) {
-                Icon(
-                    imageVector = Icons.Rounded.LocationOn,
-                    contentDescription = "location_on_ion_location",
+                AsyncImage(
+                    model = store.profileImage,
+                    contentDescription = store.name,
                     modifier = Modifier
-                        .height(tinySize),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        .height(LocalConfiguration.current.screenHeightDp.dp / 5)
+                        .width(LocalConfiguration.current.screenHeightDp.dp / 5),
+                    contentScale = ContentScale.Inside
                 )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = store.address.toString(),
-                    style = MaterialTheme.typography.bodySmall,
-                    fontWeight = FontWeight.Medium
-                )
-            }
-            Row {
-                Text(text = "Business Hours: ${store.businessHours!![0]} - ${store.businessHours[1]}")
-            }
-            Row {
-                val storeProfileRoute =
-                    Screen.StoreProfile.route.replace("{storeId}", store._id.toString())
-                Button(
-                    onClick = { navController.navigate(storeProfileRoute) },
-                ) {
-                    Text(text = "Visit Profile")
-                }
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(imageVector = Icons.Rounded.Share, contentDescription = "share_icon")
-                }
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(
                         imageVector = Icons.Rounded.FavoriteBorder,
-                        contentDescription = "favorite_icon"
+                        contentDescription = "store_favorite_icon",
+                        modifier = Modifier.height(tinySize))
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .width(LocalConfiguration.current.screenHeightDp.dp / 5)
+                    .padding(0.dp, 4.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                when (store.isActive) {
+                    true -> {
+                        Card(
+                            modifier = Modifier
+                                .padding(0.dp, 12.dp)
+                                .clip(RoundedCornerShape(12.dp)),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.Green
+                            )
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .padding(8.dp, 2.dp),
+                                text = "online",
+                                color = Color.Black,
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+
+                    false -> {
+                        Card(
+                            modifier = Modifier
+                                .padding(0.dp, 12.dp)
+                                .clip(RoundedCornerShape(12.dp)),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.LightGray
+                            )
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .padding(8.dp, 2.dp),
+                                text = "offline",
+                                color = Color.Black,
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+
+                    else -> Text(
+                        text = "Smoking my nappy dreads",
+                        style = MaterialTheme.typography.labelSmall
                     )
                 }
+                Text(
+                    text = store.name.capitalize(),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Black
+                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.Notifications,
+                        contentDescription = "clock_indicator_icon",
+                        modifier = Modifier.height(tinySize))
+                    Text(
+                        text = "${store.businessHours!![0]} - ${store.businessHours[1]}",
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+                Text(
+                    text = store.address.toString(),
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.Medium,
+                    maxLines = 2
+                )
             }
         }
     }

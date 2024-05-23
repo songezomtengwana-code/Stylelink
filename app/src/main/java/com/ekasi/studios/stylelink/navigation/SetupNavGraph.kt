@@ -20,6 +20,8 @@ import com.ekasi.studios.stylelink.ui.splash.SplashScreen
 import com.ekasi.studios.stylelink.ui.splash.SplashViewModel
 import com.ekasi.studios.stylelink.ui.storeprofile.StoreProfile
 import com.ekasi.studios.stylelink.ui.storeprofile.StoreProfileViewModel
+import com.ekasi.studios.stylelink.viewModels.LocationViewModel
+import com.ekasi.studios.stylelink.viewModels.PlacesViewModel
 import com.ekasi.studios.stylelink.viewModels.StoresViewModel
 
 @Composable
@@ -32,7 +34,9 @@ fun SetupNavGraph(
     loginViewModel: LoginViewModel,
     searchViewModel: SearchViewModel,
     storesViewModel: StoresViewModel,
-    storeProfileViewModel: StoreProfileViewModel
+    storeProfileViewModel: StoreProfileViewModel,
+    locationViewModel: LocationViewModel,
+    placesViewModel: PlacesViewModel
 ) {
     NavHost(
         navController = navController,
@@ -54,7 +58,7 @@ fun SetupNavGraph(
             SignupScreen(viewModel = signupViewModel)
         }
         composable(route = Screen.Search.route) {
-            SearchScreen(viewModel = searchViewModel)
+            SearchScreen(viewModel = searchViewModel,locationViewModel = locationViewModel, placesViewModel = placesViewModel)
         }
         composable(
             route = Screen.StoreProfile.route,

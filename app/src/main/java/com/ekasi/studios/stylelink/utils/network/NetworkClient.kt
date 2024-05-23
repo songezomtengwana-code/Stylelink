@@ -1,6 +1,8 @@
 package com.ekasi.studios.stylelink.utils.network
 
 import com.ekasi.studios.stylelink.utils.services.UserApiService
+import com.ekasi.studios.stylelink.utils.services.markers.MarkerService
+import com.ekasi.studios.stylelink.utils.services.products.ProductService
 import com.ekasi.studios.stylelink.utils.services.services.ServicesService
 import com.ekasi.studios.stylelink.utils.services.stores.StoreService
 import okhttp3.OkHttpClient
@@ -14,6 +16,7 @@ class NetworkClient private constructor() {
     // server documentation -> https://stylelinkapi.onrender.com/api/docs
     object NetworkClient {
         private const val BASE_URL = "https://stylelinkapi.onrender.com/"
+        private const val LOCAL_BASE_URL = "http://localhost:7000/"
 
         private val retrofit: Retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -33,5 +36,12 @@ class NetworkClient private constructor() {
             return retrofit.create(ServicesService::class.java)
         }
 
+        fun productsApiService(): ProductService {
+            return retrofit.create(ProductService::class.java)
+        }
+
+        fun markersApiService(): MarkerService {
+            return retrofit.create(MarkerService::class.java)
+        }
     }
 }

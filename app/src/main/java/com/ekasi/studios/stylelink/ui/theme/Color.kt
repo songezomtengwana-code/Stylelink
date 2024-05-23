@@ -1,4 +1,4 @@
-package com.ekasi.studios.stylelink.base.common.composables
+package com.ekasi.studios.stylelink.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
@@ -12,6 +12,7 @@ val black80 = Color(0xFF0F1011)
 val black60 = Color(0xFF2C2D2F)
 val black40 = Color(0xFF505356)
 val black20 = Color(0xFF777B7E)
+val blackOpaque = Color(0xFFA7A7A7)
 
 // white
 val white100 = Color(0xFFFFFFFF)
