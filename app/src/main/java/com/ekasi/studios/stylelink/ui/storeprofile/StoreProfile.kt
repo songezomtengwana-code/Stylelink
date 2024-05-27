@@ -196,7 +196,7 @@ fun StoreProfileComponent(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.background)
                 .fillMaxSize()
-                .padding(tinySize, paddingValues.calculateTopPadding())
+                .padding(tinySize, paddingValues.calculateTopPadding(), tinySize, 0.dp)
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -224,10 +224,18 @@ fun StoreProfileComponent(
                         .weight(1f)
                 ) {
                     StatBar(value = "1,2K", title = "Reviews")
-                    if (servicesState.value !== ServicesState.Loading) {
-                        val services =
-                            (servicesState.value as ServicesState.MultipleServicesSuccess).services
-                        StatBar(value = services.size.toString(), title = "Services")
+                    when (servicesState.value) {
+                        is ServicesState.MultipleServicesSuccess -> {
+                            if (servicesState.value !== ServicesState.Loading) {
+                                val services =
+                                    (servicesState.value as ServicesState.MultipleServicesSuccess).services
+                                StatBar(value = services.size.toString(), title = "Services")
+                            }
+                        }
+                        else -> {
+                            StatBar(value = "-", title = "Services")
+                        }
+
                     }
                     StatBar(value = "2K", title = "Favorites")
 
@@ -444,7 +452,7 @@ fun ServiceCard(service: Service, onClick: () -> Unit = {}) {
                         painter = painterResource(id = R.drawable.cash_rounded),
                         contentDescription = "icon",
                         modifier = Modifier
-                            .height(tinySize)
+                            .height(20.dp)
                             .width(tinySize)
                     )
                     Text(
