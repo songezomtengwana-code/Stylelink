@@ -5,22 +5,21 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.bumptech.glide.Glide.init
+import com.ekasi.studios.stylelink.R
 import com.ekasi.studios.stylelink.UserDetail
 import com.ekasi.studios.stylelink.data.local.UserDao
 import com.ekasi.studios.stylelink.data.model.ServerUserModel
 import com.ekasi.studios.stylelink.data.repository.UserRepository
 import com.ekasi.studios.stylelink.data.serializer.userDetailDatastore
+import com.ekasi.studios.stylelink.helpers.KeystoreHelper
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -34,19 +33,25 @@ class UserViewModel(
     private fun provideApplicationContext(application: Application): Context =
         application.applicationContext
 
+    val context: Context = provideApplicationContext(application)
+
+    private val sharedPreferences =
+        context.getSharedPreferences(context.getString(R.string.pref_store), Context.MODE_PRIVATE)
+    private val keystoreHelper = KeystoreHelper()
+
+
     var userDetailsId: String? = null
 
     init {
         viewModelScope.launch {
             val userDetailFlowUserId: Unit =
                 provideApplicationContext(application).userDetailDatastore.data.map { preferences ->
-                    preferences.userId
-                }.collect { formattedUserId ->
-                    userDetailsId = formattedUserId
-                    Log.v("userViewModel init{}", "intenal: $formattedUserId")
+                    preferences.token
+                }.collect { formattedToken ->
+                    userDetailsId = formattedToken
                 }
             userDetailsId = userDetailFlowUserId.toString()
-            Log.v("userViewModel init{}", "external:  $userDetailFlowUserId")
+            Log.d("retrieveToken", "$userDetailFlowUserId")
         }
     }
 
@@ -120,21 +125,58 @@ class UserViewModel(
     }
 
 
-    suspend fun setUserDetails(userId: String) {
-//        TODO("implement write function to datastore and initiate all testing procedures")
-        if (userId.isNotEmpty()) {
-            viewModelScope.launch {
+    suspend fun setUserDetails(id: String,token: String) {
+        viewModelScope.launch {
+            try {
                 provideApplicationContext(application).userDetailDatastore.updateData { userDetail ->
                     userDetail.toBuilder()
-                        .setUserId(userId)
+                        .setUserId(id)
+                        .setToken(token)
                         .build()
                 }
 
-                Log.v("setUserDetails", "new userId: $userId")
+                Log.v("setUserDetails", "id: $id")
+            } catch (e: Exception) {
+                Log.v("setUserDetails", "${e.message}")
             }
-        } else {
-            Log.v("setUserDetails", "userId: $userId")
         }
+    }
+
+    suspend fun storeToken(token: String) {
+        viewModelScope.launch {
+            try {
+                provideApplicationContext(application).userDetailDatastore.updateData { userDetail ->
+                    userDetail.toBuilder()
+                        .setToken(token)
+                        .build()
+                }
+
+                val result = retrieveToken()
+                Log.d("setUserDetails", "User details updated: token=[$result]")
+            } catch (e: Exception) {
+                Log.v("setUserDetails", "${e.message}")
+            }
+        }
+    }
+
+    suspend fun retrieveToken(): String? {
+        val context = provideApplicationContext(application)
+        val dataStore = context.userDetailDatastore
+        var tokenContainer: String? = null
+
+
+        try {
+            val token = dataStore.data.map { user ->
+                user.token
+            }.collect { formattedValue -> tokenContainer = formattedValue }.toString()
+
+            Log.d("setUserDetails", "encryptedToken: $token")
+            return token
+        } catch (e: Exception) {
+            return null;
+        }
+
+
     }
 
     suspend fun getUserDetails(): Flow<String> {
@@ -151,11 +193,12 @@ class UserViewModel(
         viewModelScope.launch {
             try {
                 var pref = ""
-                val userid = provideApplicationContext(application).userDetailDatastore.data.map {
-                    user -> user.userId
-                }.collect{
-                    preference -> pref = preference
-                }.toString()
+                val userid =
+                    provideApplicationContext(application).userDetailDatastore.data.map { user ->
+                        user.userId
+                    }.collect { preference ->
+                        pref = preference
+                    }.toString()
 
                 Log.d("fetchServerUser", "initiating")
                 if (userid.isNotEmpty()) {
@@ -170,8 +213,26 @@ class UserViewModel(
             }
         }
     }
-}
 
-//data class UserDetailDatastoreModel(
-////    val
-//)
+//    fun storeToken(token: String) {
+//        viewModelScope.launch {
+//            try {
+//                val encryptedToken = keystoreHelper.encrypt(token)
+//                if (encryptedToken != null) {
+//                    with(sharedPreferences.edit()) {
+//                        putString("bearer_token", encryptedToken)
+//                        apply()
+//                    }
+//                }
+//            } catch (e: Exception) {
+//                Log.d("storeToken", e.message.toString())
+//            }
+//        }
+//    }
+//
+//    fun retrieveToken(): String? {
+//        val encryptedToken = sharedPreferences.getString("bearer_token", null)
+//        return keystoreHelper.decrypt(encryptedToken ?: return null)
+//    }
+
+}

@@ -1,4 +1,4 @@
-package com.ekasi.studios.stylelink.ui.register
+package com.ekasi.studios.stylelink.ui.auth.register
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -190,7 +190,7 @@ fun RegisterScreen(viewModel: RegisterViewModel) {
                 Spacer(modifier = Modifier.height(12.dp))
                 OutlinedButton(
                     enabled = false,
-                    onClick = { viewModel.navigateTo(Screen.Main.route) },
+                    onClick = { viewModel.navigateTo(Screen.Home.route) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(smallSize),

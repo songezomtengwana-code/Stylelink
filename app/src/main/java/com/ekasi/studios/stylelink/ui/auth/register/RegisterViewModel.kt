@@ -1,30 +1,21 @@
-package com.ekasi.studios.stylelink.ui.register
+package com.ekasi.studios.stylelink.ui.auth.register
 
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.bumptech.glide.Glide.init
 import com.ekasi.studios.stylelink.data.model.RegistrationUserModel
-import com.ekasi.studios.stylelink.data.model.ServerUserModel
 import com.ekasi.studios.stylelink.data.repository.AuthRepository
 import com.ekasi.studios.stylelink.data.repository.UserRepository
 import com.ekasi.studios.stylelink.navigation.Screen
+
 import com.ekasi.studios.stylelink.utils.services.popUpToTop
 import com.ekasi.studios.stylelink.viewModels.UserViewModel
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.auth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.auth.userProfileChangeRequest
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
-import retrofit2.Call
 
 class RegisterViewModel(
     private val userRepository: UserRepository,
@@ -73,17 +64,18 @@ class RegisterViewModel(
             try {
                 Log.d("registerUserAccount", "Initiating Registration Service")
                 val response = userRepository.createUserAccount(newUserAccount)
-                Log.d("registerUserAccount", "response : ${response.result}")
+                Log.d("registerUserAccount", "token : ${response}")
 
                 if (response.success) {
-                    userViewModel.setUserDetails(response.result._id)
+                    userViewModel.setUserDetails(response.result, response.token)
+//                    userViewModel.storeToken(response.token)
                     Log.d("registerUserAccount", "onSuccess: ${response.message}")
-                    navigateTo(Screen.Main.route)
+                    navigateTo(Screen.Home.route)
                 } else {
                     Log.d("registerUserAccount", response.message)
                 }
             } catch (e: Exception) {
-                Log.d("registerUserAccount", e.message.toString())
+                Log.d("registerUserAccount", e.toString())
                 activateSnackBar("Sorry, there was a problem with creating your account")
                 dismissLoading()
             }
@@ -92,7 +84,7 @@ class RegisterViewModel(
 
         if (value) {
             dismissLoading()
-            navigateTo(Screen.Main.route)
+            navigateTo(Screen.Home.route)
         } else {
             showLoading()
         }
