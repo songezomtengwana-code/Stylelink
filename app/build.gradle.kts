@@ -170,7 +170,12 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.44")
     ksp("com.google.dagger:hilt-compiler:2.44")
 
-    // secrets
+
+    // Android Keystore
+    implementation("androidx.security:security-crypto-ktx:1.1.0-alpha06")
+
+    // Material Icons
+    implementation ("androidx.compose.material:material-icons-extended:1.7.0-beta02")
 }
 
 protobuf {
