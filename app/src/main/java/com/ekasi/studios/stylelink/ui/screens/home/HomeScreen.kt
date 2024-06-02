@@ -1,4 +1,4 @@
-package com.ekasi.studios.stylelink.ui.main
+package com.ekasi.studios.stylelink.ui.screens.home
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -17,18 +17,21 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,14 +41,12 @@ import androidx.navigation.NavController
 import com.ekasi.studios.stylelink.base.components.ActionIconButton
 import com.ekasi.studios.stylelink.base.components.LoadingDialog
 import com.ekasi.studios.stylelink.base.components.SolidNavbar
-import com.ekasi.studios.stylelink.base.composable.CarouselEmpty
 import com.ekasi.studios.stylelink.base.composable.CarouselLoader
-import com.ekasi.studios.stylelink.base.composable.HomeSearchButton
-import com.ekasi.studios.stylelink.base.composable.SectionTitle
 import com.ekasi.studios.stylelink.base.widgets.StoreCard
 import com.ekasi.studios.stylelink.data.model.ServerUserModel
 import com.ekasi.studios.stylelink.navigation.Screen
 import com.ekasi.studios.stylelink.ui.theme.black20
+import com.ekasi.studios.stylelink.ui.theme.smallSize
 import com.ekasi.studios.stylelink.ui.theme.tinySize
 import com.ekasi.studios.stylelink.ui.theme.white100
 import com.ekasi.studios.stylelink.utils.services.stores.models.Store
@@ -53,14 +54,15 @@ import com.ekasi.studios.stylelink.viewModels.StoreState
 import com.ekasi.studios.stylelink.viewModels.StoresViewModel
 
 @Composable
-fun MainScreen(
-    viewModel: MainViewModel,
+fun HomeScreen(
+    viewModel: HomeViewModel,
     storesViewModel: StoresViewModel,
     navController: NavController
 ) {
     val user: ServerUserModel? by remember { mutableStateOf(viewModel.user) }
     val uiState = viewModel.uiState.collectAsState()
     val storesState = storesViewModel.storeState.collectAsState()
+    var tokenField by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         if (viewModel.user === null) {
@@ -73,7 +75,15 @@ fun MainScreen(
     Scaffold(
         modifier = Modifier
             .background(white100),
-        topBar = { SolidNavbar(imageUrl = if (user !== null) user?.profileImageURL!! else "") }
+        topBar = {
+            Column {
+                SolidNavbar(imageUrl = if (user !== null) user?.profileImageURL!! else "")
+//                Header(
+//                    onSearchLocationClicked = {},
+//                    onSearchClicked = {}
+//                )
+            }
+        }
     ) { paddingValues ->
 
         when (uiState.value) {
@@ -83,7 +93,7 @@ fun MainScreen(
 
             is MainState.Success -> {
                 val success = (uiState.value as MainState.Success)
-                Text(text = success.user.fullname)
+//                Text(text = success.user.fullname)
                 Surface(
                     modifier = Modifier
                         .padding(paddingValues)
@@ -94,46 +104,8 @@ fun MainScreen(
                         modifier = Modifier
                             .verticalScroll(rememberScrollState())
                             .background(white100)
-                            .padding(16.dp)
                     ) {
-                        Row(
-                            modifier = Modifier
-                                .padding(0.dp, 16.dp)
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column(
-                            ) {
-                                Text(
-                                    text = "Hi, ${success.user.fullname} 👋",
-                                    style = MaterialTheme.typography.titleLarge,
-                                    fontWeight = FontWeight.Black
-                                )
-                                Text(text = "Where to next ?")
-                            }
-                            ActionIconButton(
-                                onClick = { viewModel.navigateTo(Screen.Search.route) },
-                                icon = Icons.Rounded.Search,
-                                iconSize = 35
-                            )
-                        }
-                        HomeSearchButton()
-                        SectionTitle(
-                            title = "Favourites",
-                            count = success.user.favorites.count(),
-                            moreAction = {}
-                        )
-                        if (success.user.favorites.isNotEmpty()) {
-                            val favorites = success.user.favorites
 
-                            favorites.forEach { favorite: String -> Text(text = favorite) }
-                        } else {
-                            CarouselEmpty(
-                                text = "No Favorites Yet.",
-                                suggestion = "Click on the heart icon to save a store as a favorite"
-                            )
-                        }
                         StoreSlider(
                             storesViewModel = storesViewModel,
                             navController = navController
@@ -171,6 +143,23 @@ fun MainScreen(
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text("Refresh", fontWeight = FontWeight.Bold)
+                        }
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        TextField(
+                            value = tokenField,
+                            onValueChange = { tokenField = it },
+                            modifier = Modifier.weight(1f)
+                        )
+                        Button(
+                            onClick = { viewModel.storeToken(tokenField) },
+                            modifier = Modifier
+                                .height(smallSize),
+                            shape = MaterialTheme.shapes.small
+                        ) {
+                            Text("Store", fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -213,14 +202,13 @@ fun StoreSlider(storesViewModel: StoresViewModel, navController: NavController) 
 
         is StoreState.Success -> {
             val stores = (state.value as StoreState.Success).stores
-            SectionTitle(title = "Stores", count = stores.size) {
 
-            }
-            Row(
+            Column(
                 modifier = Modifier
                     .horizontalScroll(rememberScrollState())
-                    .padding(tinySize, 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(tinySize)
+                    .padding(tinySize, 0.dp)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(tinySize)
             ) {
                 stores.forEach { store: Store ->
                     val storeProfileRoute =
@@ -251,7 +239,7 @@ fun StoreSlider(storesViewModel: StoresViewModel, navController: NavController) 
                 }) {
                     Text("Reload")
                 }
-                Log.d("MainScreen", "error: ${state.value}")
+                Log.d("HomeScreen", "error: ${state.value}")
             }
         }
     }

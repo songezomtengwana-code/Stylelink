@@ -1,4 +1,4 @@
-package com.ekasi.studios.stylelink.ui.search
+package com.ekasi.studios.stylelink.ui.screens.discover
 
 import android.app.Application
 import android.util.Log
@@ -12,7 +12,7 @@ import com.ekasi.studios.stylelink.data.repository.MarkersRepository
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
 
-class SearchViewModel(
+class DiscoverViewModel(
     private val navController: NavController,
     private val application: Application,
     private val markersRepository: MarkersRepository
@@ -33,5 +33,9 @@ class SearchViewModel(
                 Log.d("configureLastLocation", e.message.toString())
             }
         }
+    }
+
+    fun back() {
+        navController.popBackStack()
     }
 }

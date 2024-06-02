@@ -20,11 +20,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ekasi.studios.stylelink.R
-import com.ekasi.studios.stylelink.ui.theme.StylelinkTheme
 import com.ekasi.studios.stylelink.ui.theme.mediumSize
 
 private const val splashTimeOut: Long = 1500 // note -> milliseconds
@@ -71,8 +69,6 @@ fun SplashScreen(navController: NavController, viewModel: SplashViewModel) {
             }
 
             LaunchedEffect(Unit) {
-//                kotlinx.coroutines.delay(splashTimeOut)
-//                navController.navigate(Screen.Signup.route)
 
                     viewModel.checkForUserActivity()
             }
@@ -81,12 +77,4 @@ fun SplashScreen(navController: NavController, viewModel: SplashViewModel) {
     )
 
 
-}
-
-@Preview
-@Composable
-fun SplashScreenPreview() {
-    StylelinkTheme {
-//        SplashScreen(navController = rememberNavController())
-    }
 }

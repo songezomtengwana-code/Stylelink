@@ -1,4 +1,4 @@
-package com.ekasi.studios.stylelink.ui.login
+package com.ekasi.studios.stylelink.ui.auth.login
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -51,7 +51,7 @@ class LoginViewModel(
     }
 
     private fun navigateToHome() {
-        navController.navigate(Screen.Main.route) { popUpToTop(navController) }
+        navController.navigate(Screen.Home.route) { popUpToTop(navController) }
     }
 
     fun navigateToSignup() {
@@ -65,4 +65,11 @@ class LoginViewModel(
     private fun dismissLoading() {
         isLoading = false
     }
+}
+
+sealed class LoginState {
+    data class Error(val message: String) : LoginState()
+    data object Loading : LoginState()
+    data object Success : LoginState()
+    data object Default : LoginState()
 }

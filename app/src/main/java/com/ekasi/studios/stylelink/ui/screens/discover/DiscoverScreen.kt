@@ -1,32 +1,22 @@
-package com.ekasi.studios.stylelink.ui.search
+package com.ekasi.studios.stylelink.ui.screens.discover
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -36,13 +26,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.unit.dp
 import com.ekasi.studios.stylelink.base.components.LoadingDialog
 import com.ekasi.studios.stylelink.base.composable.CarouselEmpty
-import com.ekasi.studios.stylelink.navigation.Screen
 import com.ekasi.studios.stylelink.ui.theme.tinySize
 import com.ekasi.studios.stylelink.viewModels.LocationState
 import com.ekasi.studios.stylelink.viewModels.LocationViewModel
@@ -57,8 +45,8 @@ import com.google.maps.android.compose.rememberCameraPositionState
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
-fun SearchScreen(
-    viewModel: SearchViewModel,
+fun DiscoverScreen(
+    viewModel: DiscoverViewModel,
     locationViewModel: LocationViewModel,
     placesViewModel: PlacesViewModel
 ) {
@@ -98,46 +86,6 @@ fun SearchScreen(
             val places = (placesState.value as PlacesState.Success).places
 
             Scaffold(
-                topBar = {
-                    Column() {
-//                        CenteredTopBar(title = "Find Stores") {
-//                            viewModel.navigateTo(Screen.Main.route)
-//                        }
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(tinySize / 2),
-                            horizontalArrangement = Arrangement.spacedBy(
-                                tinySize / 4
-                            ),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            IconButton(onClick = { viewModel.navigateTo(Screen.Main.route) }) {
-                                Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = "navigation_back")
-                            }
-                            TextField(
-//                                leadingIcon = { Icon(
-//                                    imageVector = Icons.Rounded.Search,
-//                                    contentDescription = "search_icon"
-//                                )},
-                                maxLines = 1,
-                                colors = TextFieldDefaults.colors(
-                                    unfocusedContainerColor = Color(0xFFE2E2E2),
-                                    focusedContainerColor = Color(0xFFE2E2E2),
-                                    focusedIndicatorColor = Color.Transparent,
-                                    unfocusedIndicatorColor = Color.Transparent,
-                                    disabledIndicatorColor = Color.Transparent
-                                ),
-                                value = searchText,
-                                onValueChange = { searchText = it },
-                                modifier = Modifier
-                                    .weight(1f),
-                                singleLine = true,
-                                shape = MaterialTheme.shapes.extraLarge
-                            )
-                        }
-                    }
-                },
             ) { paddingValues ->
                 when (locationState.value) {
                     is LocationState.PermissionDenied -> {
@@ -149,7 +97,7 @@ fun SearchScreen(
                             (locationState.value as LocationState.Coordinates).coordinates
                         val lastLocation = LatLng(coordinates.first, coordinates.second)
                         val cameraPosition = rememberCameraPositionState {
-                            position = CameraPosition.fromLatLngZoom(lastLocation, 13f)
+                            position = CameraPosition.fromLatLngZoom(lastLocation, 10f)
                         }
 
                         LaunchedEffect(Unit) {
@@ -160,6 +108,7 @@ fun SearchScreen(
                             modifier = Modifier
                                 .fillMaxSize()
                         ) {
+
                             Box(modifier = Modifier.weight(1f)) {
                                 GoogleMap(
                                     modifier = Modifier
@@ -184,39 +133,9 @@ fun SearchScreen(
                                     }
 
                                 }
+                                LocationHeader(onBackIconClick = { viewModel.back() })
                             }
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clip(RoundedCornerShape(tinySize, tinySize, 0.dp, 0.dp))
-                                    .animateContentSize()
-                                    .height(
-                                        if (showBottomSheet) LocalConfiguration.current.screenHeightDp.dp / 3
-                                        else 70.dp
-                                    )
-                                    .background(Color.Transparent),
-                            ) {
-                                Scaffold() { paddingValues ->
-                                    Column(
-                                        modifier = Modifier
-                                            .background(MaterialTheme.colorScheme.background)
-                                            .padding(paddingValues)
-                                            .verticalScroll(rememberScrollState())
-                                    ) {
-                                        if (places.isNotEmpty()) {
-                                            places.forEach { place ->
-                                                Text(place.markerAddress)
-                                                Text(place.storeId)
-                                                Spacer(modifier = Modifier.height(tinySize))
-                                            }
-                                        }
-                                    }
-                                }
 
-                            }
-                            if (showBottomSheet) {
-
-                            }
                         }
                     }
 
@@ -239,33 +158,41 @@ fun SearchScreen(
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Bottom() {
-    val sheetState = rememberModalBottomSheetState()
-    val showBottomSheet = mutableStateOf(true)
-    ModalBottomSheet(
-        sheetState = sheetState,
-        onDismissRequest = {
-            showBottomSheet.value = false
-        },
-//                                scrimColor = Color.Transparent
-    ) {
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .verticalScroll(
-                    rememberScrollState()
-                )
+private fun LocationHeader(onBackIconClick: ()-> Unit = {}) {
+    val gradient = Brush.linearGradient(
+        colors = listOf(Color.White, Color.Transparent),
+        start = Offset.Zero,
+        end = Offset(0f, Float.POSITIVE_INFINITY)
+    )
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.Transparent)
+//            .background(brush = gradient)
+            .padding(tinySize, tinySize * 2, tinySize, tinySize),
         ) {
-//            if (places.isNotEmpty()) {
-//                places.forEach { place ->
-//                    Text(place.markerAddress)
-//                    Text(place.storeId)
-//                }
-//            }
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(
+                tinySize / 4
+            )
+        ) {
+//            Text(
+//                text = "Fort Beaufort",
+//                style = MaterialTheme.typography.titleLarge,
+//                fontFamily = poppinsFontFamily,
+//                fontWeight = FontWeight.Bold
+//            )
+//            Icon(
+//                imageVector = Icons.Outlined.KeyboardArrowDown,
+//                contentDescription = "navigation_forward",
+//            )
+
+            IconButton(onClick = onBackIconClick) {
+                Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription ="back_icon")
+            }
         }
     }
 }
-
