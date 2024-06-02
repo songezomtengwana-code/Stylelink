@@ -19,10 +19,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.ekasi.studios.stylelink.ui.theme.white100
 import com.ekasi.studios.stylelink.ui.theme.StylelinkTheme
 import com.ekasi.studios.stylelink.ui.theme.antonFontFamily
 import com.ekasi.studios.stylelink.ui.theme.smallSize
+import com.ekasi.studios.stylelink.ui.theme.white100
 
 @Composable
 fun SolidNavbar(imageUrl: String = "") {
@@ -54,7 +54,7 @@ fun SolidNavbar(imageUrl: String = "") {
                 AsyncImage(
                     model = imageUrl,
                     contentDescription = "user_profile_image",
-                    modifier = Modifier.clickable { TODO("") })
+                    modifier = Modifier.clickable {  })
             }
         }
     }
