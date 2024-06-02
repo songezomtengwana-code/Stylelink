@@ -10,7 +10,7 @@ import com.google.protobuf.InvalidProtocolBufferException
 import java.io.InputStream
 import java.io.OutputStream
 
-/*
+/**
 * source https://developer.android.com/topic/libraries/architecture/datastore
 * @description - serializer for UserDetail class
 * */

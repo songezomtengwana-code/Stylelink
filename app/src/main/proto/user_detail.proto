@@ -4,7 +4,6 @@ option java_package = "com.ekasi.studios.stylelink";
 option java_multiple_files = true;
 
 message UserDetail {
-  string name = 1;
   string userId = 3;
-  string email = 5;
+  string token = 2;
 }
