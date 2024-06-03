@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.ekasi.studios.stylelink.data.model.Marker
 import com.ekasi.studios.stylelink.data.repository.MarkersRepository
+import com.ekasi.studios.stylelink.navigation.Screen
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
 
@@ -20,11 +21,16 @@ class DiscoverViewModel(
     private val markersRepository: MarkersRepository
 ) : ViewModel() {
     var isLoading by mutableStateOf(false)
-    private val initalLocation = LatLng(-29.000000, 24.000000)
-    private var _activeMarker = mutableStateOf<LatLng>(initalLocation)
+    private val initialLocation = LatLng(-29.000000, 24.000000)
+    private var _activeLocation = mutableStateOf<LatLng>(initialLocation)
+    private var _marker = mutableStateOf<Marker?>(null)
+    private var _activeStoreId = mutableStateOf("")
     private var _showModal = mutableStateOf(false)
-    val lastLocation: MutableState<LatLng> = _activeMarker
+
+    val lastLocation: MutableState<LatLng> = _activeLocation
     val showModalState: MutableState<Boolean> = _showModal
+    val activeStoreId: MutableState<String> = _activeStoreId
+    val marker: MutableState<Marker?> = _marker
     fun navigateTo(route: String) {
         navController.navigate(route)
     }
@@ -32,7 +38,7 @@ class DiscoverViewModel(
     fun updateLastLocation(location: Pair<Double, Double>) {
         viewModelScope.launch {
             try {
-                _activeMarker.value = LatLng(location.first, location.second)
+                _activeLocation.value = LatLng(location.first, location.second)
             } catch (e: Exception) {
                 Log.d("configureLastLocation", e.message.toString())
             }
@@ -42,7 +48,10 @@ class DiscoverViewModel(
     fun onMarkerClick(marker: Marker) {
         viewModelScope.launch {
             try {
-                _activeMarker.value = LatLng(marker.coordinates.latitude, marker.coordinates.longitude)
+                Log.d("fetchStoreProfile", marker.storeId)
+                _activeStoreId.value = marker.storeId
+                _marker.value = marker
+                _activeLocation.value = LatLng(marker.coordinates.latitude, marker.coordinates.longitude)
                 _showModal.value = true
             } catch (e: Exception) {
                 Log.d("onMarkerClick", e.message.toString())
@@ -52,5 +61,13 @@ class DiscoverViewModel(
 
     fun back() {
         navController.popBackStack()
+    }
+
+    fun bookServicesHandler() {
+        viewModelScope.launch {
+            val storeProfileRoute =
+                Screen.StoreProfile.route.replace("{storeId}", activeStoreId.value)
+            navController.navigate(storeProfileRoute)
+        }
     }
 }
