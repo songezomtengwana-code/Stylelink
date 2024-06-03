@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.FilterAlt
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material3.Button
@@ -43,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ekasi.studios.stylelink.R
+import com.ekasi.studios.stylelink.base.components.StorePreview.StorePreview
 import com.ekasi.studios.stylelink.base.composable.CarouselEmpty
 import com.ekasi.studios.stylelink.ui.theme.tinySize
 import com.ekasi.studios.stylelink.viewModels.LocationState
@@ -70,34 +70,27 @@ fun DiscoverScreen(
     val locationState = locationViewModel.locationState.collectAsState()
     val placesState = placesViewModel.placesState.collectAsState()
     var showBottomSheet by remember { mutableStateOf(true) }
-
+    val showModalState = viewModel.showModalState.value
     LaunchedEffect(Unit) {
         placesViewModel.fetchStoreMarkers()
     }
 
-    Scaffold(
-        floatingActionButton = {
-//            FloatingActionButton(
-//                onClick = { /* do something */ },
-//            ) {
-//                Icon(Icons.Outlined.LocationOn, "Localized description")
-//            }
-        }
-    ) { paddingValues ->
+    Scaffold() { paddingValues ->
         when (locationState.value) {
             is LocationState.PermissionDenied -> {
                 Text(text = "Location Permission Have Been Denied")
             }
 
             is LocationState.Coordinates -> {
-
+                val zoom: Float = 15f
                 val coordinates =
                     (locationState.value as LocationState.Coordinates).coordinates
-                var cameraPosition = rememberCameraPositionState {
-                    position = CameraPosition.fromLatLngZoom(viewModel.lastLocation.value, 10f)
+                val cameraPosition = rememberCameraPositionState {
+                    position = CameraPosition.fromLatLngZoom(viewModel.lastLocation.value, 1f)
                 }
-                LaunchedEffect(viewModel.lastLocation.value) {
+                LaunchedEffect(Unit, viewModel.lastLocation.value) {
                     val newLocation = viewModel.lastLocation.value
+
                     if (newLocation != null) {
                         cameraPosition.animate(
                             update = CameraUpdateFactory.newCameraPosition(
@@ -108,15 +101,14 @@ fun DiscoverScreen(
                             ),
                             durationMs = 1000
                         )
+                    } else if (viewModel.lastLocation.value == LatLng(0.0, 0.0)) {
+                        Log.d("lastLocation", "null")
                     }
                 }
+                Column {
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
 
-                    Box(modifier = Modifier.weight(1f)) {
+                    Box() {
                         GoogleMap(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -148,14 +140,20 @@ fun DiscoverScreen(
                                             tag = place.storeName,
                                             icon = BitmapDescriptorFactory.fromResource(R.drawable.marker_circle),
                                             onClick = { marker ->
-                                                viewModel.updateLastLocation(
-                                                    Pair(
-                                                        marker.position.latitude,
-                                                        marker.position.longitude
-                                                    )
-                                                )
-                                                true
+                                                viewModel.onMarkerClick(place)
+                                                false
                                             }
+                                        )
+                                        Marker(
+                                            state = MarkerState(
+                                                LatLng(
+                                                    coordinates.first,
+                                                    coordinates.second
+                                                )
+                                            ),
+                                            title = "Your Locaition",
+                                            tag = "This is your current location",
+                                            icon = BitmapDescriptorFactory.fromResource(R.drawable.marker_circle_invert),
                                         )
                                     }
                                 }
@@ -167,25 +165,14 @@ fun DiscoverScreen(
                             viewModel = viewModel
                         )
                     }
-                    Row(
+
+                    Column(
                         modifier = Modifier
+                            .background(Color.Transparent)
                             .padding(tinySize)
-                            .background(Color.Transparent),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
+                            .height(200.dp),
                     ) {
-                        Button(
-                            onClick = { /* Do something! */ },
-                            contentPadding = ButtonDefaults.ButtonWithIconContentPadding
-                        ) {
-                            Icon(
-                                Icons.Outlined.FilterAlt,
-                                contentDescription = "Localized description",
-                                modifier = Modifier.height(ButtonDefaults.IconSize)
-                            )
-                            Spacer(Modifier.width(ButtonDefaults.IconSpacing))
-                            Text("Filter")
-                        }
+                        StorePreview(showModalState)
                     }
                 }
             }
