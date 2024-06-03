@@ -2,6 +2,7 @@ package com.ekasi.studios.stylelink.ui.screens.discover
 
 import android.app.Application
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -19,13 +20,13 @@ class DiscoverViewModel(
 ) : ViewModel() {
     var isLoading by mutableStateOf(false)
     private var _activeMarker = mutableStateOf<LatLng>(LatLng(0.0, 0.0))
-    val lastLocation: LatLng get() = _activeMarker.value
+    val lastLocation: MutableState<LatLng> =  _activeMarker
 
     fun navigateTo(route: String) {
         navController.navigate(route)
     }
 
-    fun updateLastLocation(location: Pair<Double,Double>) {
+    fun updateLastLocation(location: Pair<Double, Double>) {
         viewModelScope.launch {
             try {
                 _activeMarker.value = LatLng(location.first, location.second)
