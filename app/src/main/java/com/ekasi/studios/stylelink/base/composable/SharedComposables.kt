@@ -34,6 +34,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -165,16 +166,12 @@ fun CarouselError(message: String, handler: () -> Unit) {
         verticalArrangement = Arrangement.Center
     ) {
         Text(text = message)
-        Text(
-            text = "Click to refresh",
-            modifier = Modifier
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) {
-                    handler
-                }
-        )
+        TextButton(onClick = handler) {
+            Text(
+                text = "Click to refresh",
+                fontWeight = FontWeight.Bold,
+            )
+        }
     }
 }
 
@@ -204,12 +201,12 @@ fun HomeSearchButton() {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(smallSize*2)
+            .height(smallSize * 2)
             .padding(0.dp, tinySize)
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }
-            ) {  },
+            ) { },
         shape = CircleShape,
         colors = CardDefaults.cardColors(containerColor = Color.LightGray)
     ) {
@@ -219,7 +216,7 @@ fun HomeSearchButton() {
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
-                .padding(tinySize,0.dp)
+                .padding(tinySize, 0.dp)
         ) {
 
             Text(
@@ -284,7 +281,7 @@ fun CheckBoxWithText(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
-        Checkbox(checked = checkBox, onCheckedChange = {onCheckedChange(checkBox)})
+        Checkbox(checked = checkBox, onCheckedChange = { onCheckedChange(checkBox) })
         Text(
             text = text,
             style = MaterialTheme.typography.bodyMedium,

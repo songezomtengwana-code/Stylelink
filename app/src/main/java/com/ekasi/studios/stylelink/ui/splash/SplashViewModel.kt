@@ -20,12 +20,7 @@ class SplashViewModel(
     fun checkForUserActivity() {
         viewModelScope.launch {
             var currentUser = authRepository.getCurrentUser()
-
-            if (currentUser != null) {
-                navigateTo(Screen.Home.route)
-            } else {
-                navigateTo(Screen.Signup.route)
-            }
+            navigateTo(Screen.Home.route)
         }
     }
 
