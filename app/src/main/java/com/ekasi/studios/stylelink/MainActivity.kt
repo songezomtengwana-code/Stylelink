@@ -19,6 +19,7 @@ import androidx.core.app.ActivityCompat
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.ekasi.studios.stylelink.adapters.PlacePredictionAdapter
+import com.ekasi.studios.stylelink.base.components.StorePreview.StorePreviewViewModel
 import com.ekasi.studios.stylelink.base.composable.BottomNavigation
 import com.ekasi.studios.stylelink.data.converters.ListConverter
 import com.ekasi.studios.stylelink.data.local.AppDatabase
@@ -164,6 +165,11 @@ class MainActivity : ComponentActivity() {
                     application = application,
                     markersRepository = markersRepository
                 )
+
+                val storePreviewViewModel = StorePreviewViewModel(
+                    storeRepository = storesRepository,
+                )
+
                 Scaffold(
                     bottomBar = {
                         BottomNavigation(
@@ -189,7 +195,8 @@ class MainActivity : ComponentActivity() {
                             storesViewModel = storesViewModel,
                             storeProfileViewModel = storeProfileViewModel,
                             locationViewModel = locationViewModel,
-                            placesViewModel = placesViewModel
+                            placesViewModel = placesViewModel,
+                            storePreviewViewModel = storePreviewViewModel
                         )
                     }
                 }

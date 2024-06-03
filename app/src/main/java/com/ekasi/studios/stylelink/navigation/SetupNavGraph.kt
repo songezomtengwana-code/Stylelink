@@ -6,6 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.ekasi.studios.stylelink.base.components.StorePreview.StorePreviewViewModel
 import com.ekasi.studios.stylelink.ui.auth.login.LoginScreen
 import com.ekasi.studios.stylelink.ui.auth.login.LoginViewModel
 import com.ekasi.studios.stylelink.ui.auth.register.RegisterScreen
@@ -36,7 +37,8 @@ fun SetupNavGraph(
     storesViewModel: StoresViewModel,
     storeProfileViewModel: StoreProfileViewModel,
     locationViewModel: LocationViewModel,
-    placesViewModel: PlacesViewModel
+    placesViewModel: PlacesViewModel,
+    storePreviewViewModel: StorePreviewViewModel
 ) {
     NavHost(
         navController = navController,
@@ -58,7 +60,12 @@ fun SetupNavGraph(
             SignupScreen(viewModel = signupViewModel)
         }
         composable(route = Screen.Discover.route) {
-            DiscoverScreen(viewModel = discoverViewModel,locationViewModel = locationViewModel, placesViewModel = placesViewModel)
+            DiscoverScreen(
+                viewModel = discoverViewModel,
+                locationViewModel = locationViewModel,
+                placesViewModel = placesViewModel,
+                storePreviewViewModel = storePreviewViewModel
+            )
         }
         composable(
             route = Screen.StoreProfile.route,
