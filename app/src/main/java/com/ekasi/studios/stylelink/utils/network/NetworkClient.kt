@@ -1,6 +1,7 @@
 package com.ekasi.studios.stylelink.utils.network
 
 import com.ekasi.studios.stylelink.utils.services.UserApiService
+import com.ekasi.studios.stylelink.utils.services.auth.AuthService
 import com.ekasi.studios.stylelink.utils.services.markers.MarkerService
 import com.ekasi.studios.stylelink.utils.services.products.ProductService
 import com.ekasi.studios.stylelink.utils.services.services.ServicesService
@@ -23,6 +24,10 @@ class NetworkClient private constructor() {
             .addConverterFactory(GsonConverterFactory.create())
             .client(OkHttpClient())
             .build()
+
+        fun authService(): AuthService {
+            return retrofit.create(AuthService::class.java)
+        }
 
         fun userApiService(): UserApiService {
             return retrofit.create(UserApiService::class.java)

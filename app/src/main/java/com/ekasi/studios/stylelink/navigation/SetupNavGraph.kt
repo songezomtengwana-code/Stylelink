@@ -6,16 +6,17 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.ekasi.studios.stylelink.ui.login.LoginScreen
-import com.ekasi.studios.stylelink.ui.login.LoginViewModel
-import com.ekasi.studios.stylelink.ui.main.MainScreen
-import com.ekasi.studios.stylelink.ui.main.MainViewModel
-import com.ekasi.studios.stylelink.ui.register.RegisterScreen
-import com.ekasi.studios.stylelink.ui.register.RegisterViewModel
-import com.ekasi.studios.stylelink.ui.search.SearchScreen
-import com.ekasi.studios.stylelink.ui.search.SearchViewModel
-import com.ekasi.studios.stylelink.ui.signup.SignupScreen
-import com.ekasi.studios.stylelink.ui.signup.SignupViewModel
+import com.ekasi.studios.stylelink.base.components.StorePreview.StorePreviewViewModel
+import com.ekasi.studios.stylelink.ui.auth.login.LoginScreen
+import com.ekasi.studios.stylelink.ui.auth.login.LoginViewModel
+import com.ekasi.studios.stylelink.ui.auth.register.RegisterScreen
+import com.ekasi.studios.stylelink.ui.auth.register.RegisterViewModel
+import com.ekasi.studios.stylelink.ui.auth.signup.SignupScreen
+import com.ekasi.studios.stylelink.ui.auth.signup.SignupViewModel
+import com.ekasi.studios.stylelink.ui.screens.discover.DiscoverScreen
+import com.ekasi.studios.stylelink.ui.screens.discover.DiscoverViewModel
+import com.ekasi.studios.stylelink.ui.screens.home.HomeScreen
+import com.ekasi.studios.stylelink.ui.screens.home.HomeViewModel
 import com.ekasi.studios.stylelink.ui.splash.SplashScreen
 import com.ekasi.studios.stylelink.ui.splash.SplashViewModel
 import com.ekasi.studios.stylelink.ui.storeprofile.StoreProfile
@@ -30,13 +31,14 @@ fun SetupNavGraph(
     registerViewModel: RegisterViewModel,
     signupViewModel: SignupViewModel,
     splashScreenViewModel: SplashViewModel,
-    mainViewModel: MainViewModel,
+    homeViewModel: HomeViewModel,
     loginViewModel: LoginViewModel,
-    searchViewModel: SearchViewModel,
+    discoverViewModel: DiscoverViewModel,
     storesViewModel: StoresViewModel,
     storeProfileViewModel: StoreProfileViewModel,
     locationViewModel: LocationViewModel,
-    placesViewModel: PlacesViewModel
+    placesViewModel: PlacesViewModel,
+    storePreviewViewModel: StorePreviewViewModel
 ) {
     NavHost(
         navController = navController,
@@ -48,8 +50,8 @@ fun SetupNavGraph(
         composable(route = Screen.Register.route) {
             RegisterScreen(registerViewModel)
         }
-        composable(route = Screen.Main.route) {
-            MainScreen(mainViewModel, storesViewModel, navController)
+        composable(route = Screen.Home.route) {
+            HomeScreen(homeViewModel, storesViewModel, navController)
         }
         composable(route = Screen.Login.route) {
             LoginScreen(loginViewModel)
@@ -57,8 +59,13 @@ fun SetupNavGraph(
         composable(route = Screen.Signup.route) {
             SignupScreen(viewModel = signupViewModel)
         }
-        composable(route = Screen.Search.route) {
-            SearchScreen(viewModel = searchViewModel,locationViewModel = locationViewModel, placesViewModel = placesViewModel)
+        composable(route = Screen.Discover.route) {
+            DiscoverScreen(
+                viewModel = discoverViewModel,
+                locationViewModel = locationViewModel,
+                placesViewModel = placesViewModel,
+                storePreviewViewModel = storePreviewViewModel
+            )
         }
         composable(
             route = Screen.StoreProfile.route,

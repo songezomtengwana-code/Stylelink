@@ -16,19 +16,11 @@ class SplashViewModel(
     private val navController: NavController,
 ) : ViewModel() {
     var isLoading by mutableStateOf(false)
-//    fun checkNetworkConnectivity() {
-//
-//    }
 
     fun checkForUserActivity() {
         viewModelScope.launch {
             var currentUser = authRepository.getCurrentUser()
-
-            if (currentUser != null) {
-                navigateTo(Screen.Main.route)
-            } else {
-                navigateTo(Screen.Signup.route)
-            }
+            navigateTo(Screen.Home.route)
         }
     }
 

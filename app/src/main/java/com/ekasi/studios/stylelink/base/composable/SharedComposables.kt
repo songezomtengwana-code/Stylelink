@@ -15,6 +15,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Bookmarks
+import androidx.compose.material.icons.outlined.Explore
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.rounded.KeyboardArrowLeft
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Card
@@ -26,7 +31,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -40,6 +48,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.ekasi.studios.stylelink.ui.theme.StylelinkTheme
 import com.ekasi.studios.stylelink.ui.theme.black20
 import com.ekasi.studios.stylelink.ui.theme.mediumSize
@@ -157,16 +166,12 @@ fun CarouselError(message: String, handler: () -> Unit) {
         verticalArrangement = Arrangement.Center
     ) {
         Text(text = message)
-        Text(
-            text = "Click to refresh",
-            modifier = Modifier
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) {
-                    handler
-                }
-        )
+        TextButton(onClick = handler) {
+            Text(
+                text = "Click to refresh",
+                fontWeight = FontWeight.Bold,
+            )
+        }
     }
 }
 
@@ -196,12 +201,12 @@ fun HomeSearchButton() {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(smallSize*2)
+            .height(smallSize * 2)
             .padding(0.dp, tinySize)
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }
-            ) {  },
+            ) { },
         shape = CircleShape,
         colors = CardDefaults.cardColors(containerColor = Color.LightGray)
     ) {
@@ -211,7 +216,7 @@ fun HomeSearchButton() {
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
-                .padding(tinySize,0.dp)
+                .padding(tinySize, 0.dp)
         ) {
 
             Text(
@@ -276,11 +281,52 @@ fun CheckBoxWithText(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
-        Checkbox(checked = checkBox, onCheckedChange = {onCheckedChange(checkBox)})
+        Checkbox(checked = checkBox, onCheckedChange = { onCheckedChange(checkBox) })
         Text(
             text = text,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.primary
         )
+    }
+}
+
+@Composable
+fun BottomNavigation(navController: NavController, selectedIndex: Int) {
+
+    val navigationItems = listOf(
+        "Home",
+        "Home",
+        "Discover",
+        "Home",
+        "Home"
+    )
+
+    val icons = listOf(
+        Icons.Outlined.Home,
+        Icons.Outlined.Search,
+        Icons.Outlined.Explore,
+        Icons.Outlined.Bookmarks,
+        Icons.Outlined.Person
+    )
+
+    var selectedItem = 0
+
+    NavigationBar(
+        containerColor = Color.Transparent
+    ) {
+        navigationItems.forEachIndexed { index, item ->
+            NavigationBarItem(
+                icon = { Icon(icons[index], contentDescription = item) },
+                label = {
+                    Text(
+                        item,
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                selected = false,
+                onClick = { navController.navigate(item.lowercase()) }
+            )
+        }
     }
 }

@@ -6,12 +6,21 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.core.app.ActivityCompat
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.ekasi.studios.stylelink.adapters.PlacePredictionAdapter
+import com.ekasi.studios.stylelink.base.components.StorePreview.StorePreviewViewModel
+import com.ekasi.studios.stylelink.base.composable.BottomNavigation
 import com.ekasi.studios.stylelink.data.converters.ListConverter
 import com.ekasi.studios.stylelink.data.local.AppDatabase
 import com.ekasi.studios.stylelink.data.repository.AuthRepository
@@ -21,11 +30,11 @@ import com.ekasi.studios.stylelink.data.repository.ServicesRepository
 import com.ekasi.studios.stylelink.data.repository.StoreRepository
 import com.ekasi.studios.stylelink.data.repository.UserRepository
 import com.ekasi.studios.stylelink.navigation.SetupNavGraph
-import com.ekasi.studios.stylelink.ui.login.LoginViewModel
-import com.ekasi.studios.stylelink.ui.main.MainViewModel
-import com.ekasi.studios.stylelink.ui.register.RegisterViewModel
-import com.ekasi.studios.stylelink.ui.search.SearchViewModel
-import com.ekasi.studios.stylelink.ui.signup.SignupViewModel
+import com.ekasi.studios.stylelink.ui.auth.login.LoginViewModel
+import com.ekasi.studios.stylelink.ui.auth.register.RegisterViewModel
+import com.ekasi.studios.stylelink.ui.auth.signup.SignupViewModel
+import com.ekasi.studios.stylelink.ui.screens.discover.DiscoverViewModel
+import com.ekasi.studios.stylelink.ui.screens.home.HomeViewModel
 import com.ekasi.studios.stylelink.ui.splash.SplashViewModel
 import com.ekasi.studios.stylelink.ui.storeprofile.StoreProfileViewModel
 import com.ekasi.studios.stylelink.ui.theme.StylelinkTheme
@@ -57,6 +66,8 @@ class MainActivity : ComponentActivity() {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var placesClient: PlacesClient
 
+    var selectedIndex: Int = 0 // Track selected index
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val locationPermissionGranted by mutableStateOf(false)
@@ -76,9 +87,13 @@ class MainActivity : ComponentActivity() {
 
                 // Firebase
                 val auth = Firebase.auth
+                val authService = NetworkClient.NetworkClient.authService()
 
                 // Repositories
-                val userRepository = UserRepository(NetworkClient.NetworkClient.userApiService())
+                val userRepository = UserRepository(
+                    userApiService = NetworkClient.NetworkClient.userApiService(),
+                    authService = authService
+                )
                 val storesRepository =
                     StoreRepository(NetworkClient.NetworkClient.storesApiService())
                 val servicesRepository =
@@ -88,6 +103,7 @@ class MainActivity : ComponentActivity() {
 
                 val markersRepository =
                     MarkersRepository(NetworkClient.NetworkClient.markersApiService())
+
 
                 // ViewModels
                 val userViewModel = UserViewModel(
@@ -113,7 +129,7 @@ class MainActivity : ComponentActivity() {
                     authRepository = AuthRepository(auth)
                 )
 
-                val mainViewModel = MainViewModel(
+                val homeViewModel = HomeViewModel(
                     authRepository = AuthRepository(auth),
                     navController = navController,
                     userViewModel = userViewModel
@@ -128,7 +144,7 @@ class MainActivity : ComponentActivity() {
                     storeRepository = storesRepository,
                 )
 
-                val searchViewModel = SearchViewModel(
+                val discoverViewModel = DiscoverViewModel(
                     navController = navController,
                     application = application,
                     markersRepository = markersRepository
@@ -150,19 +166,41 @@ class MainActivity : ComponentActivity() {
                     markersRepository = markersRepository
                 )
 
-                SetupNavGraph(
-                    navController = navController,
-                    splashScreenViewModel = splashViewModel,
-                    signupViewModel = signupViewModel,
-                    registerViewModel = registerViewModel,
-                    mainViewModel = mainViewModel,
-                    loginViewModel = loginViewModel,
-                    searchViewModel = searchViewModel,
-                    storesViewModel = storesViewModel,
-                    storeProfileViewModel = storeProfileViewModel,
-                    locationViewModel = locationViewModel,
-                    placesViewModel = placesViewModel
+                val storePreviewViewModel = StorePreviewViewModel(
+                    storeRepository = storesRepository,
                 )
+
+                Scaffold(
+                    bottomBar = {
+                        BottomNavigation(
+                            navController = navController,
+                            selectedIndex = selectedIndex
+                        )
+                    }
+                ) { it ->
+                    Box(
+                        modifier = Modifier
+                            .padding(it)
+                            .background(Color.Transparent)
+                            .fillMaxWidth()
+                    ) {
+                        SetupNavGraph(
+                            navController = navController,
+                            splashScreenViewModel = splashViewModel,
+                            signupViewModel = signupViewModel,
+                            registerViewModel = registerViewModel,
+                            homeViewModel = homeViewModel,
+                            loginViewModel = loginViewModel,
+                            discoverViewModel = discoverViewModel,
+                            storesViewModel = storesViewModel,
+                            storeProfileViewModel = storeProfileViewModel,
+                            locationViewModel = locationViewModel,
+                            placesViewModel = placesViewModel,
+                            storePreviewViewModel = storePreviewViewModel
+                        )
+                    }
+                }
+
                 if (areLocationPermissionsGranted()) {
                     getCurrentLocation(
                         onGetCurrentLocationSuccess = {
@@ -243,8 +281,6 @@ class MainActivity : ComponentActivity() {
                     this, Manifest.permission.ACCESS_COARSE_LOCATION
                 ) == PackageManager.PERMISSION_GRANTED)
     }
-
-
 }
 
 
