@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.ekasi.studios.stylelink.data.model.Marker
 import com.ekasi.studios.stylelink.data.repository.MarkersRepository
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
@@ -19,9 +20,11 @@ class DiscoverViewModel(
     private val markersRepository: MarkersRepository
 ) : ViewModel() {
     var isLoading by mutableStateOf(false)
-    private var _activeMarker = mutableStateOf<LatLng>(LatLng(0.0, 0.0))
-    val lastLocation: MutableState<LatLng> =  _activeMarker
-
+    private val initalLocation = LatLng(-29.000000, 24.000000)
+    private var _activeMarker = mutableStateOf<LatLng>(initalLocation)
+    private var _showModal = mutableStateOf(false)
+    val lastLocation: MutableState<LatLng> = _activeMarker
+    val showModalState: MutableState<Boolean> = _showModal
     fun navigateTo(route: String) {
         navController.navigate(route)
     }
@@ -32,6 +35,17 @@ class DiscoverViewModel(
                 _activeMarker.value = LatLng(location.first, location.second)
             } catch (e: Exception) {
                 Log.d("configureLastLocation", e.message.toString())
+            }
+        }
+    }
+
+    fun onMarkerClick(marker: Marker) {
+        viewModelScope.launch {
+            try {
+                _activeMarker.value = LatLng(marker.coordinates.latitude, marker.coordinates.longitude)
+                _showModal.value = true
+            } catch (e: Exception) {
+                Log.d("onMarkerClick", e.message.toString())
             }
         }
     }
