@@ -1,7 +1,10 @@
 package com.ekasi.studios.stylelink.ui.screens.discover
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,10 +42,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ekasi.studios.stylelink.R
 import com.ekasi.studios.stylelink.base.components.StorePreview.StorePreview
+import com.ekasi.studios.stylelink.base.components.StorePreview.StorePreviewViewModel
 import com.ekasi.studios.stylelink.base.composable.CarouselEmpty
 import com.ekasi.studios.stylelink.ui.theme.tinySize
 import com.ekasi.studios.stylelink.viewModels.LocationState
@@ -58,12 +63,14 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun DiscoverScreen(
     viewModel: DiscoverViewModel,
     locationViewModel: LocationViewModel,
-    placesViewModel: PlacesViewModel
+    placesViewModel: PlacesViewModel,
+    storePreviewViewModel: StorePreviewViewModel
 ) {
     var searchExpanded by remember { mutableStateOf(true) }
     var searchText by remember { mutableStateOf("") }
@@ -106,9 +113,7 @@ fun DiscoverScreen(
                     }
                 }
                 Column {
-
-
-                    Box() {
+                    Box(modifier = Modifier.weight(1f)) {
                         GoogleMap(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -122,7 +127,7 @@ fun DiscoverScreen(
                                 }
 
                                 is PlacesState.Error -> {
-                                    Log.d("placesState", "Loading...")
+                                    Log.d("placesState", "Error")
                                 }
 
                                 is PlacesState.Success -> {
@@ -165,14 +170,24 @@ fun DiscoverScreen(
                             viewModel = viewModel
                         )
                     }
+                    val cardHeight = LocalConfiguration.current.screenHeightDp.dp / 4
 
+                    val height by animateDpAsState(
+                        targetValue = if (showModalState) cardHeight else 0.dp,
+                        label = ""
+                    )
                     Column(
                         modifier = Modifier
                             .background(Color.Transparent)
                             .padding(tinySize)
-                            .height(200.dp),
+                            .height(height),
                     ) {
-                        StorePreview(showModalState)
+                        StorePreview(
+                            storeId = viewModel.activeStoreId.value,
+                            storePreviewViewModel = storePreviewViewModel,
+                            marker = viewModel.marker.value,
+                            bookServiceHandler = {viewModel.bookServicesHandler()}
+                        )
                     }
                 }
             }
