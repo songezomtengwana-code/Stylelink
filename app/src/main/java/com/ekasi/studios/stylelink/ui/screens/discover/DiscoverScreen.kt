@@ -149,21 +149,22 @@ fun DiscoverScreen(
                                                 false
                                             }
                                         )
-                                        Marker(
-                                            state = MarkerState(
-                                                LatLng(
-                                                    coordinates.first,
-                                                    coordinates.second
-                                                )
-                                            ),
-                                            title = "Your Locaition",
-                                            tag = "This is your current location",
-                                            icon = BitmapDescriptorFactory.fromResource(R.drawable.marker_circle_invert),
-                                        )
+
                                     }
                                 }
                             }
-                        }
+
+                            Marker(
+                                state = MarkerState(
+                                    LatLng(
+                                        coordinates.first,
+                                        coordinates.second
+                                    )
+                                ),
+                                title = "Your Location",
+                                tag = "This is your current location",
+                                icon = BitmapDescriptorFactory.fromResource(R.drawable.marker_circle_invert),
+                            )                        }
                         LocationHeader(
                             onBackIconClick = { viewModel.back() },
                             onMyLocationClick = { viewModel.updateLastLocation(coordinates) },

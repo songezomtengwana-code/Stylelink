@@ -7,6 +7,7 @@ import androidx.navigation.NavController
 import com.ekasi.studios.stylelink.data.repository.ProductRepository
 import com.ekasi.studios.stylelink.data.repository.ServicesRepository
 import com.ekasi.studios.stylelink.data.repository.StoreRepository
+import com.ekasi.studios.stylelink.navigation.Screen
 import com.ekasi.studios.stylelink.utils.services.stores.models.Store
 import com.ekasi.studios.stylelink.utils.states.ProductState
 import com.ekasi.studios.stylelink.utils.states.ServicesState
@@ -115,6 +116,12 @@ class StoreProfileViewModel(
      fun backNavigation() {
         viewModelScope.launch {
             navController.popBackStack()
+        }
+    }
+
+    fun startBooking(serviceId: String) {
+        viewModelScope.launch {
+            navController.navigate(Screen.Booking.route.replace("{serviceId}", serviceId))
         }
     }
 }

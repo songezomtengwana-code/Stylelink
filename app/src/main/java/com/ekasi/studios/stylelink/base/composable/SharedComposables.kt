@@ -49,6 +49,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.ekasi.studios.stylelink.ui.theme.StylelinkTheme
 import com.ekasi.studios.stylelink.ui.theme.black20
 import com.ekasi.studios.stylelink.ui.theme.mediumSize
@@ -284,7 +285,7 @@ fun CheckBoxWithText(
         Checkbox(checked = checkBox, onCheckedChange = { onCheckedChange(checkBox) })
         Text(
             text = text,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.primary
         )
     }
@@ -292,6 +293,8 @@ fun CheckBoxWithText(
 
 @Composable
 fun BottomNavigation(navController: NavController, selectedIndex: Int) {
+
+    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
     val navigationItems = listOf(
         "Home",
@@ -324,7 +327,7 @@ fun BottomNavigation(navController: NavController, selectedIndex: Int) {
                         fontWeight = FontWeight.Bold
                     )
                 },
-                selected = false,
+                selected = currentRoute == item.lowercase(),
                 onClick = { navController.navigate(item.lowercase()) }
             )
         }
