@@ -177,7 +177,9 @@ fun StorePreviewSkeleton() {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun StorePreviewBody(
-    store: Store, marker: Marker, bookServiceHandler: () -> Unit = {},
+    store: Store,
+    marker: Marker,
+    bookServiceHandler: () -> Unit = {},
     directionsHandler: () -> Unit = {},
     bookmarkHandler: () -> Unit = {},
     shareHandler: () -> Unit = {},
