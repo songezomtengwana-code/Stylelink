@@ -3,9 +3,11 @@ package com.ekasi.studios.stylelink
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.app.ActivityCompat
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.ekasi.studios.stylelink.adapters.PlacePredictionAdapter
@@ -68,6 +71,7 @@ class MainActivity : ComponentActivity() {
 
     var selectedIndex: Int = 0 // Track selected index
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val locationPermissionGranted by mutableStateOf(false)
@@ -170,12 +174,24 @@ class MainActivity : ComponentActivity() {
                     storeRepository = storesRepository,
                 )
 
+                val navigationItems = listOf(
+                    "home",
+                    "home",
+                    "discover",
+                    "home",
+                    "home"
+                )
+
+                val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+
                 Scaffold(
                     bottomBar = {
-                        BottomNavigation(
-                            navController = navController,
-                            selectedIndex = selectedIndex
-                        )
+                        if (currentRoute in navigationItems) {
+                            BottomNavigation(
+                                navController = navController,
+                                selectedIndex = selectedIndex
+                            )
+                        }
                     }
                 ) { it ->
                     Box(
